@@ -1,4 +1,4 @@
-package classes;
+package classes.specialunits;
 
 public class Magician extends SpecialUnit {
 

@@ -1,4 +1,4 @@
-package classes;
+package classes.buildings;
 
 public abstract class Building {
 	
