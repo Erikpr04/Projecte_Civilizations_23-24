@@ -1,11 +1,10 @@
-package classes;
+package classes.specialunits;
 
-public abstract class DefenseUnit {
+public abstract class SpecialUnit {
 	
 	//Atributos
 	private int armor;
 	private int initialArmor;
 	private int baseDamage;
 	private int experience;
-	private boolean sanctified;
 }

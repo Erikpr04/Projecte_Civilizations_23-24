@@ -1,4 +1,4 @@
-package classes;
+package classes.technologies;
 
 public abstract class Technologies{
 	
