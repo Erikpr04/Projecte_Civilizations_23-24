@@ -1,0 +1,26 @@
+package classes;
+
+public class dc_classes {
+	
+
+	
+	
+	public static void new_smithy() {
+		civilization.setSmithy(civilization.getSmithy()+1);
+
+	};
+	
+	public static void new_church() {
+		
+	//si cumple condiciones se sube 1 en numero de church
+	if civilization.getFood() 
+		
+		civilization.setChurch(civilization.getChurch()+1);
+
+	};
+	
+	
+	
+	
+
+}

@@ -1,0 +1,9 @@
+package classes.buildings;
+
+public class Smithy extends Building {
+	
+	public void createBuilding() {
+		
+	}
+
+}

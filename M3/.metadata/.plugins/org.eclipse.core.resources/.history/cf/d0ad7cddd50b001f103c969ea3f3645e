@@ -1,0 +1,23 @@
+package classes.attackunits;
+
+import classes.Civilization;
+import interfaces.Variables;
+
+public class Swordsman extends AttackUnit {
+	
+	
+
+
+	//CONSTRUCTOR 1
+	
+		public Swordsman(int armor, int baseDamage) {
+			super(armor,baseDamage);
+		
+			
+			
+			
+		}
+
+	
+
+}
