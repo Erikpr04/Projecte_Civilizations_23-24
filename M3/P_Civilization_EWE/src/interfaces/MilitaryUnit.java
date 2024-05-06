@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface MilitaryUnit extends Variable {
+public interface MilitaryUnit extends Variables {
 	//Devuelve el ataque de la unidad.
 	abstract int attack(); 
 	
