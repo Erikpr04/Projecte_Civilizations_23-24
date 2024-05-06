@@ -6,7 +6,7 @@ import interfaces.MilitaryUnit;
 
 public class Civilization {
 	
-	//Atributod
+	//Atributos
 	private int technologyDefense;
 	private int technologyAttack;
 	private int wood;
@@ -19,5 +19,101 @@ public class Civilization {
 	private int smithy;
 	private int carpentry;
 	private int battles;
-	private ArrayList<MilitaryUnit> army;
+	private ArrayList<ArrayList> army;
+	
+	
+	
+	//getters and setters
+	
+	public int getTechnologyDefense() {
+		return technologyDefense;
+	}
+	public void setTechnologyDefense(int technologyDefense) {
+		this.technologyDefense = technologyDefense;
+	}
+	public int getTechnologyAttack() {
+		return technologyAttack;
+	}
+	public void setTechnologyAttack(int technologyAttack) {
+		this.technologyAttack = technologyAttack;
+	}
+	public int getWood() {
+		return wood;
+	}
+	public void setWood(int wood) {
+		this.wood = wood;
+	}
+	public int getIron() {
+		return iron;
+	}
+	public void setIron(int iron) {
+		this.iron = iron;
+	}
+	public int getFood() {
+		return food;
+	}
+	public void setFood(int food) {
+		this.food = food;
+	}
+	public int getMana() {
+		return mana;
+	}
+	public void setMana(int mana) {
+		this.mana = mana;
+	}
+	public int getMagicTower() {
+		return magicTower;
+	}
+	public void setMagicTower(int magicTower) {
+		this.magicTower = magicTower;
+	}
+	public int getFarm() {
+		return farm;
+	}
+	public void setFarm(int farm) {
+		this.farm = farm;
+	}
+	public int getCurch() {
+		return curch;
+	}
+	public void setCurch(int curch) {
+		this.curch = curch;
+	}
+	public int getSmithy() {
+		return smithy;
+	}
+	public void setSmithy(int smithy) {
+		this.smithy = smithy;
+	}
+	public int getCarpentry() {
+		return carpentry;
+	}
+	public void setCarpentry(int carpentry) {
+		this.carpentry = carpentry;
+	}
+	public int getBattles() {
+		return battles;
+	}
+	public void setBattles(int battles) {
+		this.battles = battles;
+	}
+	public ArrayList<ArrayList> getArmy() {
+		return army;
+	}
+	public void setArmy(ArrayList<ArrayList> army) {
+		this.army = army;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
