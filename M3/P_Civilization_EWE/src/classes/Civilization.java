@@ -320,6 +320,9 @@ public class Civilization {
 	}
 	
 	
+	//METODOS PARA CREAR EDIFICIOS
+	
+	
 	public void new_Church() throws ResourceException {
 		if (getFood() >= Variables.FOOD_COST_CHURCH || getWood() >= Variables.WOOD_COST_CHURCH || getIron() >= Variables.IRON_COST_CHURCH || getMana() >= Variables.MANA_COST_CHURCH) {
 			church += 1;
@@ -368,6 +371,8 @@ public class Civilization {
 		}
 	}
 	
+	
+	//METODOS PARA MEJORAR TECNOLOGIA
 	
 	public void upgradeTechnologyDefense() throws ResourceException {
 		if (getWood() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_WOOD_COST * technologyDefense)  || getIron() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST * technologyDefense)) {
