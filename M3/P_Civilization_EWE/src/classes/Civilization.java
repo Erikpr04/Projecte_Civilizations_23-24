@@ -1,8 +1,13 @@
 package classes;
 
+import java.text.ChoiceFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import classes.attackunits.Swordsman;
+import exceptions.ResourceException;
 import interfaces.MilitaryUnit;
+import interfaces.Variables;
 
 public class Civilization {
 	
@@ -19,7 +24,7 @@ public class Civilization {
 	private int smithy;
 	private int carpentry;
 	private int battles;
-	private ArrayList<ArrayList> army;
+	private ArrayList<ArrayList> army = new ArrayList<ArrayList>(9);
 	
 	
 	
@@ -105,6 +110,31 @@ public class Civilization {
 	}
 	
 	
+	
+	//METODOS
+	
+	
+	//METODOS PARA CREAR UNIDADES
+	
+	public void new_Swordsman(int i) throws ResourceException {
+		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*1000/100);
+		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*1000/100);
+		int iterator_army;
+		
+		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
+			
+			
+			if (getFood() >= Variables.FOOD_COST_SWORDSMAN ||getFood() >= Variables.WOOD_COST_SWORDSMAN || getIron() >= Variables.IRON_COST_SWORDSMAN) {
+				army.get(0).add(new Swordsman(total_armor,total_attack));
+
+			}
+			else {
+				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Swordsman");
+			}
+			
+			
+		}
+	}
 	
 	
 	
