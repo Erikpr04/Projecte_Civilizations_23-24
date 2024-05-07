@@ -1,5 +1,5 @@
 package interfaces;
 
-public interface MilitaryUnit extends Variable {
+public interface MilitaryUnit extends Variables {
 
 }

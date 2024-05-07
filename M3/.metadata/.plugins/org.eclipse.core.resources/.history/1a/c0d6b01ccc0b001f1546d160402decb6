@@ -1,0 +1,11 @@
+package classes.buildings;
+
+import classes.*;
+
+public class Smithy extends Building {
+	
+	public void createBuilding() {
+		dc_classes.new_smithy();
+	}
+
+}
