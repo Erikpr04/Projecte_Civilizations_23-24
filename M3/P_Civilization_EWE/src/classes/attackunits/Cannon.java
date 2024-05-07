@@ -27,7 +27,10 @@ public class Cannon extends AttackUnit{
 	}
 
 	public void takeDamage(int receivedDamage) {
+		//Se resta el daño a la armadura
 		setArmor(getArmor() - receivedDamage);
+		
+		//Si al restar, la armadura es negativa, se cambia a 0
         if (getArmor() < 0) {
             setArmor(0);
         }

@@ -127,22 +127,25 @@ public class Civilization {
 	//METODOS PARA CREAR UNIDADES
 	
 	public void new_Swordsman(int i) throws ResourceException {
+		//Calculamos la armadura total y el ataque total
 		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*1000/100);
 		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*1000/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
-			
+			//Comprobamos que tenga los recursos
 			if (getFood() >= Variables.FOOD_COST_SWORDSMAN ||getWood() >= Variables.WOOD_COST_SWORDSMAN || getIron() >= Variables.IRON_COST_SWORDSMAN) {
+				//Si los tiene, lo añadimos al ArrayList
 				army.get(0).add(new Swordsman(total_armor,total_attack));
 
 			}
 			else {
+				//Si no los tiene, creamos excepcion de Resources
 				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Swordsman");
 			}
 			
-			
+			//Y asi con las demás unidades
 		}
 	}
 	
@@ -273,12 +276,14 @@ public class Civilization {
 	
 	
 	public void new_Magician(int i) throws ResourceException, BuildingException {
+		//Para el Mago su armadura es 0
 		int total_armor = 0;
 		int total_attack = Variables.BASE_DAMAGE_MAGICIAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_MAGICIAN_BY_TECHNOLOGY)*1000/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
+			//Y hay que comprobar que tengas almenos 1 Magic Tower 
 			if (getMagicTower() >= 1) {
 				if (getFood() >= Variables.FOOD_COST_MAGICIAN ||getWood() >= Variables.WOOD_COST_MAGICIAN || getIron() >= Variables.IRON_COST_MAGICIAN || getMana() >= Variables.MANA_COST_MAGICIAN) {
 					army.get(7).add(new Magician(total_armor,total_attack));
@@ -289,6 +294,7 @@ public class Civilization {
 				}
 			} 
 			else {
+				//Si no la tienes, se genera excepcion de Building
 				throw new BuildingException("Not enough Magic Towers to create unit");
 			}
 			
@@ -297,12 +303,14 @@ public class Civilization {
 	
 	
 	public void new_Priest(int i) throws ResourceException, BuildingException {
+		//Para el Sacerdote la armadura y el ataque son 0
 		int total_armor = 0;
 		int total_attack = 0;
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
+			//Y hay que comprobar que tengas almenos 1 iglesia
 			if (getChurch() >= 1) {
 				if (getFood() >= Variables.FOOD_COST_PRIEST ||getWood() >= Variables.WOOD_COST_PRIEST || getIron() >= Variables.IRON_COST_PRIEST || getMana() >= Variables.MANA_COST_PRIEST) {
 					army.get(8).add(new Priest(total_armor,total_attack));
@@ -313,6 +321,7 @@ public class Civilization {
 				}
 			}
 			else {
+				//Y si no la tienes, se genera excepcion de Building
 				throw new BuildingException("Not enough Churchs to create unit");
 			}
 			
@@ -324,13 +333,16 @@ public class Civilization {
 	
 	
 	public void new_Church() throws ResourceException {
+		//Se comprueba que tengas los recursos para crear el building
 		if (getFood() >= Variables.FOOD_COST_CHURCH || getWood() >= Variables.WOOD_COST_CHURCH || getIron() >= Variables.IRON_COST_CHURCH || getMana() >= Variables.MANA_COST_CHURCH) {
+			//Si puedes crearla, se añade 1 al contador de iglesias
 			church += 1;
 		}
 		else {
+			//Si no tienes los recursos, se genera excepcion de Resource
 			throw new ResourceException("Not enough resources to create building");
 		}
-	}
+	} //Y igual para las demás
 	
 	
 	public void new_MagicTower() throws ResourceException {
@@ -375,13 +387,16 @@ public class Civilization {
 	//METODOS PARA MEJORAR TECNOLOGIA
 	
 	public void upgradeTechnologyDefense() throws ResourceException {
+		//Se comprueba que tengas los recursos para mejorar la tecnologia
 		if (getWood() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_WOOD_COST * technologyDefense)  || getIron() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST * technologyDefense)) {
+			//Si tienes los recursos, se añade 1 al nivel de defensa
 			technologyDefense += 1;
 		}
 		else {
+			//Si no tienes los recursos, se genera excepcion de Resource
 			throw new ResourceException("Not enough resources to upgrade defense technology");
 		}
-	}
+	} //Y igual para la tecnologia de ataque
 	
 	
 	public void upgradeTechnologyAttack() throws ResourceException {
