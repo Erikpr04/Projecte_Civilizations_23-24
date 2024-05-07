@@ -1,0 +1,15 @@
+package classes;
+
+public class dc_classes {
+	
+	Civilization civilization = new Civilization();
+
+	
+	
+	public void sum_clases() {
+		civilization.setSmithy(civilization.getSmithy()+1);
+
+	};
+	
+
+}

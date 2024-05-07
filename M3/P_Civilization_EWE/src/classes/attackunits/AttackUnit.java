@@ -8,4 +8,18 @@ public abstract class AttackUnit {
 	private int baseDamage;
 	private int experience;
 	private boolean sanctified;
+	
+	
+	 
+	//CONSTRUCTOR 1
+	
+	public AttackUnit(int armor, int baseDamage) {
+		super();
+		this.armor = armor;
+		this.baseDamage = baseDamage;
+	}
+	
+	
+	
+	
 }
