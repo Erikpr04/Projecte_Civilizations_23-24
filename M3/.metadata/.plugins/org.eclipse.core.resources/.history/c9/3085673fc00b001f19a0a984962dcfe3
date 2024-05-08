@@ -1,0 +1,124 @@
+package gui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Mainscreen extends JPanel {
+    private static final int PANEL_SIZE = 50; // Tamaño de cada panel
+    private static final int INIT_ZOOM = 50; // Zoom inicial
+    private int zoomLevel = INIT_ZOOM; // Nivel de zoom actual
+    private int rows, cols; // Número de filas y columnas de paneles
+    private Color panelColor = Color.GREEN; // Color de los paneles
+    private Color borderColor = Color.GREEN; // Color del borde
+    private Image customizableImage; // Imagen personalizable
+    private int offsetX = 0; // Desplazamiento en el eje X
+    private int offsetY = 0; // Desplazamiento en el eje Y
+    private int lastMouseX; // Última posición X del ratón
+    private int lastMouseY; // Última posición Y del ratón
+    
+    public Mainscreen(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        
+        setPreferredSize(new Dimension(cols * PANEL_SIZE, rows * PANEL_SIZE));
+        
+        // Carga la imagen personalizable (puedes personalizar esto según tus necesidades)
+        customizableImage = new ImageIcon("path/to/your/image.png").getImage(); // Cambia "path/to/your/image.png" a la ruta de tu imagen
+        
+        addMouseWheelListener(new MouseAdapter() {
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int notches = e.getWheelRotation();
+                if (notches < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            }
+        });
+        
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    // Captura la posición inicial del ratón al presionar el botón derecho
+                    lastMouseX = e.getX();
+                    lastMouseY = e.getY();
+                }
+            }
+        });
+        
+        addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    // Calcula el desplazamiento del ratón y ajusta la posición de la vista
+                    offsetX += e.getX() - lastMouseX;
+                    offsetY += e.getY() - lastMouseY;
+                    lastMouseX = e.getX();
+                    lastMouseY = e.getY();
+                    repaint();
+                }
+            }
+        });
+    }
+    
+    private void zoomIn() {
+        zoomLevel += 10; // Incrementar el nivel de zoom
+        repaint(); // Volver a dibujar el panel
+    }
+    
+    private void zoomOut() {
+        if (zoomLevel > 10) { // Evitar zoom negativo
+            zoomLevel -= 10; // Decrementar el nivel de zoom
+            repaint(); // Volver a dibujar el panel
+        }
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        
+        // Aplicar zoom y desplazamiento
+        g2d.scale((double) zoomLevel / 100, (double) zoomLevel / 100);
+        g2d.translate(offsetX, offsetY);
+        
+        // Dibujar paneles isométricos
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int x = j * PANEL_SIZE * 3 / 4;
+                int y = i * PANEL_SIZE * 3 / 4;
+                
+                // Dibujar imagen personalizable en la casilla determinada
+                if (i == 2 && j == 3) { // Cambia estas coordenadas según tu necesidad
+                    g2d.drawImage(customizableImage, x, y, PANEL_SIZE, PANEL_SIZE, this);
+                } else {
+                    // Dibujar panel
+                    g2d.setColor(panelColor);
+                    g2d.fillRect(x, y, PANEL_SIZE, PANEL_SIZE);
+                    
+                    // Dibujar borde
+                    g2d.setColor(borderColor);
+                    g2d.drawRect(x, y, PANEL_SIZE, PANEL_SIZE);
+                }
+            }
+        }
+        
+        g2d.dispose();
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Isometric View Panel");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().setLayout(new BorderLayout());
+            
+            IsometricViewPanel isometricViewPanel = new IsometricViewPanel(10, 10); // Cambia 10, 10 a tus filas y columnas deseadas
+            frame.add(new JScrollPane(isometricViewPanel), BorderLayout.CENTER);
+            
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+    }
+}
+
