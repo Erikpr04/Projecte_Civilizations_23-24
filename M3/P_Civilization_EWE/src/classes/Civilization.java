@@ -111,6 +111,11 @@ public class Civilization {
 	
 	
 	
+	
+	
+	
+	
+	
 	//METODOS
 	
 	
@@ -134,6 +139,8 @@ public class Civilization {
 			
 			
 		}
+		
+		
 	}
 	
 	
