@@ -16,10 +16,8 @@ public class Main {
 	public static void main(String[] args) {
 		Main m = new Main();
 		ArrayList<ArrayList> enemigos = m.createEnemyArmy();
-		System.out.println(enemigos);
 		
-		Swordsman ey = (Swordsman) enemigos.get(0).get(0); 
-		System.out.println(ey.attack());
+		m.viewThread(enemigos);
 		
 
 	}
@@ -100,6 +98,14 @@ public class Main {
 		
 		countFleet += 1;
 		return enemy;
+	}
+	
+	
+	public void viewThread(ArrayList<ArrayList> enemigos) {
+		System.out.println("Swordsman: " + enemigos.get(0).size());
+		System.out.println("Spearman: " + enemigos.get(1).size());
+		System.out.println("Crossbow: " + enemigos.get(2).size());
+		System.out.println("Cannon: " + enemigos.get(3).size());
 	}
 
 }
