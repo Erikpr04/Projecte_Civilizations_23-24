@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import interfaces.MilitaryUnit;
 
 public class Battle {
-	private ArrayList<MilitaryUnit> civilizationArmy;
-	private ArrayList<MilitaryUnit> enemyArmy;
+	private ArrayList<ArrayList> civilizationArmy;
+	private ArrayList<ArrayList> enemyArmy;
 	private ArrayList<ArrayList> armies = new ArrayList(2); //ArrayList de 2 filas y 9 columnas
 	private String battleDevelopment;
 	private int[][] initialCostFleet; //Array de 2 filas 
@@ -23,16 +23,16 @@ public class Battle {
 	
 	//GETTERS Y SETTERS
 	
-	public ArrayList<MilitaryUnit> getCivilizationArmy() {
+	public ArrayList<ArrayList> getCivilizationArmy() {
 		return civilizationArmy;
 	}
-	public void setCivilizationArmy(ArrayList<MilitaryUnit> civilizationArmy) {
+	public void setCivilizationArmy(ArrayList<ArrayList> civilizationArmy) {
 		this.civilizationArmy = civilizationArmy;
 	}
-	public ArrayList<MilitaryUnit> getEnemyArmy() {
+	public ArrayList<ArrayList> getEnemyArmy() {
 		return enemyArmy;
 	}
-	public void setEnemyArmy(ArrayList<MilitaryUnit> enemyArmy) {
+	public void setEnemyArmy(ArrayList<ArrayList> enemyArmy) {
 		this.enemyArmy = enemyArmy;
 	}
 	public ArrayList<ArrayList> getArmies() {
@@ -165,6 +165,12 @@ public class Battle {
 	
 	public void resetArmyArmor() {
 		//Resetear armadura del ejercito
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < getCivilizationArmy().get(i).size(); j++) {
+				((MilitaryUnit) getCivilizationArmy().get(i).get(j)).resetArmor();
+			}
+		}
 		
 	}
 }
