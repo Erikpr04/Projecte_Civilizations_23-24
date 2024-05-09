@@ -1,5 +1,7 @@
 package classes.attackunits;
 
+import interfaces.Variables;
+
 public class Cannon extends AttackUnit{
 	
 	
@@ -23,7 +25,16 @@ public class Cannon extends AttackUnit{
 	//METODOS DE MILITARY UNIT
 	
 	public int attack() {
-		return getBaseDamage();
+		int damage = 0;
+		
+		if (isSanctified()) {
+			damage = getBaseDamage() + (getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED /100);
+			
+		} else {
+			damage = getBaseDamage();
+		}
+		
+		return damage;
 	}
 
 	public void takeDamage(int receivedDamage) {
@@ -37,7 +48,17 @@ public class Cannon extends AttackUnit{
 	}
 
 	public int getActualArmor() {
-		return getArmor();
+		int armadura = 0;
+		
+		if (isSanctified()) {
+			armadura = getArmor() + ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
+		
+		} else {
+			armadura = getArmor();
+		}
+		
+		
+		return armadura;
 	}
 
 	public int getFoodCost() {

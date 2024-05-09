@@ -4,20 +4,43 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import classes.Civilization;
+import classes.attackunits.AttackUnit;
 import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
 import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
+import exceptions.ResourceException;
+import interfaces.MilitaryUnit;
 import interfaces.Variables;
 
 public class Main {
 	private int countFleet = 0;
 
 	public static void main(String[] args) {
-		Main m = new Main();
-		ArrayList<ArrayList> enemigos = m.createEnemyArmy();
 		
-		m.viewThread(enemigos);
+		Civilization cv = new Civilization();
+		
+		cv.setWood(1000);
+		cv.setFood(1000);
+		cv.setIron(1000);
+		
+		try {
+			cv.new_Swordsman(1);
+		} catch (ResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println(cv.getArmy());
+		
+		AttackUnit swordman = (AttackUnit) cv.getArmy().get(0).get(0);
+		
+		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
+		
+		cv.sanctifyUnits();
+		
+		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
 		
 
 	}
@@ -102,10 +125,11 @@ public class Main {
 	
 	
 	public void viewThread(ArrayList<ArrayList> enemigos) {
-		System.out.println("Swordsman: " + enemigos.get(0).size());
-		System.out.println("Spearman: " + enemigos.get(1).size());
-		System.out.println("Crossbow: " + enemigos.get(2).size());
-		System.out.println("Cannon: " + enemigos.get(3).size());
+		System.out.println("NEW threat COMMING\n");
+		System.out.printf("%-15s %d\n", "Swordsman", enemigos.get(0).size());
+        System.out.printf("%-15s %d\n", "Spearman", enemigos.get(1).size());
+        System.out.printf("%-15s %d\n", "Crossbow", enemigos.get(2).size());
+        System.out.printf("%-15s %d\n", "Cannon", enemigos.get(3).size());
 	}
 
 }
