@@ -358,15 +358,15 @@ public class Battle {
 			if(! army.get(i).isEmpty()) {
 				if (army.size() == 9) { //army si es Civilization
 					unitReferenced = (MilitaryUnit) civilizationArmy.get(i).get(0);
-					foodCost += unitReferenced.getFoodCost() * civilizationDeaths[i];
-					woodCost += unitReferenced.getWoodCost() * civilizationDeaths[i];
-					ironCost += unitReferenced.getIronCost() * civilizationDeaths[i];
+					foodCost += (int) (unitReferenced.getFoodCost() * civilizationDeaths[i]);
+					woodCost += (int) (unitReferenced.getWoodCost() * civilizationDeaths[i]);
+					ironCost += (int) (unitReferenced.getIronCost() * civilizationDeaths[i]);
 					
 				}else if(army.size() == 4) { //army si es enemy
 					unitReferenced = (MilitaryUnit) enemyArmy.get(i).get(0);
-					foodCost += unitReferenced.getFoodCost() * enemyDeaths[i];
-					woodCost += unitReferenced.getWoodCost() * enemyDeaths[i];
-					ironCost += unitReferenced.getIronCost() * enemyDeaths[i];
+					foodCost += (int) (unitReferenced.getFoodCost() * enemyDeaths[i]);
+					woodCost += (int) (unitReferenced.getWoodCost() * enemyDeaths[i]);
+					ironCost += (int) (unitReferenced.getIronCost() * enemyDeaths[i]);
 				}
 			}	
 		}
@@ -433,7 +433,7 @@ public class Battle {
 		while (myTurn && !endBattle) {
 			//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
 			endBattle = remainderPercentageFleet();
-			setBattleDevelopment(getBattleDevelopment()+ "\n****************** Enemy Turn ******************");
+			setBattleDevelopment(getBattleDevelopment()+ "\n****************** Civilization Turn ******************");
 			int attackGroup = getCivilizationGroupAttacker();
 			int defenseGroup = getGroupDefender(enemyArmy);
 			int randomUnit;
@@ -490,8 +490,8 @@ public class Battle {
 					int wasteProbability = waste.nextInt(101);
 					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
 					if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
-						wood_waste_Civilization += unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100);
-						iron_waste_Civilization += unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100);
+						wood_waste_Civilization += (int) (unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100));
+						iron_waste_Civilization += (int) (unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100));
 					}
 					//Elimina la unidad con armor 0 (muere)
 					enemyArmy.get(defenseGroup).remove(randomUnit);
@@ -578,8 +578,8 @@ public class Battle {
 					int wasteProbability = waste.nextInt(101);
 					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
 					if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
-						wood_waste_Enemy += unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100);
-						iron_waste_Enemy += unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100);
+						wood_waste_Enemy += (int) (unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100));
+						iron_waste_Enemy += (int) (unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100));
 					}
 					//Elimina la unidad con armor 0 (muere)
 					myArmy.get(defenseGroup).remove(randomUnit);
