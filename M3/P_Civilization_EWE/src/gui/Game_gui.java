@@ -2,13 +2,21 @@ package gui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import interfaces.Variables;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+
+import gui.dc_gui;
 
 public class Game_gui extends JPanel {
     private static final int PANEL_SIZE = 50;
@@ -25,11 +33,22 @@ public class Game_gui extends JPanel {
     private int mouseX;
     private int mouseY;
     private boolean isRightClicked;
-    private int food, wood, iron, mana;
+    private int food;
+    private int wood;
+    private int iron;
+    private int mana;
+
     private ImageIcon resources_img,woodicon,ironicon,manaicon,foodicon,panelbackgroundimage;
     private JPanel panelright_food,panelright_wood,panelright_iron,panelright_mana;
     private JLabel woodlabel,foodlabel,ironlabel,manalabel;
+    //private String[] farmCostInfo,smithyCostInfo,churchCostInfo,magicTowerCostInfo,carpentryCostInfo;
+    private dc_gui dcGui = new dc_gui(); // Instancia de dc_gui
 
+    
+    
+    
+    
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -43,13 +62,17 @@ public class Game_gui extends JPanel {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
+        
     }
+    
+    
+    
+    
 
-    public Game_gui(int rows, int cols) {
-        this.food = 1000;
-        this.wood = 1000;
-        this.iron = 1000;
-        this.mana = 1010;
+
+	public Game_gui(int rows, int cols) {
+        
+       
 
         this.rows = rows;
         this.cols = cols;
@@ -105,17 +128,23 @@ public class Game_gui extends JPanel {
         // Añadir paneles a subpanel
         panelright1.add(panelright_food);
         agregarImagenTexto(panelright_food, "./src/gui/brown.png",foodlabel,foodicon);
-        update_resources_quantity(1300,foodlabel);
+        update_resources_quantity(this.getFood(),foodlabel);
         
         
         panelright1.add(panelright_wood);
         agregarImagenTexto(panelright_wood, "./src/gui/brown.png",woodlabel,woodicon);
+        update_resources_quantity(this.getWood(),woodlabel);
+
 
         panelright1.add(panelright_iron);
         agregarImagenTexto(panelright_iron, "./src/gui/brown.png",ironlabel,ironicon);
+        update_resources_quantity(this.getIron(),ironlabel);
+
 
         panelright1.add(panelright_mana);
         agregarImagenTexto(panelright_mana, "./src/gui/brown.png",manalabel,manaicon);
+        update_resources_quantity(this.getMana(),manalabel);
+
 
 
         // Rest of the constructor code...
@@ -148,10 +177,69 @@ public class Game_gui extends JPanel {
         panelright2.setPreferredSize(new Dimension(425, 700));
         panelup.setPreferredSize(new Dimension(1400, 20));
         
+        
+        
+        //Boton para ver logs
+        
+     // En el constructor de Game_gui, después de crear panelup
+        JButton openButton = new JButton("Open Window");
+        openButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame popupFrame = new JFrame("Popup Window");
+                popupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                // Crear un JTextArea y colocarlo en un JScrollPane
+                JTextArea textArea = new JTextArea(10, 30);
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+                // Agregar texto al JTextArea
+                textArea.setText("Texto en la ventana emergente.");
+
+                // Crear un JPanel para contener los componentes
+                JPanel panelContainer = new JPanel();
+                panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.Y_AXIS));
+
+                // Cargar la imagen battleicon.png
+                ImageIcon battleIcon = new ImageIcon("./src/gui/battleicon.png");
+                Image scaledImage = battleIcon.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                JLabel iconLabel = new JLabel(scaledIcon);
+                iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                
+                // Agregar la imagen al JPanel
+                panelContainer.add(iconLabel);
+
+                // Agregar el JScrollPane al JPanel
+                panelContainer.add(scrollPane);
+
+                // Agregar el JPanel al JFrame
+                popupFrame.getContentPane().add(panelContainer, BorderLayout.CENTER);
+
+                // Ajustar el tamaño de la ventana y hacerla visible
+                popupFrame.pack();
+                popupFrame.setLocationRelativeTo(null);
+                popupFrame.setVisible(true);
+            }
+        });
+        panelup.add(openButton);
+
+
+     
+
+        
+        
+        
+        
+        
+        
+        
+        
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                subPanels[i][j] = new MiPanelito();
+                subPanels[i][j] = new MiPanelito(dcGui);
                 mainPanel2.add(subPanels[i][j]);
             }
         }
@@ -224,11 +312,48 @@ public class Game_gui extends JPanel {
         }
     });
 }
+	
+    public int getFood() {
+        return dcGui.getFood();
+    }
+
+    public void setFood(int food) {
+        dcGui.setFood(food);
+    }
+
+    public int getWood() {
+        return dcGui.getWood();
+    }
+
+    public void setWood(int wood) {
+        dcGui.setWood(wood);
+    }
+
+    public int getIron() {
+        return dcGui.getIron();
+    }
+
+    public void setIron(int iron) {
+        dcGui.setIron(iron);
+    }
+
+    public int getMana() {
+        return dcGui.getMana();
+    }
+
+    public void setMana(int mana) {
+        dcGui.setMana(mana);
+    }
     
     
     
     
-    //metodos
+    public Game_gui() {
+
+
+	}
+
+	//metodos
     
     //este metodo actualiza el label que queramos con un numero
     
@@ -346,7 +471,7 @@ public class Game_gui extends JPanel {
     }
 
 
-}
+
 
 class MiPanelito extends JPanel {
     private int lastMouseX;
@@ -355,33 +480,145 @@ class MiPanelito extends JPanel {
     private Color borderColor = Color.black;
     private ImageIcon[] buildingImages = new ImageIcon[5];
     private ImageIcon currentImage,main_texture;
+    private dc_gui dcGui;
 
-    public MiPanelito() {
+
+    
+    
+    
+    
+
+    public MiPanelito(dc_gui dcGui) {
+        this.dcGui = dcGui;
+
     	main_texture = new ImageIcon("./src/gui/main_grass_texture.jpg");
     	this.setCurrentImage(main_texture);
         //setBorder(BorderFactory.createLineBorder(borderColor));
 
-        buildingImages[0] = new ImageIcon("path/to/farm.png");
-        buildingImages[1] = new ImageIcon("path/to/smithy.png");
-        buildingImages[2] = new ImageIcon("./src/gui/church.png");
-        buildingImages[3] = new ImageIcon("path/to/magic_tower.png");
-        buildingImages[4] = new ImageIcon("path/to/carpentry.png");
+        getBuildingImages()[0] = new ImageIcon("./src/gui/farm.png");
+        getBuildingImages()[1] = new ImageIcon("./src/gui/smithy.png");
+        getBuildingImages()[2] = new ImageIcon("./src/gui/church.png");
+        getBuildingImages()[3] = new ImageIcon("./src/gui/magic_tower.png");
+        getBuildingImages()[4] = new ImageIcon("./src/gui/carpentry.png");
+
 
         addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     lastMouseX = e.getX();
                     lastMouseY = e.getY();
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
-                    String[] options = {"Farm", "Smithy", "Church", "Magic Tower", "Carpentry"};
-                    int choice = JOptionPane.showOptionDialog(null, "Select a building to create:", "Create Building",
-                            JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                    try {
+                        String[] options = {"Farm", "Smithy", "Church", "Magic Tower", "Carpentry"};
+                        JButton[] buttons = new JButton[options.length];
+                        for (int i = 0; i < options.length; i++) {
+                            buttons[i] = new JButton(options[i]);
+                            buttons[i].addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseEntered(MouseEvent e) {
+                                    // Obtener el texto del botón sobre el que pasó el ratón
+                                    String buttonText = ((JButton) e.getSource()).getText();
+                                    // Obtener información de costo y mostrar el menú emergente
+                                    String costInfo = getSpecificCostInfo(buttonText);
+                                    JPopupMenu popupMenu = new JPopupMenu();
+                                    popupMenu.add(new JLabel(costInfo));
+                                    popupMenu.show((Component) e.getSource(), 0, ((Component) e.getSource()).getHeight());
+                                }
 
-                    setCurrentImage(buildingImages[choice]);
-                    repaint();
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    int woodCost = 0;
+                                    int ironCost = 0;
+                                    int foodCost = 0;
+                                    // Obtener el índice del botón clickeado
+                                    int index = Arrays.asList(buttons).indexOf(e.getSource());
+                                 // Asignar los costos según la opción seleccionada
+                                    switch (index) {
+                                        case 0: // Farm
+                                            woodCost = Variables.WOOD_COST_FARM;
+                                            ironCost = Variables.IRON_COST_FARM;
+                                            foodCost = Variables.FOOD_COST_FARM;
+                                            break;
+                                        case 1: // Smithy
+                                            woodCost = Variables.WOOD_COST_SMITHY;
+                                            ironCost = Variables.IRON_COST_SMITHY;
+                                            foodCost = Variables.FOOD_COST_SMITHY;
+                                            break;
+                                        case 2: // Church
+                                            woodCost = Variables.WOOD_COST_CHURCH;
+                                            ironCost = Variables.IRON_COST_CHURCH;
+                                            foodCost = Variables.FOOD_COST_CHURCH;
+                                            break;
+                                        case 3: // Magic Tower
+                                            woodCost = Variables.WOOD_COST_MAGICTOWER;
+                                            ironCost = Variables.IRON_COST_MAGICTOWER;
+                                            foodCost = Variables.FOOD_COST_MAGICTOWER;
+                                            break;
+                                        case 4: // Carpentry
+                                            woodCost = Variables.WOOD_COST_CARPENTRY;
+                                            ironCost = Variables.IRON_COST_CARPENTRY;
+                                            foodCost = Variables.FOOD_COST_CARPENTRY;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    // Verificar si el jugador tiene los recursos necesarios
+                                    if (getWood() >= woodCost && getIron() >= ironCost && getFood() >= foodCost) {
+                                        // Descontar los recursos necesarios
+                                        setWood(getWood() - woodCost);
+                                        setIron(getIron() - ironCost);
+                                        setFood(getFood() - foodCost);
+                                        update_resources_quantity(getWood(),woodlabel);
+                                        update_resources_quantity(getIron(),ironlabel);
+                                        update_resources_quantity(getMana(),manalabel);
+                                        update_resources_quantity(getFood(),foodlabel);
+
+
+                                        // Cambiar la imagen del panel al edificio correspondiente
+                                        setCurrentImage(buildingImages[index]);
+                                        repaint();
+                                        
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "¡No tienes suficientes recursos para construir este edificio!", "Recursos insuficientes", JOptionPane.ERROR_MESSAGE);
+                                    }
+
+                                    // Cerrar el JOptionPane
+                                    Window window = SwingUtilities.getWindowAncestor((Component) e.getSource());
+                                    window.dispose();
+                                }
+                            });
+                        }
+                        
+                        // Mostrar el diálogo de opción con los botones personalizados
+                        int choice = JOptionPane.showOptionDialog(null, "Select a building to create:", "Create Building",
+                                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, buttons[0]);
+
+
+                    } catch (Exception x) {
+                        x.printStackTrace();
+                        System.out.println("error");
+                    }
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (e.getSource() instanceof JButton) {
+                    JButton button = (JButton) e.getSource();
+                    String buttonText = button.getText();
+                    String costInfo = getSpecificCostInfo(buttonText); // Obtener la información de costo personalizado
+                    JPopupMenu popupMenu = new JPopupMenu();
+                    popupMenu.add(new JLabel(costInfo));
+                    popupMenu.show(button, button.getWidth(), 0);
                 }
             }
         });
+
+
+
+
+
     }
 
     public MiPanelito(BorderLayout borderLayout) {
@@ -405,4 +642,34 @@ class MiPanelito extends JPanel {
     public void setCurrentImage(ImageIcon image) {
         this.currentImage = image;
     }
+
+	public ImageIcon[] getBuildingImages() {
+		return buildingImages;
+	}
+
+	public void setBuildingImages(ImageIcon[] buildingImages) {
+		this.buildingImages = buildingImages;
+	}
+	
+	// Método para obtener la información de costo del edificio
+	private String getSpecificCostInfo(String buildingName) {
+	    // Aquí puedes definir la información de costo específica para cada botón
+	    switch (buildingName) {
+        case "Farm":
+            return "Farm Cost Info: Wood - " + Variables.WOOD_COST_FARM + ", Iron - " + Variables.IRON_COST_FARM + ", Mana - 0, Food - " + Variables.FOOD_COST_FARM;
+        case "Smithy":
+            return "Smithy Cost Info: Wood - " + Variables.WOOD_COST_SMITHY + ", Iron - " + Variables.IRON_COST_SMITHY + ", Mana - 0, Food - " + Variables.FOOD_COST_SMITHY;
+        case "Church":
+            return "Church Cost Info: Wood - " + Variables.WOOD_COST_CHURCH + ", Iron - " + Variables.IRON_COST_CHURCH + ", Mana - 0, Food - " + Variables.FOOD_COST_CHURCH;
+        case "Magic Tower":
+            return "Magic Tower Cost Info: Wood - " + Variables.WOOD_COST_MAGICTOWER + ", Iron - " + Variables.IRON_COST_MAGICTOWER + ", Mana - 0, Food - " + Variables.FOOD_COST_MAGICTOWER;
+        case "Carpentry":
+            return "Carpentry Cost Info: Wood - " + Variables.WOOD_COST_CARPENTRY + ", Iron - " + Variables.IRON_COST_CARPENTRY + ", Mana - 0, Food - " + Variables.FOOD_COST_CARPENTRY;
+        default:
+            return "";
+    }
+	}
+
 }
+}
+
