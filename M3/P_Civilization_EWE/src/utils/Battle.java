@@ -253,17 +253,16 @@ public class Battle {
 			
 			// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
 			selectUnitPorbability = selectEnemyUnit.nextInt(1,totalUnits);
-			randomCount = actualNumberUnitsEnemy[0]; 
+			randomCount = 0; 
 
 			for (int i = 0; i < armyDefend.size(); i++ ) {
-				if (actualNumberUnitsEnemy[i] > 0) {
-					
-					randomCount += actualNumberUnitsEnemy[i];
-					if(randomCount <= selectUnitPorbability) {
-						defenseGroup = i;
-						break;	
-					}
+			
+				randomCount += actualNumberUnitsEnemy[i];
+				if(randomCount <= selectUnitPorbability) {
+					defenseGroup = i;
+					break;	
 				}
+				
 			}
 		}
 		else { //Civ
@@ -274,35 +273,72 @@ public class Battle {
 			
 			// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
 			selectUnitPorbability = selectEnemyUnit.nextInt(1,totalUnits);
-			randomCount = actualNumberUnitsCivilization[0]; 
+			randomCount = 0; 
 
 			for (int i = 0; i < armyDefend.size(); i++ ) {
-				if (actualNumberUnitsCivilization[i] > 0) {
-					
-					randomCount += actualNumberUnitsCivilization[i];
-					if(randomCount <= selectUnitPorbability) {
-						defenseGroup = i;
-						break;	
-					}
+				
+				randomCount += actualNumberUnitsCivilization[i];
+				if(randomCount <= selectUnitPorbability) {
+					defenseGroup = i;
+					break;	
 				}
+				
 			}
 		}
 		return defenseGroup;
 	}
 	
 	private int getCivilizationGroupAttacker() {
-		//Escoger el grupo atacante de la civilizacion
-		Random random = new Random();
-	    int attackerGroup = random.nextInt(9);
-	    
+		//Escoger el grupo atacante de la civilizacion (mismo algoritmo que el anterior)
+		int randomCount,selectUnitPorbability;
+		int totalUnits = 0;
+		int attackerGroup = 0;
+		Random selectUnit = new Random();
+				
+		//Numero total de tropas :
+		for(int i = 0; i < 9; i++) {
+			totalUnits += actualNumberUnitsCivilization[i];
+		}
+		
+		// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
+		selectUnitPorbability = selectUnit.nextInt(1,totalUnits);
+		randomCount = 0; 
+
+		for (int i = 0; i < 9; i++ ) {		
+			randomCount += actualNumberUnitsCivilization[i];
+			if(randomCount <= selectUnitPorbability) {
+				attackerGroup = i;
+				break;	
+			}
+			
+		}
 		return attackerGroup;
 	}
 	
 	private int getEnemyGroupAttacker() {
 		//Escoger el grupo atacante del enemigo
-		Random random = new Random();
-	    int attackerGroup = random.nextInt(4);
-	    
+		int randomCount,selectUnitPorbability;
+		int totalUnits = 0;
+		int attackerGroup = 0;
+		Random selectUnit = new Random();
+				
+		//Numero total de tropas :
+		for(int i = 0; i < 9; i++) {
+			totalUnits += actualNumberUnitsEnemy[i];
+		}
+		
+		// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
+		selectUnitPorbability = selectUnit.nextInt(1,totalUnits);
+		randomCount = 0; 
+
+		for (int i = 0; i < 9; i++ ) {		
+			randomCount += actualNumberUnitsEnemy[i];
+			if(randomCount <= selectUnitPorbability) {
+				attackerGroup = i;
+				break;	
+			}
+			
+		}
 		return attackerGroup;
 
 	}
@@ -336,8 +372,7 @@ public class Battle {
 						foodCost += unit.getFoodCost();
 						woodCost += unit.getWoodCost();
 						ironCost += unit.getIronCost();
-					}
-						
+					}	
 				}
 		    }
 		}
@@ -616,17 +651,26 @@ public class Battle {
 		// El valor de Points (puntuacion de cada bando en la batalla) mas alto pierde
 		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
 			setBattleDevelopment(getBattleDevelopment()+ "\nCivilization WIN !!!");
+			
 			//Anadir recursos a la civilizacion
 			
 		} else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
 			setBattleDevelopment(getBattleDevelopment()+ "\nEnemy WIN !!!");
-			// ????
+			
 		} else {
 			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
 		}
 		
-
+		//GUARDAR DATOS EN LA BASE DE DATOS:
 		
+		//INSERT: 
+		//  - Battle stats: civilization_id, num battle, wood_adquired, iron_adquired
+		//		  Battle log: civilization_id, num_battle, num_line, log entry
+		
+		//		  battle_attackUnits_stats: civilization_id, num_battle, unit_type, initial, death
+		//		  battle_defenseUnits_stats: civilization_id, num_battle, unit_type, initial, death
+		//		  battle_specialUnits_stats: civilization_id, num_battle, unit_type, initial, death
+		//		  enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
 	}
 	
 }
