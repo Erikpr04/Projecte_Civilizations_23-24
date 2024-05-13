@@ -534,11 +534,9 @@ public class Battle {
 				if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
 					setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Civilization.");
 					myTurn = true;
-					System.out.println("Enemigos : \n" + enemyArmy);
 		
 					
 				}else {
-					System.out.println("Enemigos : \n" + enemyArmy);
 					//falta poner condicion turno extra
 					myTurn = false;
 				}
@@ -636,14 +634,11 @@ public class Battle {
 				if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
 					setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Enemy.");
 					myTurn = false;
-					System.out.println("Nosotros : \n" +civilizationArmy);
 					
 		
 					
 				}else {
 					myTurn = true;
-					System.out.println();
-					System.out.println("Nosotros : \n" +civilizationArmy);
 					
 				}
 			}

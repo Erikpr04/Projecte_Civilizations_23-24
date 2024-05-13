@@ -25,6 +25,8 @@ public class Main {
 		Battle b = new Battle();
 		Civilization cv = new Civilization();
 		
+		//BATALLAS:
+		
 //		cv.setWood(1000000000);
 //		cv.setFood(1000000000);
 //		cv.setIron(1000000000);
@@ -50,6 +52,15 @@ public class Main {
 //		
 //		
 //		b.mainBattle(cv.getArmy(), enemy);
+
+//		System.out.println("\n\n" + b.getBattleDevelopment());
+		
+		
+		
+		
+		
+		
+		//TIMER TASK:
 		cv.setWood(Variables.CIVILIZATION_WOOD_GENERATED);
 		cv.setFood(Variables.CIVILIZATION_FOOD_GENERATED);
 		cv.setIron(Variables.CIVILIZATION_IRON_GENERATED);
@@ -86,22 +97,6 @@ public class Main {
 		
 		timer.schedule(task, 1, 10000);
 		
-//		System.out.println("\n\n" + b.getBattleDevelopment());
-		
-//		System.out.println(cv.getArmy());
-//		
-//		if (!cv.getArmy().get(2).isEmpty()) {
-//			System.out.println("Hola");
-//		}
-//		
-//		MilitaryUnit swordman = (MilitaryUnit) cv.getArmy().get(0).get(0);
-//		
-//		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
-//		
-//		cv.sanctifyUnits();
-//		
-//		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
-//		
 
 	}
 	
