@@ -8,14 +8,12 @@ public class Cannon extends AttackUnit{
 	
 	//CONSTRUCTOR 1
 
-
 	public Cannon(int armor, int baseDamage) {
 		super(armor, baseDamage);
 	}
 	
 	
 	//CONSTRUCTOR 2
-	
 	
 	public Cannon() {
 		super(ARMOR_CANNON, BASE_DAMAGE_CANNON);

@@ -132,10 +132,6 @@ public class Civilization {
 	}
 	
 	
-	
-	//METODOS
-	
-	
 	//METODOS PARA CREAR UNIDADES
 	
 	public void new_Swordsman(int i) throws ResourceException {
@@ -444,7 +440,6 @@ public class Civilization {
 			throw new ResourceException("Not enough resources to create building");
 		}
 	}
-	
 	
 	//METODOS PARA MEJORAR TECNOLOGIA
 	
