@@ -20,21 +20,25 @@ public class Main {
 		
 		Civilization cv = new Civilization();
 		
-		cv.setWood(1000);
-		cv.setFood(1000);
-		cv.setIron(1000);
+		cv.setWood(100000);
+		cv.setFood(100000);
+		cv.setIron(100000);
 		
 		try {
 			cv.new_Swordsman(1);
+			cv.new_Crossbow(2);
 		} catch (ResourceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
 		System.out.println(cv.getArmy());
 		
-		AttackUnit swordman = (AttackUnit) cv.getArmy().get(0).get(0);
+		if (!cv.getArmy().get(2).isEmpty()) {
+			System.out.println("Hola");
+		}
+		
+		MilitaryUnit swordman = (MilitaryUnit) cv.getArmy().get(0).get(0);
 		
 		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
 		
