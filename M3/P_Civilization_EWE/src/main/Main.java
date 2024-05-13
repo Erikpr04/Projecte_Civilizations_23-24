@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import classes.Civilization;
 import classes.attackunits.AttackUnit;
@@ -12,40 +14,94 @@ import classes.attackunits.Swordsman;
 import exceptions.ResourceException;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
+import utils.Battle;
 
 public class Main {
 	private int countFleet = 0;
 
 	public static void main(String[] args) {
 		
+		Main m = new Main();
+		Battle b = new Battle();
 		Civilization cv = new Civilization();
 		
-		cv.setWood(100000);
-		cv.setFood(100000);
-		cv.setIron(100000);
+//		cv.setWood(1000000000);
+//		cv.setFood(1000000000);
+//		cv.setIron(1000000000);
+//		
+//		try {
+//			cv.new_Swordsman(2);
+//			cv.new_Spearman(0);
+////			cv.new_Crossbow(4);
+////			cv.new_Cannon(1);
+////			cv.new_Catapult(3);
+//			cv.new_ArrowTower(5);
+//			
+//			
+//		} catch (ResourceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		ArrayList<ArrayList> enemy = m.createEnemyArmy();
+//		
+//		m.viewThread(enemy);
+//		
+//		
+//		b.mainBattle(cv.getArmy(), enemy);
+		cv.setWood(Variables.CIVILIZATION_WOOD_GENERATED);
+		cv.setFood(Variables.CIVILIZATION_FOOD_GENERATED);
+		cv.setIron(Variables.CIVILIZATION_IRON_GENERATED);
 		
 		try {
-			cv.new_Swordsman(1);
-			cv.new_Crossbow(2);
+			cv.new_Carpentry();
+//			cv.new_Farm();
+//			cv.new_Smithy();
 		} catch (ResourceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println(cv.getArmy());
 		
-		if (!cv.getArmy().get(2).isEmpty()) {
-			System.out.println("Hola");
-		}
+		TimerTask task = new TimerTask() {
+
+			public void run() {
+				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+				
+				System.out.println("Madera: " + cv.getWood());
+				System.out.println("Comida: " + cv.getFood());
+				System.out.println("Hierro: " + cv.getIron());
+				System.out.println("Mana: " + cv.getMana());
+				System.out.println("*********************");
+				
+			}
+			
+		};
 		
-		MilitaryUnit swordman = (MilitaryUnit) cv.getArmy().get(0).get(0);
+		Timer timer = new Timer();
 		
-		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
+		timer.schedule(task, 1, 10000);
 		
-		cv.sanctifyUnits();
+//		System.out.println("\n\n" + b.getBattleDevelopment());
 		
-		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
-		
+//		System.out.println(cv.getArmy());
+//		
+//		if (!cv.getArmy().get(2).isEmpty()) {
+//			System.out.println("Hola");
+//		}
+//		
+//		MilitaryUnit swordman = (MilitaryUnit) cv.getArmy().get(0).get(0);
+//		
+//		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
+//		
+//		cv.sanctifyUnits();
+//		
+//		System.out.println("Attack: " + swordman.attack() + ", Armor: " + swordman.getActualArmor());
+//		
 
 	}
 	

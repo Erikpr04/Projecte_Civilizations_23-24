@@ -14,7 +14,7 @@ public class Battle {
 
 	private ArrayList<ArrayList> armies = new ArrayList(2); //ArrayList de 2 filas y 9 columnas
 	
-	private String battleDevelopment;
+	private String battleDevelopment = "";
 	private int[][] initialCostFleet; //Array de 2 filas 
 	private int initialNumberUnitsCivilization;
 	private int initialNumberUnitsEnemy;
@@ -202,7 +202,7 @@ public class Battle {
 	//recuento de las tropas de cada bando (usamos initialArmies para calcular el recuento total de tropas)
 	private boolean remainderPercentageFleet() {
 		
-		boolean stop = false;
+		boolean stop = true;
 		
 		int initialCivilizationUnits = 0;
 		for (int i = 0; i<initialArmies[0].length; i++) {
@@ -230,88 +230,69 @@ public class Battle {
 		
 		//COMPROBAR SI SE CUMPLE que el recuento total sea inferior a 20%
 		if (counterUnitsCivilization <= percentageCivilization || counterUnitsEnemy <= percentageEnemy) {
-			stop = true;
+			stop = false;
 		}		
 		
 		return stop;
 	}
 	
+	
 	private int getGroupDefender(ArrayList<ArrayList> armyDefend) {
-		int randomCount,selectUnitPorbability;
-		int totalUnits = 0;
-		int defenseGroup = 0;
-		Random selectEnemyUnit = new Random();
-		
-		//Creamos un if para verificar is es Civ o Enemy seun su tamano;
-		
-		if (armyDefend.size() == 4) { //enemy
-			
-			//Numero total de tropas :
-			for(int i = 0; i < armyDefend.size(); i++) {
-				totalUnits += actualNumberUnitsEnemy[i];
-			}
-			
-			// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
-			selectUnitPorbability = selectEnemyUnit.nextInt(1,totalUnits);
-			randomCount = 0; 
-
-			for (int i = 0; i < armyDefend.size(); i++ ) {
-			
-				randomCount += actualNumberUnitsEnemy[i];
-				if(randomCount <= selectUnitPorbability) {
-					defenseGroup = i;
-					break;	
-				}
-				
-			}
+	    int totalUnits = 0;
+	    int defenseGroup = 0;
+	    Random selectEnemyUnit = new Random();
+	    int[] army;
+	    
+	    // Calcula la suma total de todas las unidades en el grupo
+	    for(int i = 0; i < armyDefend.size(); i++) {
+			totalUnits += armyDefend.get(i).size();
 		}
-		else { //Civ
-			//Numero total de tropas :
-			for(int i = 0; i < armyDefend.size(); i++) {
-				totalUnits += actualNumberUnitsCivilization[i];
-			}
-			
-			// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
-			selectUnitPorbability = selectEnemyUnit.nextInt(1,totalUnits);
-			randomCount = 0; 
+	    
+	    // Genera un número aleatorio entre 1 y la suma total
+	    int selectUnitProbability = selectEnemyUnit.nextInt(totalUnits) + 1;
+	    int randomCount = 0;
 
-			for (int i = 0; i < armyDefend.size(); i++ ) {
-				
-				randomCount += actualNumberUnitsCivilization[i];
-				if(randomCount <= selectUnitPorbability) {
-					defenseGroup = i;
-					break;	
-				}
-				
-			}
-		}
-		return defenseGroup;
+	    // Verifica el tamaño del array para determinar cómo manejar los datos
+	    if (armyDefend.size() == 4) { // Enemigo
+	    	army = getActualNumberUnitsEnemy();
+	        for (int i = 0; i < armyDefend.size(); i++) {
+                randomCount += army[i];
+                if (selectUnitProbability <= randomCount) {
+                    defenseGroup = i;
+                    return defenseGroup;  // Retorna inmediatamente al encontrar una categoría válida
+                }
+	            
+	        }
+	    } else if (armyDefend.size() == 9) { // Jugador
+	    	army = getActualNumberUnitsCivilization();
+	        for (int i = 0; i < armyDefend.size(); i++) {
+                randomCount += army[i];
+                if (selectUnitProbability <= randomCount) {
+                    defenseGroup = i;
+                    return defenseGroup;  // Retorna inmediatamente al encontrar una categoría válida
+                }
+	            
+	        }
+	    }
+	    
+	    return defenseGroup;  // Si no se encuentra una categoría válida, se retorna la primera
 	}
 	
 	private int getCivilizationGroupAttacker() {
 		//Escoger el grupo atacante de la civilizacion (mismo algoritmo que el anterior)
-		int randomCount,selectUnitPorbability;
-		int totalUnits = 0;
 		int attackerGroup = 0;
 		Random selectUnit = new Random();
-				
-		//Numero total de tropas :
-		for(int i = 0; i < 9; i++) {
-			totalUnits += actualNumberUnitsCivilization[i];
+		int randomNumber = selectUnit.nextInt(100) +1;
+		int attackChance = 0;
+		
+		for (int i = 0; i < 8; i++) {
+			attackChance += Variables.CHANCE_ATTACK_CIVILIZATION_UNITS[i];
+			if (randomNumber <= attackChance && !getCivilizationArmy().get(i).isEmpty()) {
+				attackerGroup = i;
+				break;
+			}
 		}
 		
-		// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
-		selectUnitPorbability = selectUnit.nextInt(1,totalUnits);
-		randomCount = 0; 
-
-		for (int i = 0; i < 9; i++ ) {		
-			randomCount += actualNumberUnitsCivilization[i];
-			if(randomCount <= selectUnitPorbability) {
-				attackerGroup = i;
-				break;	
-			}
-			
-		}
 		return attackerGroup;
 	}
 	
@@ -320,25 +301,17 @@ public class Battle {
 		int randomCount,selectUnitPorbability;
 		int totalUnits = 0;
 		int attackerGroup = 0;
-		Random selectUnit = new Random();
-				
-		//Numero total de tropas :
-		for(int i = 0; i < 9; i++) {
-			totalUnits += actualNumberUnitsEnemy[i];
+		Random selectUnit = new Random();		
+		int randomNumber = selectUnit.nextInt(100) + 1;
+		int attackChance = 0;
+		
+		for (int i = 0; i < 4; i++) {
+			attackChance += Variables.CHANCE_ATTACK_ENEMY_UNITS[i];
+			if (randomNumber <= attackChance && !getEnemyArmy().get(i).isEmpty()) {
+				attackerGroup = i;
+			}
 		}
 		
-		// For para seleccionar el grupo de unidades del enemigo de forma aleatoria aplicando el algoritomo
-		selectUnitPorbability = selectUnit.nextInt(1,totalUnits);
-		randomCount = 0; 
-
-		for (int i = 0; i < 9; i++ ) {		
-			randomCount += actualNumberUnitsEnemy[i];
-			if(randomCount <= selectUnitPorbability) {
-				attackerGroup = i;
-				break;	
-			}
-			
-		}
 		return attackerGroup;
 
 	}
@@ -393,23 +366,19 @@ public class Battle {
 	private int [] fleetResourceLooses(ArrayList<ArrayList> army) {
 		int[]fleetResourceLooses = new int[4];
 		int foodCost = 0 , woodCost = 0, ironCost = 0, totalPoints = 0;
-		MilitaryUnit unitReferenced;
 		
 		for (int i = 0; i < army.size() ; i++) {
-			if(! army.get(i).isEmpty()) {
 				if (army.size() == 9) { //army si es Civilization
-					unitReferenced = (MilitaryUnit) civilizationArmy.get(i).get(0);
-					foodCost += (int) (unitReferenced.getFoodCost() * civilizationDeaths[i]);
-					woodCost += (int) (unitReferenced.getWoodCost() * civilizationDeaths[i]);
-					ironCost += (int) (unitReferenced.getIronCost() * civilizationDeaths[i]);
+					foodCost += (int) (Variables.FOOD_COST_UNITS[i] * civilizationDeaths[i]);
+					woodCost += (int) (Variables.WOOD_COST_UNITS[i] * civilizationDeaths[i]);
+					ironCost += (int) (Variables.IRON_COST_UNITS[i] * civilizationDeaths[i]);
 					
 				}else if(army.size() == 4) { //army si es enemy
-					unitReferenced = (MilitaryUnit) enemyArmy.get(i).get(0);
-					foodCost += (int) (unitReferenced.getFoodCost() * enemyDeaths[i]);
-					woodCost += (int) (unitReferenced.getWoodCost() * enemyDeaths[i]);
-					ironCost += (int) (unitReferenced.getIronCost() * enemyDeaths[i]);
+					foodCost += (int) (Variables.FOOD_COST_UNITS[i] * enemyDeaths[i]);
+					woodCost += (int) (Variables.WOOD_COST_UNITS[i] * enemyDeaths[i]);
+					ironCost += (int) (Variables.IRON_COST_UNITS[i] * enemyDeaths[i]);
 				}
-			}	
+				
 		}
 		
 		totalPoints = ironCost + (5*woodCost) + (10*foodCost);
@@ -453,36 +422,49 @@ public class Battle {
 		//Seleccionamos el orden de ataque
 		
 		boolean myTurn = false;
-		boolean enemyTurn = false;
-		boolean endBattle = false;
+//		boolean enemyTurn = false;
+		boolean endBattle = true;
+		boolean turns = true;
 	
 		
 		Random comienzo =  new Random();
 		
-		if (comienzo.nextInt() == 0) {
+		if (comienzo.nextBoolean()) {
 			myTurn = true;
+//			enemyTurn = false;
 			
 		
 		}else {
-			enemyTurn = true;
+//			enemyTurn = true;
+			myTurn = false;
 		}
 		
 		Random  grupoAleatorio = new Random();
 		Random  chanceAttack = new Random();
 		
-		//Turno de Civilizacion
-		while (myTurn && !endBattle) {
-			//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
-			endBattle = remainderPercentageFleet();
-			setBattleDevelopment(getBattleDevelopment()+ "\n****************** Civilization Turn ******************");
-			int attackGroup = getCivilizationGroupAttacker();
-			int defenseGroup = getGroupDefender(enemyArmy);
-			int randomUnit;
-			AttackUnit unitAttacking;
-			DefenseUnit unitDefending;
+		while (endBattle) {
+			//Turno de Civilizacion
+			if (myTurn && endBattle) {
+				
+				
+				setBattleDevelopment(getBattleDevelopment()+ "\n****************** Civilization Turn ******************");
+				int attackGroup = getCivilizationGroupAttacker();
+				int defenseGroup = getGroupDefender(enemyArmy);
+				
+				while (myArmy.get(attackGroup).size() == 0) {
+					attackGroup = getCivilizationGroupAttacker();
+				}
+				
+				while (enemyArmy.get(defenseGroup).size() == 0) {
+					defenseGroup = getGroupDefender(enemyArmy);
+				}
+				
+				
+				int randomUnit;
+				MilitaryUnit unitAttacking;
+				MilitaryUnit unitDefending;
+				
 			
-			
-			if (chanceAttack.nextInt(100) <= Variables.CHANCE_ATTACK_CIVILIZATION_UNITS[attackGroup]){
 				setBattleDevelopment(getBattleDevelopment()+ "\nCivilization Unit: "+nameUnits[attackGroup]+" will attack...");
 				setBattleDevelopment(getBattleDevelopment()+ "\nEnemy Unit: "+nameUnits[defenseGroup]+" will defend...");
 				
@@ -490,28 +472,28 @@ public class Battle {
 				//Seleccionamos una unidad ATACANTE aleatoria y una unidad DEFENSORA aleatoria:
 				
 				//unidad atacante
-				Random randomUnitIndexAttack = new Random(myArmy.get(attackGroup).size()); 		
+				Random randomUnitIndexAttack = new Random(); 		
 				randomUnit = randomUnitIndexAttack.nextInt(myArmy.get(attackGroup).size());
 				
 				//aseguramos que el indice corresponde a una unidad valida y existente
 				while (myArmy.get(attackGroup).isEmpty()){
-					randomUnitIndexAttack = new Random(myArmy.get(attackGroup).size()); 		
+					randomUnitIndexAttack = new Random(); 		
 					randomUnit = randomUnitIndexAttack.nextInt(myArmy.get(attackGroup).size());
 				}
 				
-				unitAttacking = (AttackUnit) myArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
+				unitAttacking = (MilitaryUnit) myArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
 				
 				//unidad defensora
-				Random randomUnitIndexDefense = new Random(enemyArmy.get(defenseGroup).size()); 	
+				Random randomUnitIndexDefense = new Random(); 	
 				randomUnit = randomUnitIndexDefense.nextInt(enemyArmy.get(defenseGroup).size());
 				
 				//aseguramos que el indice corresponde a una unidad valida y existente
 				while (enemyArmy.get(defenseGroup).isEmpty()){
-					randomUnitIndexDefense = new Random(enemyArmy.get(defenseGroup).size()); 		
+					randomUnitIndexDefense = new Random(); 		
 					randomUnit = randomUnitIndexDefense.nextInt(enemyArmy.get(defenseGroup).size());
 				}
 				
-				unitDefending = (DefenseUnit) enemyArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
+				unitDefending = (MilitaryUnit) enemyArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
 				
 				
 				//COMBATE:
@@ -519,14 +501,14 @@ public class Battle {
 				//unidad atacante golpea a defensor y baja armadura (armadura = dano - armadura)
 				int dmg = unitAttacking.attack();
 				int armor = unitDefending.getActualArmor();
-				int armorResult = dmg - armor;
+				int armorResult = armor - dmg;
 				unitDefending.takeDamage(dmg);
 				enemyArmy.get(defenseGroup).set(randomUnit,unitDefending);
 				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[attackGroup]+" generates the damage = "+dmg);
 				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" stays with = "+armorResult);
 				
 				//si armadura a 0, se generan residuos (prob definida en interfaz Variable)
-				if (armorResult == 0) {
+				if (armorResult <= 0) {
 					Random waste = new Random();
 					int wasteProbability = waste.nextInt(101);
 					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
@@ -543,34 +525,46 @@ public class Battle {
 					
 				}
 				
+				//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
+				endBattle = remainderPercentageFleet();
+				
 				//probabilidad de turno extra para atacar:
 				Random attackAgain = new Random();
 				int chanceAttackAgain = attackAgain.nextInt(101);
 				if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
+					setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Civilization.");
 					myTurn = true;
-					enemyTurn = false;
+					System.out.println("Enemigos : \n" + enemyArmy);
 		
 					
 				}else {
+					System.out.println("Enemigos : \n" + enemyArmy);
 					//falta poner condicion turno extra
 					myTurn = false;
-					enemyTurn = true;
 				}
 			}	
-		}
-		
-		//Turno de Enemigos
-		while (enemyTurn && !endBattle) {
 			
-			//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
-			endBattle = remainderPercentageFleet();
-			setBattleDevelopment(getBattleDevelopment()+ "\n****************** Enemy Turn ******************");
-			int attackGroup = getEnemyGroupAttacker();
-			int defenseGroup = getGroupDefender(myArmy);
-			int randomUnit;
-			AttackUnit unitAttacking;
-			DefenseUnit unitDefending;
-			if (chanceAttack.nextInt(100) <= Variables.CHANCE_ATTACK_ENEMY_UNITS[attackGroup]){
+			//Turno de Enemigos //enemyTurn
+			else if (!myTurn && endBattle) {
+				
+				setBattleDevelopment(getBattleDevelopment()+ "\n****************** Enemy Turn ******************");
+				int attackGroup = getEnemyGroupAttacker();
+				int defenseGroup = getGroupDefender(myArmy);
+				
+				while (enemyArmy.get(attackGroup).size() == 0) {
+					attackGroup = getEnemyGroupAttacker();
+				}
+				
+				while (myArmy.get(defenseGroup).size() == 0) {
+					defenseGroup = getGroupDefender(myArmy);
+				}
+				
+				
+				
+				int randomUnit;
+				MilitaryUnit unitAttacking;
+				MilitaryUnit unitDefending;
+				
 				setBattleDevelopment(getBattleDevelopment()+ "\nEnemy Unit: "+nameUnits[attackGroup]+" will attack...");
 				setBattleDevelopment(getBattleDevelopment()+ "\nCivilization Unit: "+nameUnits[defenseGroup]+" will defend...");
 				
@@ -578,28 +572,28 @@ public class Battle {
 				//Seleccionamos una unidad ATACANTE aleatoria y una unidad DEFENSORA aleatoria:
 				
 				//unidad atacante
-				Random randomUnitIndexAttack = new Random(enemyArmy.get(attackGroup).size()); 		
+				Random randomUnitIndexAttack = new Random(); 		
 				randomUnit = randomUnitIndexAttack.nextInt(enemyArmy.get(attackGroup).size());
 				
 				//aseguramos que el indice corresponde a una unidad valida y existente
 				while (enemyArmy.get(attackGroup).isEmpty()){
-					randomUnitIndexAttack = new Random(enemyArmy.get(attackGroup).size()); 		
+					randomUnitIndexAttack = new Random(); 		
 					randomUnit = randomUnitIndexAttack.nextInt(enemyArmy.get(attackGroup).size());
 				}
 				
-				unitAttacking = (AttackUnit) enemyArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
+				unitAttacking = (MilitaryUnit) enemyArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
 				
 				//unidad defensora
-				Random randomUnitIndexDefense = new Random(myArmy.get(defenseGroup).size()); 	
+				Random randomUnitIndexDefense = new Random(); 	
 				randomUnit = randomUnitIndexDefense.nextInt(myArmy.get(defenseGroup).size());
 				
 				//aseguramos que el indice corresponde a una unidad valida y existente
 				while (myArmy.get(defenseGroup).isEmpty()){
-					randomUnitIndexDefense = new Random(myArmy.get(defenseGroup).size()); 		
+					randomUnitIndexDefense = new Random(); 		
 					randomUnit = randomUnitIndexDefense.nextInt(myArmy.get(defenseGroup).size());
 				}
 				
-				unitDefending = (DefenseUnit) myArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
+				unitDefending = (MilitaryUnit) myArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
 				
 				
 				//COMBATE:
@@ -607,14 +601,14 @@ public class Battle {
 				//unidad atacante golpea a defensor y baja armadura (armadura = dano - armaduraActual)
 				int dmg = unitAttacking.attack();
 				int armor = unitDefending.getActualArmor();
-				int armorResult = dmg - armor;
+				int armorResult = armor - dmg;
 				unitDefending.takeDamage(dmg);
 				
 				myArmy.get(defenseGroup).set(randomUnit,unitDefending);
 				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[attackGroup]+" generates the damage = "+dmg);
 				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" stays with = "+armorResult);
 				//si armadura a 0, se generan residuos (prob definida en interfaz Variable)
-				if (armorResult == 0) {
+				if (armorResult <= 0) {
 					Random waste = new Random();
 					int wasteProbability = waste.nextInt(101);
 					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
@@ -630,25 +624,32 @@ public class Battle {
 					civilizationDeaths[defenseGroup] += 1;
 				}
 				
+				//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
+				endBattle = remainderPercentageFleet();
+				if (!endBattle) {
+					turns = false;
+				}
+				
 				//probabilidad de turno extra para atacar:
 				Random attackAgain = new Random();
 				int chanceAttackAgain = attackAgain.nextInt(101);
 				if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
+					setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Enemy.");
 					myTurn = false;
-					enemyTurn = true;
+					System.out.println("Nosotros : \n" +civilizationArmy);
+					
 		
 					
 				}else {
-					
-					enemyTurn = false;
 					myTurn = true;
+					System.out.println();
+					System.out.println("Nosotros : \n" +civilizationArmy);
 					
 				}
-			}	
+			}
 		}
 		
-		
-				
+			
 		setBattleDevelopment(getBattleDevelopment()+ "\nEnd of the battle");
 //Logica para ver que bando gana
 		
@@ -656,27 +657,30 @@ public class Battle {
 		
 		// El valor de Points (puntuacion de cada bando en la batalla) mas alto pierde
 		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
+			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nCivilization WIN !!!");
 			
 			//Anadir recursos a la civilizacion
 			
 		} else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
+			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nEnemy WIN !!!");
 			
 		} else {
+			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
 		}
-		
-		//GUARDAR DATOS EN LA BASE DE DATOS:
-		
-		//INSERT: 
-		//  - Battle stats: civilization_id, num battle, wood_adquired, iron_adquired
-		//		  Battle log: civilization_id, num_battle, num_line, log entry
-		
-		//		  battle_attackUnits_stats: civilization_id, num_battle, unit_type, initial, death
-		//		  battle_defenseUnits_stats: civilization_id, num_battle, unit_type, initial, death
-		//		  battle_specialUnits_stats: civilization_id, num_battle, unit_type, initial, death
-		//		  enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
 	}
+	//GUARDAR DATOS EN LA BASE DE DATOS:
 	
+	//INSERT: 
+	//  - Battle stats: civilization_id, num battle, wood_adquired, iron_adquired
+	//		  Battle log: civilization_id, num_battle, num_line, log entry
+	
+	//		  battle_attackUnits_stats: civilization_id, num_battle, unit_type, initial, death
+	//		  battle_defenseUnits_stats: civilization_id, num_battle, unit_type, initial, death
+	//		  battle_specialUnits_stats: civilization_id, num_battle, unit_type, initial, death
+	//		  enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
 }
+	
+
