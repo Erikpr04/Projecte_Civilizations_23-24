@@ -1,5 +1,7 @@
 package classes.attackunits;
 
+import interfaces.Variables;
+
 public class CrossBow extends AttackUnit {
 	
 	
@@ -22,9 +24,18 @@ public class CrossBow extends AttackUnit {
 	
 	//METODOS DE MILITARY UNIT
 	
-	public int attack() {
-		return getBaseDamage();
-	}
+		public int attack() {
+			int damage = 0;
+			
+			if (isSanctified()) {
+				damage = getBaseDamage() + (getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED /100);
+				
+			} else {
+				damage = getBaseDamage();
+			}
+			
+			return damage;
+		}
 
 	public void takeDamage(int receivedDamage) {
 		setArmor(getArmor() - receivedDamage);
@@ -34,7 +45,17 @@ public class CrossBow extends AttackUnit {
 	}
 
 	public int getActualArmor() {
-		return getArmor();
+		int armadura = 0;
+		
+		if (isSanctified()) {
+			armadura = getArmor() + ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
+		
+		} else {
+			armadura = getArmor();
+		}
+		
+		
+		return armadura;
 	}
 
 	public int getFoodCost() {

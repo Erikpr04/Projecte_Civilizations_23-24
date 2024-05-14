@@ -5,15 +5,18 @@ import java.text.ChoiceFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import classes.attackunits.AttackUnit;
 import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
 import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
 import classes.defenseunits.ArrowTower;
 import classes.defenseunits.Catapult;
+import classes.defenseunits.DefenseUnit;
 import classes.defenseunits.RocketLauncherTower;
 import classes.specialunits.Magician;
 import classes.specialunits.Priest;
+import classes.specialunits.SpecialUnit;
 import exceptions.BuildingException;
 import exceptions.ResourceException;
 import interfaces.MilitaryUnit;
@@ -38,6 +41,15 @@ public class Civilization {
 	private int id;
 	
 	
+	//CONSTRUCTOR PARA INICIALIZAR EL ARRAY
+	
+	public Civilization() {
+        // Inicializar el ArrayList de army con 9 listas vacías
+        army = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            army.add(new ArrayList<>());
+       }
+	}
 	
 	//getters and setters
 	
@@ -130,16 +142,20 @@ public class Civilization {
 	
 	public void new_Swordsman(int i) throws ResourceException {
 		//Calculamos la armadura total y el ataque total
-		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*Variables.ARMOR_SWORDSMAN/100);
+		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SWORDSMAN/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			//Comprobamos que tenga los recursos
-			if (getFood() >= Variables.FOOD_COST_SWORDSMAN ||getWood() >= Variables.WOOD_COST_SWORDSMAN || getIron() >= Variables.IRON_COST_SWORDSMAN) {
+			if (getFood() >= Variables.FOOD_COST_SWORDSMAN && getWood() >= Variables.WOOD_COST_SWORDSMAN && getIron() >= Variables.IRON_COST_SWORDSMAN) {
 				//Si los tiene, lo añadimos al ArrayList
 				army.get(0).add(new Swordsman(total_armor,total_attack));
+				
+				setWood(wood-Variables.WOOD_COST_SWORDSMAN);
+				setFood(food-Variables.FOOD_COST_SWORDSMAN);
+				setIron(iron-Variables.IRON_COST_SWORDSMAN);
 
 			}
 			else {
@@ -153,15 +169,18 @@ public class Civilization {
 	
 	
 	public void new_Spearman(int i) throws ResourceException {
-		int total_armor = Variables.ARMOR_SPEARMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SPEARMAN_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_SPEARMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SPEARMAN_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_SPEARMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SPEARMAN_BY_TECHNOLOGY)*Variables.ARMOR_SPEARMAN/100);
+		int total_attack = Variables.BASE_DAMAGE_SPEARMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SPEARMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SPEARMAN/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			
-			if (getFood() >= Variables.FOOD_COST_SPEARMAN ||getWood() >= Variables.WOOD_COST_SPEARMAN || getIron() >= Variables.IRON_COST_SPEARMAN) {
+			if (getFood() >= Variables.FOOD_COST_SPEARMAN &&getWood() >= Variables.WOOD_COST_SPEARMAN && getIron() >= Variables.IRON_COST_SPEARMAN) {
 				army.get(1).add(new Spearman(total_armor,total_attack));
+				setWood(wood-Variables.WOOD_COST_SPEARMAN);
+				setFood(food-Variables.FOOD_COST_SPEARMAN);
+				setIron(iron-Variables.IRON_COST_SPEARMAN);
 
 			}
 			else {
@@ -174,15 +193,18 @@ public class Civilization {
 	
 	
 	public void new_Crossbow(int i) throws ResourceException {
-		int total_armor = Variables.ARMOR_CROSSBOW+((getTechnologyDefense()*Variables.PLUS_ARMOR_CROSSBOW_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_CROSSBOW+((getTechnologyAttack()*Variables.PLUS_ATTACK_CROSSBOW_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_CROSSBOW+((getTechnologyDefense()*Variables.PLUS_ARMOR_CROSSBOW_BY_TECHNOLOGY)*Variables.ARMOR_CROSSBOW/100);
+		int total_attack = Variables.BASE_DAMAGE_CROSSBOW+((getTechnologyAttack()*Variables.PLUS_ATTACK_CROSSBOW_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CROSSBOW/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			
-			if (getFood() >= Variables.FOOD_COST_CROSSBOW ||getWood() >= Variables.WOOD_COST_CROSSBOW || getIron() >= Variables.IRON_COST_CROSSBOW) {
+			if (getFood() >= Variables.FOOD_COST_CROSSBOW &&getWood() >= Variables.WOOD_COST_CROSSBOW && getIron() >= Variables.IRON_COST_CROSSBOW) {
 				army.get(2).add(new CrossBow(total_armor,total_attack));
+				setWood(wood-Variables.WOOD_COST_CROSSBOW);
+				setFood(food-Variables.FOOD_COST_CROSSBOW);
+				setIron(iron-Variables.IRON_COST_CROSSBOW);
 
 			}
 			else {
@@ -195,15 +217,19 @@ public class Civilization {
 	
 	
 	public void new_Cannon(int i) throws ResourceException {
-		int total_armor = Variables.ARMOR_CANNON+((getTechnologyDefense()*Variables.PLUS_ARMOR_CANNON_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_CANNON+((getTechnologyAttack()*Variables.PLUS_ATTACK_CANNON_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_CANNON+((getTechnologyDefense()*Variables.PLUS_ARMOR_CANNON_BY_TECHNOLOGY)*Variables.ARMOR_CANNON/100);
+		int total_attack = Variables.BASE_DAMAGE_CANNON+((getTechnologyAttack()*Variables.PLUS_ATTACK_CANNON_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CANNON/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			
-			if (getFood() >= Variables.FOOD_COST_CANNON ||getWood() >= Variables.WOOD_COST_CANNON || getIron() >= Variables.IRON_COST_CANNON) {
+			if (getFood() >= Variables.FOOD_COST_CANNON &&getWood() >= Variables.WOOD_COST_CANNON && getIron() >= Variables.IRON_COST_CANNON) {
 				army.get(3).add(new Cannon(total_armor,total_attack));
+				
+				setWood(wood-Variables.WOOD_COST_CANNON);
+				setFood(food-Variables.FOOD_COST_CANNON);
+				setIron(iron-Variables.IRON_COST_CANNON);
 
 			}
 			else {
@@ -215,15 +241,18 @@ public class Civilization {
 	}
 	
 	public void new_ArrowTower(int i) throws ResourceException {
-		int total_armor = Variables.ARMOR_ARROWTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_ARROWTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_ARROWTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY)*Variables.ARMOR_ARROWTOWER/100);
+		int total_attack = Variables.BASE_DAMAGE_ARROWTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_ARROWTOWER/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			
-			if (getFood() >= Variables.FOOD_COST_ARROWTOWER ||getWood() >= Variables.WOOD_COST_ARROWTOWER || getIron() >= Variables.IRON_COST_ARROWTOWER) {
+			if (getFood() >= Variables.FOOD_COST_ARROWTOWER &&getWood() >= Variables.WOOD_COST_ARROWTOWER && getIron() >= Variables.IRON_COST_ARROWTOWER) {
 				army.get(4).add(new ArrowTower(total_armor,total_attack));
+				setWood(wood-Variables.WOOD_COST_ARROWTOWER);
+				setFood(food-Variables.FOOD_COST_ARROWTOWER);
+				setIron(iron-Variables.IRON_COST_ARROWTOWER);
 
 			}
 			else {
@@ -236,15 +265,18 @@ public class Civilization {
 	
 	
 	public void new_Catapult(int i) throws ResourceException {
-		int total_armor = Variables.ARMOR_CATAPULT+((getTechnologyDefense()*Variables.PLUS_ARMOR_CATAPULT_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_CATAPULT+((getTechnologyAttack()*Variables.PLUS_ATTACK_CATAPULT_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_CATAPULT+((getTechnologyDefense()*Variables.PLUS_ARMOR_CATAPULT_BY_TECHNOLOGY)*Variables.ARMOR_CATAPULT/100);
+		int total_attack = Variables.BASE_DAMAGE_CATAPULT+((getTechnologyAttack()*Variables.PLUS_ATTACK_CATAPULT_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CATAPULT/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			
-			if (getFood() >= Variables.FOOD_COST_CATAPULT ||getWood() >= Variables.WOOD_COST_CATAPULT || getIron() >= Variables.IRON_COST_CATAPULT) {
+			if (getFood() >= Variables.FOOD_COST_CATAPULT && getWood() >= Variables.WOOD_COST_CATAPULT && getIron() >= Variables.IRON_COST_CATAPULT) {
 				army.get(5).add(new Catapult(total_armor,total_attack));
+				setWood(wood-Variables.WOOD_COST_CATAPULT);
+				setFood(food-Variables.FOOD_COST_CATAPULT);
+				setIron(iron-Variables.IRON_COST_CATAPULT);
 
 			}
 			else {
@@ -257,15 +289,18 @@ public class Civilization {
 	
 	
 	public void new_RocketLauncher(int i) throws ResourceException {
-		int total_armor = Variables.ARMOR_ROCKETLAUNCHERTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*1000/100);
-		int total_attack = Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*1000/100);
+		int total_armor = Variables.ARMOR_ROCKETLAUNCHERTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*Variables.ARMOR_ROCKETLAUNCHERTOWER/100);
+		int total_attack = Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			
-			if (getFood() >= Variables.FOOD_COST_ROCKETLAUNCHERTOWER ||getWood() >= Variables.WOOD_COST_ROCKETLAUNCHERTOWER || getIron() >= Variables.IRON_COST_ROCKETLAUNCHERTOWER) {
+			if (getFood() >= Variables.FOOD_COST_ROCKETLAUNCHERTOWER && getWood() >= Variables.WOOD_COST_ROCKETLAUNCHERTOWER && getIron() >= Variables.IRON_COST_ROCKETLAUNCHERTOWER) {
 				army.get(6).add(new RocketLauncherTower(total_armor,total_attack));
+				setWood(wood-Variables.WOOD_COST_ROCKETLAUNCHERTOWER);
+				setFood(food-Variables.FOOD_COST_ROCKETLAUNCHERTOWER);
+				setIron(iron-Variables.IRON_COST_ROCKETLAUNCHERTOWER);
 
 			}
 			else {
@@ -280,15 +315,18 @@ public class Civilization {
 	public void new_Magician(int i) throws ResourceException, BuildingException {
 		//Para el Mago su armadura es 0
 		int total_armor = 0;
-		int total_attack = Variables.BASE_DAMAGE_MAGICIAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_MAGICIAN_BY_TECHNOLOGY)*1000/100);
+		int total_attack = Variables.BASE_DAMAGE_MAGICIAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_MAGICIAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_MAGICIAN/100);
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
 			//Y hay que comprobar que tengas almenos 1 Magic Tower 
 			if (getMagicTower() >= 1) {
-				if (getFood() >= Variables.FOOD_COST_MAGICIAN ||getWood() >= Variables.WOOD_COST_MAGICIAN || getIron() >= Variables.IRON_COST_MAGICIAN || getMana() >= Variables.MANA_COST_MAGICIAN) {
+				if (getFood() >= Variables.FOOD_COST_MAGICIAN && getWood() >= Variables.WOOD_COST_MAGICIAN && getIron() >= Variables.IRON_COST_MAGICIAN && getMana() >= Variables.MANA_COST_MAGICIAN) {
 					army.get(7).add(new Magician(total_armor,total_attack));
+					setWood(wood-Variables.WOOD_COST_MAGICIAN);
+					setFood(food-Variables.FOOD_COST_MAGICIAN);
+					setIron(iron-Variables.IRON_COST_MAGICIAN);
 	
 				}
 				else {
@@ -314,8 +352,12 @@ public class Civilization {
 			
 			//Y hay que comprobar que tengas almenos 1 iglesia
 			if (getChurch() >= 1) {
-				if (getFood() >= Variables.FOOD_COST_PRIEST ||getWood() >= Variables.WOOD_COST_PRIEST || getIron() >= Variables.IRON_COST_PRIEST || getMana() >= Variables.MANA_COST_PRIEST) {
+				if (getFood() >= Variables.FOOD_COST_PRIEST && getWood() >= Variables.WOOD_COST_PRIEST && getIron() >= Variables.IRON_COST_PRIEST && getMana() >= Variables.MANA_COST_PRIEST) {
 					army.get(8).add(new Priest(total_armor,total_attack));
+					
+					setWood(wood-Variables.WOOD_COST_PRIEST);
+					setFood(food-Variables.FOOD_COST_PRIEST);
+					setIron(iron-Variables.IRON_COST_PRIEST);
 	
 				}
 				else {
@@ -336,9 +378,14 @@ public class Civilization {
 	
 	public void new_Church() throws ResourceException {
 		//Se comprueba que tengas los recursos para crear el building
-		if (getFood() >= Variables.FOOD_COST_CHURCH || getWood() >= Variables.WOOD_COST_CHURCH || getIron() >= Variables.IRON_COST_CHURCH || getMana() >= Variables.MANA_COST_CHURCH) {
+		if (getFood() >= Variables.FOOD_COST_CHURCH && getWood() >= Variables.WOOD_COST_CHURCH && getIron() >= Variables.IRON_COST_CHURCH && getMana() >= Variables.MANA_COST_CHURCH) {
 			//Si puedes crearla, se añade 1 al contador de iglesias
 			church += 1;
+			
+			setWood(wood-Variables.WOOD_COST_CHURCH);
+			setFood(food-Variables.FOOD_COST_CHURCH);
+			setIron(iron-Variables.IRON_COST_CHURCH);
+			setMana(mana-Variables.MANA_COST_CHURCH);
 		}
 		else {
 			//Si no tienes los recursos, se genera excepcion de Resource
@@ -348,8 +395,12 @@ public class Civilization {
 	
 	
 	public void new_MagicTower() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_MAGICTOWER || getWood() >= Variables.WOOD_COST_MAGICTOWER || getIron() >= Variables.IRON_COST_MAGICTOWER) {
+		if (getFood() >= Variables.FOOD_COST_MAGICTOWER && getWood() >= Variables.WOOD_COST_MAGICTOWER && getIron() >= Variables.IRON_COST_MAGICTOWER) {
 			magicTower += 1;
+			
+			setWood(wood-Variables.WOOD_COST_MAGICTOWER);
+			setFood(food-Variables.FOOD_COST_MAGICTOWER);
+			setIron(iron-Variables.IRON_COST_MAGICTOWER);
 		}
 		else {
 			throw new ResourceException("Not enough resources to create building");
@@ -358,8 +409,12 @@ public class Civilization {
 	
 	
 	public void new_Farm() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_FARM || getWood() >= Variables.WOOD_COST_FARM || getIron() >= Variables.IRON_COST_FARM) {
+		if (getFood() >= Variables.FOOD_COST_FARM && getWood() >= Variables.WOOD_COST_FARM && getIron() >= Variables.IRON_COST_FARM) {
 			farm += 1;
+			
+			setWood(wood-Variables.WOOD_COST_FARM);
+			setFood(food-Variables.FOOD_COST_FARM);
+			setIron(iron-Variables.IRON_COST_FARM);
 		}
 		else {
 			throw new ResourceException("Not enough resources to create building");
@@ -367,8 +422,12 @@ public class Civilization {
 	}
 	
 	public void new_Carpentry() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_CARPENTRY || getWood() >= Variables.WOOD_COST_CARPENTRY || getIron() >= Variables.IRON_COST_CARPENTRY) {
+		if (getFood() >= Variables.FOOD_COST_CARPENTRY && getWood() >= Variables.WOOD_COST_CARPENTRY && getIron() >= Variables.IRON_COST_CARPENTRY) {
 			carpentry += 1;
+			
+			setWood(wood-Variables.WOOD_COST_CARPENTRY);
+			setFood(food-Variables.FOOD_COST_CARPENTRY);
+			setIron(iron-Variables.IRON_COST_CARPENTRY);
 		}
 		else {
 			throw new ResourceException("Not enough resources to create building");
@@ -377,8 +436,12 @@ public class Civilization {
 	
 	
 	public void new_Smithy() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_SMITHY || getWood() >= Variables.WOOD_COST_SMITHY || getIron() >= Variables.IRON_COST_SMITHY) {
+		if (getFood() >= Variables.FOOD_COST_SMITHY && getWood() >= Variables.WOOD_COST_SMITHY && getIron() >= Variables.IRON_COST_SMITHY) {
 			smithy += 1;
+			
+			setWood(wood-Variables.WOOD_COST_SMITHY);
+			setFood(food-Variables.FOOD_COST_SMITHY);
+			setIron(iron-Variables.IRON_COST_SMITHY);
 		}
 		else {
 			throw new ResourceException("Not enough resources to create building");
@@ -389,9 +452,12 @@ public class Civilization {
 	
 	public void upgradeTechnologyDefense() throws ResourceException {
 		//Se comprueba que tengas los recursos para mejorar la tecnologia
-		if (getWood() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_WOOD_COST * technologyDefense)  || getIron() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST * technologyDefense)) {
+		if (getWood() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_WOOD_COST * technologyDefense)  && getIron() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST * technologyDefense)) {
 			//Si tienes los recursos, se añade 1 al nivel de defensa
 			technologyDefense += 1;
+			
+			setWood(wood-Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST);
+			setIron(iron-Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST);
 		}
 		else {
 			//Si no tienes los recursos, se genera excepcion de Resource
@@ -401,11 +467,37 @@ public class Civilization {
 	
 	
 	public void upgradeTechnologyAttack() throws ResourceException {
-		if (getWood() >= Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_ATTACK_TECHNOLOGY_WOOD_COST * technologyAttack)  || getIron() >= Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_ATTACK_TECHNOLOGY_IRON_COST * technologyAttack)) {
+		if (getWood() >= Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_ATTACK_TECHNOLOGY_WOOD_COST * technologyAttack)  && getIron() >= Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_ATTACK_TECHNOLOGY_IRON_COST * technologyAttack)) {
 			technologyAttack += 1;
+			
+			setWood(wood-Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_WOOD_COST);
+			setIron(iron-Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST);
 		}
 		else {
 			throw new ResourceException("Not enough resources to upgrade attack technology");
+		}
+	}
+	
+	
+	
+	//METODO PARA SANTIFICAR UNIDADES
+	
+	
+	public void sanctifyUnits() {
+		for (int i = 0; i < getArmy().size(); i++) {
+			for (int j = 0; j < getArmy().get(i).size(); j++) {
+				if (i < 4) {
+					AttackUnit atacante = ((AttackUnit) getArmy().get(i).get(j));
+					
+					atacante.setSanctified(true);
+				
+				} else if (i >= 4 && i < 7) {
+					DefenseUnit defensa = ((DefenseUnit) getArmy().get(i).get(j));
+					
+					defensa.setSanctified(true);
+				
+				}
+			}
 		}
 	}
 }
