@@ -14,18 +14,45 @@ import java.io.File;
 import java.io.IOException;
 
 public class MainMenu extends JPanel {
+	private ImageIcon lg_button  = new ImageIcon("./src/gui/mm_assets/lg_button.png");
+	private ImageIcon sg_button  = new ImageIcon("./src/gui/mm_assets/sg_button.png");
+	private ImageIcon options_button  = new ImageIcon("./src/gui/mm_assets/options_button.png");
+	private ImageIcon quit_button  = new ImageIcon("./src/gui/mm_assets/quit_button.png");
+	private ImageIcon play_button  = new ImageIcon("./src/gui/mm_assets/play_button.png");
+	private ImageIcon settings_button  = new ImageIcon("./src/gui/mm_assets/settings_button.png");
+
+
+
+	
+	
+	
+	
     public MainMenu() {
+    	
+    	int sizebutton1 = 250;
+    	int sizebutton2 = 100;
+    	
+   
+    	
+    	
     	// Establecer el diseño del panel principal
     	setLayout(new BorderLayout());
 
     	// Crear el título del juego
     	JLabel titleLabel = new JLabel("Civilization");
+    	titleLabel.setForeground(Color.WHITE);
     	
     	titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
     	titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
     	// Crear los botones del menú
-    	LabelButton newGameButton = new LabelButton("New Game");
+    	//savegame button
+    	LabelButton newGameButton = new LabelButton("");
+    	ImageIcon originalIcon = new ImageIcon("./src/gui/mm_assets/play_button.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
+    	Image originalImage = originalIcon.getImage();
+    	Image resizedImage = originalImage.getScaledInstance(sizebutton1, sizebutton2, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
+    	ImageIcon resizedIcon = new ImageIcon(resizedImage);
+    	newGameButton.setIcon(resizedIcon);
     	
     	
     	newGameButton.addMouseListener(new MouseListener() {
@@ -62,9 +89,28 @@ public class MainMenu extends JPanel {
 				
 			}
 		});
-    	LabelButton saveGameButton = new LabelButton("Save Game");
-    	LabelButton loadGameButton = new LabelButton("Load Game");
-    	LabelButton optionsButton = new LabelButton("Options");
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	//loadgame button
+    	LabelButton loadGameButton = new LabelButton("");
+    	originalIcon = new ImageIcon("./src/gui/mm_assets/lg_button.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
+    	originalImage = originalIcon.getImage();
+    	resizedImage = originalImage.getScaledInstance(sizebutton1, sizebutton2, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
+    	resizedIcon = new ImageIcon(resizedImage);
+    	loadGameButton.setIcon(resizedIcon);
+    	
+    	//options button
+    	LabelButton optionsButton = new LabelButton("");
+    	originalIcon = new ImageIcon("./src/gui/mm_assets/options_button.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
+    	originalImage = originalIcon.getImage();
+    	resizedImage = originalImage.getScaledInstance(sizebutton1, sizebutton2, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
+    	resizedIcon = new ImageIcon(resizedImage);
+    	optionsButton.setIcon(resizedIcon);
     	
     	optionsButton.addMouseListener(new MouseListener() {
 			
@@ -103,7 +149,53 @@ public class MainMenu extends JPanel {
     	
     	
     	
-    	LabelButton exitButton = new LabelButton("Exit");
+    	
+    	LabelButton exitButton = new LabelButton("");
+    	originalIcon = new ImageIcon("./src/gui/mm_assets/quit_button.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
+    	originalImage = originalIcon.getImage();
+    	resizedImage = originalImage.getScaledInstance(sizebutton1, sizebutton2, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
+    	resizedIcon = new ImageIcon(resizedImage);
+    	exitButton.setIcon(resizedIcon);
+
+
+    	
+    	exitButton.addMouseListener(new MouseListener() {
+			
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		        // Cerrar la ventana del menú principal
+				dispose_main_menu();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
+    	
+    	
+    	
     	ImageBackgroundPanel mainpanel = new ImageBackgroundPanel("./src/gui/background_title.jpg");
     	add(mainpanel);
     	// Agregar ActionListener a cada botón
@@ -126,7 +218,6 @@ public class MainMenu extends JPanel {
 
     	JPanel buttonPanel = new JPanel(new GridLayout(0, 1)); // Un GridLayout de una columna
     	buttonPanel.add(newGameButton);
-    	buttonPanel.add(saveGameButton);
     	buttonPanel.add(loadGameButton);
     	buttonPanel.add(optionsButton);
     	buttonPanel.add(exitButton);
@@ -154,10 +245,32 @@ public class MainMenu extends JPanel {
     	mainpanel.setPreferredSize(new Dimension(1920,1080));
 
     	leftPanel.add(titleLabel,BorderLayout.CENTER);
+    	
 
 
 
     }
+    
+    
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     private void startGame() {
         // Obtener la referencia a la ventana del menú principal
@@ -192,12 +305,19 @@ public class MainMenu extends JPanel {
 
         optionsFrame.setVisible(true);
     }
+    
+    private void dispose_main_menu() {
+            // Obtener la referencia a la ventana del menú principal
+            JFrame mainMenuFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            // Cerrar la ventana del menú principal
+            mainMenuFrame.dispose();
+        }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // Crear la ventana del menú principal
-            JFrame mainMenuFrame = new JFrame("Main Menu");
-            mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        	
+        	JFrame mainMenuFrame = new JFrame("Main Menu");
 
             // Crear una instancia del menú principal y agregarla al frame
             MainMenu mainMenu = new MainMenu();
@@ -210,6 +330,21 @@ public class MainMenu extends JPanel {
         });
     }
 }
+
+
+
+
+
+
+
+
+
+
+//CLASE PARA PANEL DE FONDO
+
+
+
+
 class ImageBackgroundPanel extends JPanel {
     private BufferedImage backgroundImage;
 
@@ -233,33 +368,36 @@ class ImageBackgroundPanel extends JPanel {
 }
 
 
+
+
+//CLASE BOTON LABEL
+
 class LabelButton extends JLabel {
     public LabelButton(String text) {
         super(text);
         setForeground(Color.BLACK); // Color de texto predeterminado
         setBorder(BorderFactory.createEmptyBorder()); // Borde predeterminado
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                // Cambiar el color del texto y agregar un borde al entrar el mouse
-                setForeground(Color.WHITE);
-                setBorder(BorderFactory.createLineBorder(Color.WHITE));
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Acción al hacer clic en el JLabel
-                // Puedes agregar el comportamiento deseado aquí
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // Restaurar el color del texto y eliminar el borde al salir el mouse
-                setForeground(Color.BLACK);
-                setBorder(BorderFactory.createEmptyBorder());
-            }
-        });
+//        addMouseListener(new MouseAdapter() {
+//            public void mouseEntered(MouseEvent e) {
+//                // Cambiar el color del texto y agregar un borde al entrar el mouse
+//                setForeground(Color.WHITE);
+//                setBorder(BorderFactory.createLineBorder(Color.WHITE));
+//            }
+//
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                // Acción al hacer clic en el JLabel
+//                // Puedes agregar el comportamiento deseado aquí
+//            }
+//
+//            @Override
+//            public void mouseExited(MouseEvent e) {
+//                // Restaurar el color del texto y eliminar el borde al salir el mouse
+//                setForeground(Color.BLACK);
+//                setBorder(BorderFactory.createEmptyBorder());
+//            }
+//        });
     }
 }
     

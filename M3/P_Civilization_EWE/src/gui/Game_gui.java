@@ -30,6 +30,7 @@ public class Game_gui extends JPanel {
     private int lastMouseX;
     private int lastMouseY;
     private JPanel mainPanel1, containerpanel, mainPanel2, panelright, panelup, panelright1;
+    private JLayeredPane mainpanel;
     private int mouseX;
     private int mouseY;
     private boolean isRightClicked;
@@ -147,12 +148,18 @@ public class Game_gui extends JPanel {
 
 
 
-        // Rest of the constructor code...
-   
+        
+        
+        
+        JLayeredPane mainpanel = new JLayeredPane();
+        mainPanel1.setPreferredSize(new Dimension(1920,1080));
 
         setLayout(new BorderLayout());
+        add(mainpanel,BorderLayout.CENTER);
+        mainpanel.setPreferredSize(new Dimension(1920,1080));
+        mainpanel.add(mainPanel1);
 
-        add(mainPanel1, BorderLayout.CENTER);
+        //mainpanel.add(mainPanel1,JLayeredPane.DEFAULT_LAYER);
 
         mainPanel1.add(containerpanel, BorderLayout.WEST);
         mainPanel1.add(panelright, BorderLayout.EAST);
@@ -163,17 +170,17 @@ public class Game_gui extends JPanel {
 
         containerpanel.add(mainPanel2);
         
-        
+        mainPanel1.setBounds(0, 0, 1920, 1080); // Aquí puedes ajustar las coordenadas y el tamaño según tus necesidades
+
         
 
-        mainPanel1.setPreferredSize(new Dimension(1920, 1080));
         
-        containerpanel.setPreferredSize(new Dimension(1500, 1300));
-        mainPanel2.setPreferredSize(new Dimension(1500, 1400));
+        containerpanel.setPreferredSize(new Dimension(1500, 1500));
+        mainPanel2.setPreferredSize(new Dimension(1500, 1500));
         
-        
-        panelright.setPreferredSize(new Dimension(420, 1400));
-        panelright1.setPreferredSize(new Dimension(425, 500));
+
+        panelright.setPreferredSize(new Dimension(420, 30));
+        panelright1.setPreferredSize(new Dimension(300, 400));
         panelright2.setPreferredSize(new Dimension(425, 700));
         panelup.setPreferredSize(new Dimension(1400, 20));
         
@@ -182,51 +189,20 @@ public class Game_gui extends JPanel {
         //Boton para ver logs
         
      // En el constructor de Game_gui, después de crear panelup
-        JButton openButton = new JButton("Open Window");
+        JButton openButton = new JButton("Battle Logs");
         openButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame popupFrame = new JFrame("Popup Window");
-                popupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-                // Crear un JTextArea y colocarlo en un JScrollPane
-                JTextArea textArea = new JTextArea(10, 30);
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-                // Agregar texto al JTextArea
-                textArea.setText("Texto en la ventana emergente.");
-
-                // Crear un JPanel para contener los componentes
-                JPanel panelContainer = new JPanel();
-                panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.Y_AXIS));
-
-                // Cargar la imagen battleicon.png
-                ImageIcon battleIcon = new ImageIcon("./src/gui/battleicon.png");
-                Image scaledImage = battleIcon.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
-                ImageIcon scaledIcon = new ImageIcon(scaledImage);
-                JLabel iconLabel = new JLabel(scaledIcon);
-                iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            	battlelog_frame();
                 
-                // Agregar la imagen al JPanel
-                panelContainer.add(iconLabel);
-
-                // Agregar el JScrollPane al JPanel
-                panelContainer.add(scrollPane);
-
-                // Agregar el JPanel al JFrame
-                popupFrame.getContentPane().add(panelContainer, BorderLayout.CENTER);
-
-                // Ajustar el tamaño de la ventana y hacerla visible
-                popupFrame.pack();
-                popupFrame.setLocationRelativeTo(null);
-                popupFrame.setVisible(true);
             }
         });
-        panelup.add(openButton);
+        openButton.setPreferredSize(new Dimension(70,50));
+        panelup.add(openButton,BorderLayout.EAST);
 
 
      
+    	showCustomPanel(mainpanel);
 
         
         
@@ -469,8 +445,136 @@ public class Game_gui extends JPanel {
         panel.revalidate();
         panel.repaint();
     }
+    
+    //metodo notificacion
+    
+    private void showCustomPanel(JLayeredPane parentComponent) {
+        JPanel customPanel = new JPanel();
+    	ImageIcon originalIcon = new ImageIcon("./src/gui/battleicon.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
+    	Image originalImage = originalIcon.getImage();
+    	Image resizedImage = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
+    	ImageIcon resizedIcon = new ImageIcon(resizedImage);
+        JLabel customLabel = new JLabel("ATTACK INCOMING");
+    	customLabel.setIcon(resizedIcon);
+        customLabel.setFont(new Font("Serif", Font.PLAIN, 30));
+
+        customLabel.setSize(new Dimension(200, 200));
+        customPanel.add(customLabel);
+        customPanel.setBackground(Color.red);
+
+        int parentWidth = parentComponent.getWidth();
+        int panelWidth = 500; // Ancho del panel personalizado
+        int panelHeight = 200; // Alto del panel personalizado
+        int panelX =  panelWidth +200; // Posición X para centrar horizontalmente
+        int panelYStart = -panelHeight; // Posición inicial Y para colocar arriba del JLayeredPane
+        int panelYEnd = (parentComponent.getHeight() - panelHeight +200) / 2; // Posición final Y para centrar verticalmente
+
+        customPanel.setBounds(panelX, panelYStart, panelWidth, panelHeight);
+
+        Timer timer = new Timer(30, null);
+        timer.addActionListener(new ActionListener() {
+            private int yOffset = panelYStart;
+            private int state = 0; // Estado para controlar las partes de la animación
+            private int pauseCount = 0; // Contador para la pausa
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Primera parte: movimiento hacia abajo
+                if (state == 0) {
+                    if (yOffset < panelYEnd) {
+                        yOffset += 5; // Ajusta la velocidad de la animación cambiando este valor
+                        customPanel.setLocation(panelX, yOffset);
+                    } else {
+                        state = 1; // Cambiar al siguiente estado
+                        pauseCount = 0; // Reiniciar el contador de pausa
+                    }
+                }
+                // Segunda parte: pausa de 5 segundos
+                else if (state == 1) {
+                    pauseCount++;
+                    if (pauseCount >= 150) { // 150 * 30ms = 4500ms = 4.5 segundos
+                        state = 2; // Cambiar al siguiente estado
+                        pauseCount = 0; // Reiniciar el contador de pausa
+                    }
+                }
+                // Tercera parte: movimiento hacia arriba para esconder el panel
+                else if (state == 2) {
+                    if (yOffset > panelYStart) {
+                        yOffset -= 5; // Ajusta la velocidad de la animación cambiando este valor
+                        customPanel.setLocation(panelX, yOffset);
+                    } else {
+                        timer.stop();
+                        parentComponent.remove(customPanel); // Eliminar el panel del componente principal
+                        parentComponent.revalidate(); // Actualizar la interfaz
+                    }
+                }
+            }
+        });
+
+        parentComponent.add(customPanel, JLayeredPane.PALETTE_LAYER); // Agregar el panel al componente principal
+        parentComponent.revalidate(); // Actualizar la interfaz
+
+        timer.start(); // Iniciar la animación
+    }
 
 
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    void battlelog_frame(){
+		
+
+    	JFrame popupFrame = new JFrame("Battle Log");
+        popupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Crear un JTextArea y colocarlo en un JScrollPane
+        JTextArea textArea = new JTextArea(10, 30);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // Agregar texto al JTextArea
+        textArea.setText("Texto en la ventana emergente.");
+
+        // Crear un JPanel para contener los componentes
+        JPanel panelContainer = new JPanel();
+        panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.Y_AXIS));
+
+        // Cargar la imagen battleicon.png
+        ImageIcon battleIcon = new ImageIcon("./src/gui/battleicon.png");
+        Image scaledImage = battleIcon.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        JLabel iconLabel = new JLabel(scaledIcon);
+        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        // Agregar la imagen al JPanel
+        panelContainer.add(iconLabel);
+
+        // Agregar el JScrollPane al JPanel
+        panelContainer.add(scrollPane);
+
+        // Agregar el JPanel al JFrame
+        popupFrame.getContentPane().add(panelContainer, BorderLayout.CENTER);
+
+        // Ajustar el tamaño de la ventana y hacerla visible
+        popupFrame.pack();
+        popupFrame.setLocationRelativeTo(null);
+        popupFrame.setVisible(true);
+    	}
+    
+    
+    
 
 
 class MiPanelito extends JPanel {
@@ -481,6 +585,7 @@ class MiPanelito extends JPanel {
     private ImageIcon[] buildingImages = new ImageIcon[5];
     private ImageIcon currentImage,main_texture;
     private dc_gui dcGui;
+    private boolean isoccupied;
 
 
     
@@ -509,6 +614,11 @@ class MiPanelito extends JPanel {
                     lastMouseX = e.getX();
                     lastMouseY = e.getY();
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
+                	
+                	if (isoccupied) {
+                		JOptionPane.showMessageDialog(null, "Cannot build here", "Error", JOptionPane.ERROR_MESSAGE);
+
+                	}else {
                     try {
                         String[] options = {"Farm", "Smithy", "Church", "Magic Tower", "Carpentry"};
                         JButton[] buttons = new JButton[options.length];
@@ -531,6 +641,7 @@ class MiPanelito extends JPanel {
                                     int woodCost = 0;
                                     int ironCost = 0;
                                     int foodCost = 0;
+                                    int manaCost = 0;
                                     // Obtener el índice del botón clickeado
                                     int index = Arrays.asList(buttons).indexOf(e.getSource());
                                  // Asignar los costos según la opción seleccionada
@@ -549,6 +660,7 @@ class MiPanelito extends JPanel {
                                             woodCost = Variables.WOOD_COST_CHURCH;
                                             ironCost = Variables.IRON_COST_CHURCH;
                                             foodCost = Variables.FOOD_COST_CHURCH;
+                                            manaCost = Variables.MANA_COST_CHURCH;
                                             break;
                                         case 3: // Magic Tower
                                             woodCost = Variables.WOOD_COST_MAGICTOWER;
@@ -564,11 +676,12 @@ class MiPanelito extends JPanel {
                                             break;
                                     }
                                     // Verificar si el jugador tiene los recursos necesarios
-                                    if (getWood() >= woodCost && getIron() >= ironCost && getFood() >= foodCost) {
+                                    if (getWood() >= woodCost && getIron() >= ironCost && getFood() >= foodCost && getMana() >= manaCost) {
                                         // Descontar los recursos necesarios
                                         setWood(getWood() - woodCost);
                                         setIron(getIron() - ironCost);
                                         setFood(getFood() - foodCost);
+                                        setMana(getMana() - manaCost);
                                         update_resources_quantity(getWood(),woodlabel);
                                         update_resources_quantity(getIron(),ironlabel);
                                         update_resources_quantity(getMana(),manalabel);
@@ -578,6 +691,7 @@ class MiPanelito extends JPanel {
                                         // Cambiar la imagen del panel al edificio correspondiente
                                         setCurrentImage(buildingImages[index]);
                                         repaint();
+                                        isoccupied = true;
                                         
                                     } else {
                                         JOptionPane.showMessageDialog(null, "¡No tienes suficientes recursos para construir este edificio!", "Recursos insuficientes", JOptionPane.ERROR_MESSAGE);
@@ -598,7 +712,7 @@ class MiPanelito extends JPanel {
                     } catch (Exception x) {
                         x.printStackTrace();
                         System.out.println("error");
-                    }
+                    }}
                 }
             }
 
@@ -660,7 +774,7 @@ class MiPanelito extends JPanel {
         case "Smithy":
             return "Smithy Cost Info: Wood - " + Variables.WOOD_COST_SMITHY + ", Iron - " + Variables.IRON_COST_SMITHY + ", Mana - 0, Food - " + Variables.FOOD_COST_SMITHY;
         case "Church":
-            return "Church Cost Info: Wood - " + Variables.WOOD_COST_CHURCH + ", Iron - " + Variables.IRON_COST_CHURCH + ", Mana - 0, Food - " + Variables.FOOD_COST_CHURCH;
+            return "Church Cost Info: Wood - " + Variables.WOOD_COST_CHURCH + ", Iron - " + Variables.IRON_COST_CHURCH + ", Mana "+Variables.MANA_COST_CHURCH+", Food - " + Variables.FOOD_COST_CHURCH;
         case "Magic Tower":
             return "Magic Tower Cost Info: Wood - " + Variables.WOOD_COST_MAGICTOWER + ", Iron - " + Variables.IRON_COST_MAGICTOWER + ", Mana - 0, Food - " + Variables.FOOD_COST_MAGICTOWER;
         case "Carpentry":
