@@ -35,6 +35,7 @@ public class Civilization {
 	private int carpentry;
 	private int battles;
 	private ArrayList<ArrayList> army = new ArrayList<ArrayList>(9);
+	private int id;
 	
 	
 	
@@ -118,7 +119,12 @@ public class Civilization {
 	public void setArmy(ArrayList<ArrayList> army) {
 		this.army = army;
 	}
-	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	//METODOS PARA CREAR UNIDADES
 	
