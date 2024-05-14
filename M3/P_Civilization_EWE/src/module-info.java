@@ -5,5 +5,5 @@
  * 
  */
 module P_Civilization_EWE {
-	requires java.desktop;
+	requires java.sql;
 }
