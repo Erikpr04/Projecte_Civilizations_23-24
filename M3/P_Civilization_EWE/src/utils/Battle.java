@@ -11,11 +11,13 @@ import interfaces.Variables;
 public class Battle {
 	private ArrayList<ArrayList> civilizationArmy;
 	private ArrayList<ArrayList> enemyArmy;
-
+	
+//***
 	private ArrayList<ArrayList> armies = new ArrayList(2); //ArrayList de 2 filas y 9 columnas
 	
 	private String battleDevelopment = "";
 	private int[][] initialCostFleet; //Array de 2 filas 
+	
 	private int initialNumberUnitsCivilization;
 	private int initialNumberUnitsEnemy;
 	
@@ -26,6 +28,8 @@ public class Battle {
 	private int [] civilizationDeaths;
 	
 	private int[][] resourcesLooses; //Array de 2 filas y 4 columnas
+	
+
 	private int[][] initialArmies; //Array de 2 filas y 9 columnas
 	private int[] actualNumberUnitsCivilization;
 	private int[] actualNumberUnitsEnemy; //Arrays para contabilizar unidades
@@ -76,13 +80,21 @@ public class Battle {
 		this.initialCostFleet = initialCostFleet;
 	}
 	public int getInitialNumberUnitsCivilization() {
-		return initialNumberUnitsCivilization;
+		int initialCivilizationUnits = 0;
+		for (int i = 0; i<initialArmies[0].length; i++) {
+			initialCivilizationUnits += initialArmies[0][i]; 
+		}
+		return initialCivilizationUnits;
 	}
 	public void setInitialNumberUnitsCivilization(int initialNumberUnitsCivilization) {
 		this.initialNumberUnitsCivilization = initialNumberUnitsCivilization;
 	}
 	public int getInitialNumberUnitsEnemy() {
-		return initialNumberUnitsEnemy;
+		int initialEnemyUnits = 0;
+		for (int i = 0; i<initialArmies[1].length; i++) {
+			initialEnemyUnits += initialArmies[1][i]; 
+		}
+		return initialEnemyUnits;
 	}
 	public void setInitialNumberUnitsEnemy(int initialNumberUnitsEnemy) {
 		this.initialNumberUnitsEnemy = initialNumberUnitsEnemy;
@@ -227,11 +239,6 @@ public class Battle {
 		return report;
 	}
 	
-	public String BattleDevelopment1() {
-		//Paso a paso de la batalla
-		return "";
-	}
-	
 	public void initInitialArmies() {
 		//Inicializar el Array initialArmies y asi poder calcular reportes
 		// Bucle para realizar el recuento de las tropas tanto de civilización como enemigas
@@ -252,31 +259,28 @@ public class Battle {
 				//igualamos a la initialArmies de la clase principal
 				setInitialArmies(initialArmies);
 	}
-	
-	public void updateResourcesLooses() {
-		//Generar el Array de perdidas
-		
-	}
+
+	//************************************************
+//	public void updateResourcesLooses() {
+//		//Generar el Array de perdidas
+//		
+//	}
 	
 	
 //	public void initialFleetNumber(ArrayList<ArrayList> army) {
 //		//Calcular numero de unidades iniciales de cada ejercito
 //		
 //	}
+//************************************************
 	
 	//recuento de las tropas de cada bando (usamos initialArmies para calcular el recuento total de tropas)
 	private boolean remainderPercentageFleet() {
 		
 		boolean stop = true;
 		
-		int initialCivilizationUnits = 0;
-		for (int i = 0; i<initialArmies[0].length; i++) {
-			initialCivilizationUnits += initialArmies[0][i]; 
-		}
-		int initialEnemyUnits = 0;
-		for (int i = 0; i<initialArmies[1].length; i++) {
-			initialEnemyUnits += initialArmies[1][i]; 
-		}
+		
+		int initialCivilizationUnits = getInitialNumberUnitsCivilization();
+		int initialEnemyUnits = getInitialNumberUnitsEnemy();
 		
 		int percentageCivilization = (int) (initialCivilizationUnits * 0.20);
 		int percentageEnemy = (int) (initialEnemyUnits * 0.20);
@@ -487,22 +491,21 @@ public class Battle {
 		//Seleccionamos el orden de ataque
 		
 		boolean myTurn = false;
-//		boolean enemyTurn = false;
 		boolean endBattle = true;
 		boolean turns = true;
 	
 		
-		Random comienzo =  new Random();
+		Random comienzo = new Random();
 		
 		if (comienzo.nextBoolean()) {
 			myTurn = true;
-//			enemyTurn = false;
+
 			
 		
 		}else {
-//			enemyTurn = true;
 			myTurn = false;
 		}
+
 		
 		Random  grupoAleatorio = new Random();
 		Random  chanceAttack = new Random();
