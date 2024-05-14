@@ -27,33 +27,35 @@ public class Main {
 		
 		//BATALLAS:
 		
-//		cv.setWood(1000000000);
-//		cv.setFood(1000000000);
-//		cv.setIron(1000000000);
-//		
-//		try {
-//			cv.new_Swordsman(2);
-//			cv.new_Spearman(0);
-////			cv.new_Crossbow(4);
-////			cv.new_Cannon(1);
-////			cv.new_Catapult(3);
-//			cv.new_ArrowTower(5);
-//			
-//			
-//		} catch (ResourceException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		ArrayList<ArrayList> enemy = m.createEnemyArmy();
-//		
-//		m.viewThread(enemy);
-//		
-//		
-//		b.mainBattle(cv.getArmy(), enemy);
+		cv.setWood(1000000000);
+		cv.setFood(1000000000);
+		cv.setIron(1000000000);
+		
+		try {
+			cv.new_Swordsman(2);
+			cv.new_Spearman(0);
+//			cv.new_Crossbow(4);
+//			cv.new_Cannon(1);
+//			cv.new_Catapult(3);
+			cv.new_ArrowTower(5);
+			
+			
+		} catch (ResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		ArrayList<ArrayList> enemy = m.createEnemyArmy();
+		
+		m.viewThread(enemy);
+		
+		
+		b.mainBattle(cv.getArmy(), enemy);
 
-//		System.out.println("\n\n" + b.getBattleDevelopment());
+		System.out.println("\n\n" + b.getBattleDevelopment());
+		
+		System.out.println("\n\n\n" + b.getBattleReport(0));
 		
 		
 		
@@ -61,60 +63,54 @@ public class Main {
 		
 		
 		//TIMER TASK:
-		cv.setWood(Variables.CIVILIZATION_WOOD_GENERATED);
-		cv.setFood(Variables.CIVILIZATION_FOOD_GENERATED);
-		cv.setIron(Variables.CIVILIZATION_IRON_GENERATED);
-		
-		try {
-			cv.new_Carpentry();
-//			cv.new_Farm();
-//			cv.new_Smithy();
-		} catch (ResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		TimerTask task = new TimerTask() {
-
-			public void run() {
-				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
-				
-				System.out.println("Madera: " + cv.getWood());
-				System.out.println("Comida: " + cv.getFood());
-				System.out.println("Hierro: " + cv.getIron());
-				System.out.println("Mana: " + cv.getMana());
-				System.out.println("*********************");
-				
-			}
-			
-		};
-		
-		Timer timer = new Timer();
-		
-		timer.schedule(task, 1, 10000);
+//		cv.setWood(Variables.CIVILIZATION_WOOD_GENERATED);
+//		cv.setFood(Variables.CIVILIZATION_FOOD_GENERATED);
+//		cv.setIron(Variables.CIVILIZATION_IRON_GENERATED);
+//		
+//		try {
+//			cv.new_Carpentry();
+////			cv.new_Farm();
+////			cv.new_Smithy();
+//		} catch (ResourceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		TimerTask task = new TimerTask() {
+//
+//			public void run() {
+//				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+//				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+//				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+//				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+//				
+//				System.out.println("Madera: " + cv.getWood());
+//				System.out.println("Comida: " + cv.getFood());
+//				System.out.println("Hierro: " + cv.getIron());
+//				System.out.println("Mana: " + cv.getMana());
+//				System.out.println("*********************");
+//				
+//			}
+//			
+//		};
+//		
+//		Timer timer = new Timer();
+//		
+//		timer.schedule(task, 1, 10000);
 		
 
 	}
 	
+	
+	//METODO PARA CREAR ARMY ENEMIGAS
 	public ArrayList<ArrayList> createEnemyArmy() {
 		int enemyWood;
 		int enemyFood;
 		int enemyIron;
-		
-		if (countFleet == 0) {
-			enemyWood = Variables.WOOD_BASE_ENEMY_ARMY;
-			enemyFood = Variables.FOOD_BASE_ENEMY_ARMY;
-			enemyIron = Variables.IRON_BASE_ENEMY_ARMY;
-		
-		} else {
-			enemyWood = Variables.WOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.WOOD_BASE_ENEMY_ARMY/100);
-			enemyFood = Variables.FOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.FOOD_BASE_ENEMY_ARMY/100);
-			enemyIron = Variables.IRON_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.IRON_BASE_ENEMY_ARMY/100);;
-		}
+		enemyWood = Variables.WOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.WOOD_BASE_ENEMY_ARMY/100);
+		enemyFood = Variables.FOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.FOOD_BASE_ENEMY_ARMY/100);
+		enemyIron = Variables.IRON_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.IRON_BASE_ENEMY_ARMY/100);
 		
 		
 		
@@ -178,6 +174,8 @@ public class Main {
 		return enemy;
 	}
 	
+	
+	//PRINT DE LA ARMY ENEMIGA
 	
 	public void viewThread(ArrayList<ArrayList> enemigos) {
 		System.out.println("NEW threat COMMING\n");

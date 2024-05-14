@@ -20,7 +20,7 @@ public class Battle {
 	private int initialNumberUnitsEnemy;
 	
 //***
-	private int[][] wasteWoodIron; //Array [madera, iron]
+	private int[] wasteWoodIron; //Array [madera, iron]
 	
 	private int [] enemyDeaths;
 	private int [] civilizationDeaths;
@@ -87,10 +87,10 @@ public class Battle {
 	public void setInitialNumberUnitsEnemy(int initialNumberUnitsEnemy) {
 		this.initialNumberUnitsEnemy = initialNumberUnitsEnemy;
 	}
-	public int[][] getWasteWoodIron() {
+	public int[] getWasteWoodIron() {
 		return wasteWoodIron;
 	}
-	public void setWasteWoodIron(int[][] wasteWoodIron) {
+	public void setWasteWoodIron(int[] wasteWoodIron) {
 		this.wasteWoodIron = wasteWoodIron;
 	}
 	public int[] getEnemyDeaths() {
@@ -159,7 +159,72 @@ public class Battle {
 	
 	public String getBattleReport(int battles) {
 		//Resumen de la batalla, battles es el numero de batallas que hemos acumulado
-		return "";
+		String report = "";
+		String[] nameUnits = {"Swordsman", "Spearman", "Crossbow", "Cannon", 
+		                      "Arrow Tower", "Catapult", "Rocket Launcher Tower", 
+		                      "Magician", "Priest"};
+
+		// Encabezado de las estadísticas de batalla
+		report += "BATTLE STATISTICS\n\n";
+
+		// Encabezado de la sección de batalla
+		report += "Civilization Army\tUnits\tDrops\tEnemy Army\tUnits\tDrops\n\n";
+
+		// Agregar información de cada tipo de unidad
+		for (int i = 0; i < getCivilizationArmy().size(); i++) {
+		    if (i < 4) {
+		        // Unidades cuerpo a cuerpo y a distancia
+		        report += String.format("%-15s%-8d%-8d%-15s%-8d%-8d\n\n",
+		                                nameUnits[i],
+		                                getInitialArmies()[0][i],
+		                                getCivilizationDeaths()[i],
+		                                nameUnits[i],
+		                                getInitialArmies()[1][i],
+		                                getEnemyDeaths()[i]);
+		    } else {
+		        // Otras unidades
+		        report += String.format("%-15s%-8d%-8d\n\n",
+		                                nameUnits[i],
+		                                getInitialArmies()[0][i],
+		                                getCivilizationDeaths()[i]);
+		    }
+		}
+
+		report += "**************************************************************************************\n\n";
+
+		// Encabezado de la sección de costos de recursos
+		report += "Cost Army Civilization\tCost Army Enemy\n\n";
+		report += String.format("Food: %-8dFood: %-8d\n", getInitialCostFleet()[0][0], getInitialCostFleet()[1][0]);
+		report += String.format("Wood: %-8dWood: %-8d\n", getInitialCostFleet()[0][1], getInitialCostFleet()[1][1]);
+		report += String.format("Iron: %-8dIron: %-8d\n\n", getInitialCostFleet()[0][2], getInitialCostFleet()[1][2]);
+		report += "**************************************************************************************\n\n";
+
+		// Encabezado de la sección de pérdidas de recursos
+		report += "Losses Army Civilization\tLosses Army Enemy\n\n";
+		report += String.format("Food: %-8dFood: %-8d\n", getResourcesLooses()[0][0], getResourcesLooses()[1][0]);
+		report += String.format("Wood: %-8dWood: %-8d\n", getResourcesLooses()[0][1], getResourcesLooses()[1][1]);
+		report += String.format("Iron: %-8dIron: %-8d\n\n", getResourcesLooses()[0][2], getResourcesLooses()[1][2]);
+		report += "**************************************************************************************\n\n";
+
+		// Desperdicios generados
+		report += "Waste Generated:\n";
+		report += String.format("Wood: %-8d\n", wasteWoodIron[0]);
+		report += String.format("Iron: %-8d\n\n", wasteWoodIron[1]);
+		
+		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
+			report += "Battle Winned by Civilization, we Collect Rubble";
+		
+		}else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
+			report += "Battle Winned by Enemy, we Don't Collect Rubble";
+		
+		} else {
+			report += "Battle tied, we Don't Collect Rubble";
+		}
+		
+		report += "\n##########################################################################";
+		
+		
+		return report;
 	}
 	
 	public String BattleDevelopment1() {
@@ -513,8 +578,8 @@ public class Battle {
 					int wasteProbability = waste.nextInt(101);
 					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
 					if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
-						wood_waste_Civilization += (int) (unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100));
-						iron_waste_Civilization += (int) (unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100));
+						wood_waste_Civilization += (int) ((unitDefending.getWoodCost() * Variables.PERCENTATGE_WASTE)/100);
+						iron_waste_Civilization += (int) ((unitDefending.getIronCost() * Variables.PERCENTATGE_WASTE)/100);
 					}
 					//Elimina la unidad con armor 0 (muere)
 					enemyArmy.get(defenseGroup).remove(randomUnit);
@@ -611,8 +676,9 @@ public class Battle {
 					int wasteProbability = waste.nextInt(101);
 					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
 					if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
-						wood_waste_Enemy += (int) (unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100));
-						iron_waste_Enemy += (int) (unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100));
+						wood_waste_Enemy += (int) ((unitDefending.getWoodCost() * Variables.PERCENTATGE_WASTE)/100);
+						iron_waste_Enemy += (int) ((unitDefending.getIronCost() * Variables.PERCENTATGE_WASTE)/100);
+						
 					}
 					//Elimina la unidad con armor 0 (muere)
 					myArmy.get(defenseGroup).remove(randomUnit);
@@ -649,6 +715,12 @@ public class Battle {
 //Logica para ver que bando gana
 		
 		resourcesLooses = getResourcesLooses();
+		int[] wasteWoodIron = new int[2];
+		
+		wasteWoodIron[0] = wood_waste_Civilization + wood_waste_Enemy;
+		wasteWoodIron[1] = iron_waste_Civilization + iron_waste_Enemy;
+		
+		setWasteWoodIron(wasteWoodIron);
 		
 		// El valor de Points (puntuacion de cada bando en la batalla) mas alto pierde
 		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
@@ -658,7 +730,7 @@ public class Battle {
 			//Anadir recursos a la civilizacion
 			
 		} else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
-			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
+			setBattleDevelopment(getBattleDevelopment() + "\nEnemy: " + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nEnemy WIN !!!");
 			
 		} else {
