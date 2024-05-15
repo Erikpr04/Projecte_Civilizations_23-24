@@ -170,74 +170,80 @@ public class Battle {
 	//METODOS
 	
 	public String getBattleReport(int battles) {
-		//Resumen de la batalla, battles es el numero de batallas que hemos acumulado
-		String report = "";
-		String[] nameUnits = {"Swordsman", "Spearman", "Crossbow", "Cannon", 
-		                      "Arrow Tower", "Catapult", "Rocket Launcher Tower", 
-		                      "Magician", "Priest"};
+	    StringBuilder report = new StringBuilder();
+	    String[] nameUnits = {"Swordsman", "Spearman", "Crossbow", "Cannon", 
+	                          "Arrow Tower", "Catapult", "Rocket Launcher Tower", 
+	                          "Magician", "Priest"};
 
-		// Encabezado de las estadísticas de batalla
-		report += "BATTLE STATISTICS\n\n";
+	    // Encabezado de las estadísticas de batalla
+	    report.append("BATTLE STATISTICS\n\n");
 
-		// Encabezado de la sección de batalla
-		report += "Civilization Army\tUnits\tDrops\tEnemy Army\tUnits\tDrops\n\n";
+	    // Encabezado de la sección de batalla
+	    report.append(String.format("%-15s%-8s%-8s%-15s%-8s%-8s\n",
+	                                "Civilization Army",
+	                                "Units",
+	                                "Drops",
+	                                "Enemy Army",
+	                                "Units",
+	                                "Drops"));
 
-		// Agregar información de cada tipo de unidad
-		for (int i = 0; i < getCivilizationArmy().size(); i++) {
-		    if (i < 4) {
-		        // Unidades cuerpo a cuerpo y a distancia
-		        report += String.format("%-15s%-8d%-8d%-15s%-8d%-8d\n\n",
-		                                nameUnits[i],
-		                                getInitialArmies()[0][i],
-		                                getCivilizationDeaths()[i],
-		                                nameUnits[i],
-		                                getInitialArmies()[1][i],
-		                                getEnemyDeaths()[i]);
-		    } else {
-		        // Otras unidades
-		        report += String.format("%-15s%-8d%-8d\n\n",
-		                                nameUnits[i],
-		                                getInitialArmies()[0][i],
-		                                getCivilizationDeaths()[i]);
-		    }
-		}
+	    // Agregar información de cada tipo de unidad
+	    for (int i = 0; i < getCivilizationArmy().size(); i++) {
+	        if (i < 4) {
+	            // Unidades cuerpo a cuerpo y a distancia
+	            report.append(String.format("%-15s%8d%8d%-15s%8d%8d\n",
+	                                        nameUnits[i],
+	                                        getInitialArmies()[0][i],
+	                                        getCivilizationDeaths()[i],
+	                                        nameUnits[i],
+	                                        getInitialArmies()[1][i],
+	                                        getEnemyDeaths()[i]));
+	        } else {
+	            // Otras unidades
+	            report.append(String.format("%-15s%8d%8d\n",
+	                                        nameUnits[i],
+	                                        getInitialArmies()[0][i],
+	                                        getCivilizationDeaths()[i]));
+	        }
+	    }
 
-		report += "**************************************************************************************\n\n";
+	    report.append("**************************************************************************************\n\n");
 
-		// Encabezado de la sección de costos de recursos
-		report += "Cost Army Civilization\tCost Army Enemy\n\n";
-		report += String.format("Food: %-8dFood: %-8d\n", getInitialCostFleet()[0][0], getInitialCostFleet()[1][0]);
-		report += String.format("Wood: %-8dWood: %-8d\n", getInitialCostFleet()[0][1], getInitialCostFleet()[1][1]);
-		report += String.format("Iron: %-8dIron: %-8d\n\n", getInitialCostFleet()[0][2], getInitialCostFleet()[1][2]);
-		report += "**************************************************************************************\n\n";
+	    // Encabezado de la sección de costos de recursos
+	    report.append("Cost Army Civilization\tCost Army Enemy\n");
+	    report.append(String.format("Food: %-8d\tFood: %-8d\n", getInitialCostFleet()[0][0], getInitialCostFleet()[1][0]));
+	    report.append(String.format("Wood: %-8d\tWood: %-8d\n", getInitialCostFleet()[0][1], getInitialCostFleet()[1][1]));
+	    report.append(String.format("Iron: %-8d\tIron: %-8d\n\n", getInitialCostFleet()[0][2], getInitialCostFleet()[1][2]));
+	    report.append("**************************************************************************************\n\n");
 
-		// Encabezado de la sección de pérdidas de recursos
-		report += "Losses Army Civilization\tLosses Army Enemy\n\n";
-		report += String.format("Food: %-8dFood: %-8d\n", getResourcesLooses()[0][0], getResourcesLooses()[1][0]);
-		report += String.format("Wood: %-8dWood: %-8d\n", getResourcesLooses()[0][1], getResourcesLooses()[1][1]);
-		report += String.format("Iron: %-8dIron: %-8d\n\n", getResourcesLooses()[0][2], getResourcesLooses()[1][2]);
-		report += "**************************************************************************************\n\n";
+	    // Encabezado de la sección de pérdidas de recursos
+	    report.append("Losses Army Civilization\tLosses Army Enemy\n");
+	    report.append(String.format("Food: %-8d\tFood: %-8d\n", getResourcesLooses()[0][0], getResourcesLooses()[1][0]));
+	    report.append(String.format("Wood: %-8d\tWood: %-8d\n", getResourcesLooses()[0][1], getResourcesLooses()[1][1]));
+	    report.append(String.format("Iron: %-8d\tIron: %-8d\n\n", getResourcesLooses()[0][2], getResourcesLooses()[1][2]));
+	    report.append("**************************************************************************************\n\n");
 
-		// Desperdicios generados
-		report += "Waste Generated:\n";
-		report += String.format("Wood: %-8d\n", wasteWoodIron[0]);
-		report += String.format("Iron: %-8d\n\n", wasteWoodIron[1]);
-		
-		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
-			report += "Battle Winned by Civilization, we Collect Rubble";
-		
-		}else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
-			report += "Battle Winned by Enemy, we Don't Collect Rubble";
-		
-		} else {
-			report += "Battle tied, we Don't Collect Rubble";
-		}
-		
-		report += "\n##########################################################################";
-		
-		
-		return report;
+	    // Desperdicios generados
+	    report.append("Waste Generated:\n");
+	    report.append(String.format("Wood: %-8d\n", wasteWoodIron[0]));
+	    report.append(String.format("Iron: %-8d\n\n", wasteWoodIron[1]));
+
+	    // Determinar el resultado de la batalla
+	    int civLosses = getResourcesLooses()[0][3];
+	    int enemyLosses = getResourcesLooses()[1][3];
+	    if (civLosses < enemyLosses) {
+	        report.append("Battle Won by Civilization, we Collect Rubble");
+	    } else if (civLosses > enemyLosses) {
+	        report.append("Battle Won by Enemy, we Don't Collect Rubble");
+	    } else {
+	        report.append("Battle Tied, we Don't Collect Rubble");
+	    }
+
+	    report.append("\n##########################################################################");
+
+	    return report.toString();
 	}
+
 	
 	public void initInitialArmies() {
 		//Inicializar el Array initialArmies y asi poder calcular reportes

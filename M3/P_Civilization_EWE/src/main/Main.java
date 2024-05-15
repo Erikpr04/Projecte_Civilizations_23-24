@@ -90,24 +90,26 @@ public class Main {
 //		
 		b.mainBattle(cv.getArmy(), enemy);
 
-		System.out.println("\n\n" + b.getBattleDevelopment());
+//		System.out.println("\n\n" + b.getBattleDevelopment());
+		
+		System.out.println("\n\n" + b.getBattleReport(0));
 		
 		
-		try {
-			cbd.insertarBattleLog(1,2,b.getBattleDevelopment());
-		} catch (MiSQLException e) {
-		
-			e.printStackTrace();
-		}
-		
-		try {
-			cbd.sacarBattleLog(1,2);
-			
-		} catch (MiSQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+//		try {
+//			cbd.insertarBattleLog(1,2,b.getBattleDevelopment());
+//		} catch (MiSQLException e) {
+//		
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			cbd.sacarBattleLog(1,2);
+//			
+//		} catch (MiSQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
 		
 		
 //		try {
@@ -119,32 +121,32 @@ public class Main {
 //			e.printStackTrace();
 //		}
 		
-		
-		TimerTask task = new TimerTask() {
-
-			public void run() {
-				cv.setWood(cv.getWood() + Variables.CIVILIZATION_WOOD_GENERATED);
-				cv.setFood(cv.getFood() + Variables.CIVILIZATION_FOOD_GENERATED);
-				cv.setIron(cv.getIron() + Variables.CIVILIZATION_IRON_GENERATED);
-				
-				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
-				
-				System.out.println("Madera: " + cv.getWood());
-				System.out.println("Comida: " + cv.getFood());
-				System.out.println("Hierro: " + cv.getIron());
-				System.out.println("Mana: " + cv.getMana());
-				System.out.println("*********************");
-				
-			}
-			
-		};
-		
-		Timer timer = new Timer();
-		timer.schedule(task, 1, 10000);
-		
+//		
+//		TimerTask task = new TimerTask() {
+//
+//			public void run() {
+//				cv.setWood(cv.getWood() + Variables.CIVILIZATION_WOOD_GENERATED);
+//				cv.setFood(cv.getFood() + Variables.CIVILIZATION_FOOD_GENERATED);
+//				cv.setIron(cv.getIron() + Variables.CIVILIZATION_IRON_GENERATED);
+//				
+//				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+//				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+//				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+//				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+//				
+//				System.out.println("Madera: " + cv.getWood());
+//				System.out.println("Comida: " + cv.getFood());
+//				System.out.println("Hierro: " + cv.getIron());
+//				System.out.println("Mana: " + cv.getMana());
+//				System.out.println("*********************");
+//				
+//			}
+//			
+//		};
+//		
+//		Timer timer = new Timer();
+//		timer.schedule(task, 1, 10000);
+//		
 
 	}
 	
