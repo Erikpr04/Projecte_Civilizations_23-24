@@ -22,9 +22,9 @@ public class Main {
 	private int countFleet = 0;
 	
 	//Cosas BD
-	private static String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private static String user = "root";
-	private static String pass = "P@ssw0rd";
+	private static String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	private static String user = "AdminCivilization";
+	private static String pass = "Civi1234";
 	
 	
 			
@@ -93,6 +93,16 @@ public class Main {
 		System.out.println("\n\n" + b.getBattleDevelopment());
 		
 		System.out.println("\n\n" + b.getBattleReport(0));
+		
+		try {
+			cbd.insertarBattleLog(1, 1, b.getBattleReport(0));
+			
+			cbd.sacarBattleLog(1, 1);
+		} catch (MiSQLException e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 		
 //		try {

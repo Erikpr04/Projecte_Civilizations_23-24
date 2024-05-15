@@ -13,9 +13,9 @@ import exceptions.MiSQLException;
 
 public class ConnectionDB {
 	
-	private String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private String user = "root";
-	private String pass = "P@ssw0rd";
+	private String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	private String user = "AdminCivilization";
+	private String pass = "Civi1234";
 	
 	public ConnectionDB(String url, String user, String pass){
 		this.url = url;
@@ -42,7 +42,7 @@ public class ConnectionDB {
 	public void insertarBattleLog(int civilizationId, int battleId, String logEntry) throws MiSQLException {
 	    try {
 	        Connection conn = openConnectionDB();
-	        String query = "INSERT INTO battle_log (civilization_id, num_battle, log_entry) VALUES (?, ?, ?)";
+	        String query = "INSERT INTO Battle_log (civilization_id, num_battle, log_entry) VALUES (?, ?, ?)";
 	        
 	        PreparedStatement pstmt = conn.prepareStatement(query);
 	        pstmt.setInt(1, civilizationId);
@@ -67,7 +67,7 @@ public class ConnectionDB {
 	public void sacarBattleLog(int civilizationId, int battleId) throws MiSQLException {
 	    try {
 	        Connection conn = openConnectionDB();
-	        String query = "SELECT log_entry FROM battle_log WHERE civilization_id = ? AND num_battle = ?";
+	        String query = "SELECT log_entry FROM Battle_log WHERE civilization_id = ? AND num_battle = ?";
 	        
 	        PreparedStatement pstmt = conn.prepareStatement(query);
 	        pstmt.setInt(1, civilizationId);
@@ -130,30 +130,30 @@ public class ConnectionDB {
 		}
 	}
 	
-//	public static void main(String[] args){
-//	    String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-//	    String user = "root";
-//	    String pass = "P@ssw0rd";
-//
-//	    ConnectionDB cbd = new ConnectionDB(url, user, pass);
-//
-//	    try {
-//	        // Establecer la conexión con la base de datos
-//	        Connection conn = cbd.openConnectionDB();
-//	        if (conn != null) {
-//	            System.out.println("Conexión exitosa con la base de datos.");
-//	            try {
-//					conn.close();
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//	        } else {
-//	            System.out.println("Error al conectar con la base de datos.");
-//	        }
-//	    } catch (MiSQLException e) {
-//	        System.out.println("Error al establecer la conexión: " + e.getMessage());
-//	    }
-//	}
+	public static void main(String[] args){
+	    String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	    String user = "AdminCivilization";
+	    String pass = "Civi1234";
+
+	    ConnectionDB cbd = new ConnectionDB(url, user, pass);
+
+	    try {
+	        // Establecer la conexión con la base de datos
+	        Connection conn = cbd.openConnectionDB();
+	        if (conn != null) {
+	        	cbd.sacarBattleLog(1, 1);
+	            try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	        } else {
+	            System.out.println("Error al conectar con la base de datos.");
+	        }
+	    } catch (MiSQLException e) {
+	        System.out.println("Error al establecer la conexión: " + e.getMessage());
+	    }
+	}
 
 	
 }
