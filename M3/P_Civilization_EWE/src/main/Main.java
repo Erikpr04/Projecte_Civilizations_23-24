@@ -90,7 +90,7 @@ public class Main {
 //		
 		b.mainBattle(cv.getArmy(), enemy);
 
-//		System.out.println("\n\n" + b.getBattleDevelopment());
+		System.out.println("\n\n" + b.getBattleDevelopment());
 		
 		System.out.println("\n\n" + b.getBattleReport(0));
 		
