@@ -23,8 +23,11 @@
 		</list>
 	</section>
 	<section name="org.eclipse.egit.ui.internal.pull.PullResultDialog.dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="427"/>
+		<item key="DIALOG_X_ORIGIN" value="314"/>
 		<item key="DIALOG_Y_ORIGIN" value="254"/>
+		<item key="DIALOG_WIDTH" value="896"/>
+		<item key="DIALOG_HEIGHT" value="256"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
 	</section>
 	<section name="org.eclipse.egit.ui.internal.dialogs.CheckoutDialog.dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="260"/>
@@ -35,10 +38,20 @@
 	</section>
 	<section name="org.eclipse.egit.ui.internal.staging.StagingView">
 		<item key="MAIN_SASH_FORM_ORIENTATION_VERTICAL" value="false"/>
-		<item key="HORIZONTAL_SASH_FORM_WEIGHT" value="200,200"/>
-		<item key="STAGING_SASH_FORM_WEIGHT" value="200,200"/>
+		<item key="HORIZONTAL_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="STAGING_SASH_FORM_WEIGHT" value="500,500"/>
 		<item key="sortItemState" value="false"/>
 	</section>
 	<section name="GitCommitMessageComponent">
+		<list key="/home/erik/P_Civilization_EWE/Projecte_Civilizations_23-24/.git">
+			<item value="false"/>
+			<item value="erikpr04 &lt;erikpr32@gmail.com&gt;"/>
+			<item value="subidos avances en interfaz grafica"/>
+			<item value="erikpr04 &lt;erikpr32@gmail.com&gt;"/>
+			<item value="64da90297a4ccfa0bb6ab94bc8a9a7940f9df1f4"/>
+			<item value="0"/>
+			<item value="false"/>
+			<item value=""/>
+		</list>
 	</section>
 </section>

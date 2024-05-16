@@ -1,0 +1,6 @@
+package interfaces;
+
+public interface GameGuiListener {
+    void Save_game_gui();
+    
+}

@@ -1,0 +1,305 @@
+package gui;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.io.File;
+import java.io.IOException;
+
+public class Game_gui extends JPanel {
+    private static final int PANEL_SIZE = 50; // Tamaño de cada panel
+    private static final int INIT_ZOOM = 50; // Zoom inicial
+    private int zoomLevel = INIT_ZOOM; // Nivel de zoom actual
+    private int rows, cols; // Número de filas y columnas de paneles
+    private MiPanelito[][] subPanels; // Matriz de paneles secundarios
+    private static int offsetX = 0; // Desplazamiento en el eje X
+    private static int offsetY = 0; // Desplazamiento en el eje Y
+    private int lastMouseX; // Última posición X del ratón
+    private int lastMouseY; // Última posición Y del ratón
+    private JPanel mainPanel1,containerpanel,mainPanel2,panelright,panelup,panelright1,panelright2;
+    private JPanel panelright_food,panelright_wood,panelright_iron,panelright_mana;
+
+    private int mouseX;
+    private int mouseY;
+    private boolean isRightClicked;
+
+    private int food,wood,iron,mana;
+
+    //imagenes gui
+    private ImageIcon resources_img;
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Game GUI");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            Game_gui gameGui = new Game_gui(10, 10); // Cambia 10, 10 a tus filas y columnas deseadas
+            frame.add(gameGui, BorderLayout.CENTER); // Agregar directamente el gameGui al centro del JFrame
+
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+    }
+
+    public Game_gui(int rows, int cols) {
+        this.food = 1000;
+        this.wood = 1000;
+        this.iron = 1000;
+        this.mana = 1000;
+
+        this.rows = rows;
+        this.cols = cols;
+        subPanels = new MiPanelito[rows][cols];
+        mainPanel1 = new JPanel(new BorderLayout());
+        containerpanel = new JPanel();
+        mainPanel2 = new JPanel(new GridLayout(rows, cols));
+        panelright = new JPanel(new BorderLayout());
+        panelup = new JPanel(new BorderLayout());
+        panelright1 = new JPanel(new BorderLayout());
+        panelright2 = new JPanel(new BorderLayout());
+
+        //paneles de recursos
+        panelright_food = new JPanel(new BorderLayout());
+        panelright_wood = new JPanel(new BorderLayout());
+        panelright_iron = new JPanel(new BorderLayout());
+        panelright_mana = new JPanel(new BorderLayout());
+
+        //Ajustamos panel right 1
+        panelright1.setLayout(new GridLayout(4, 1));
+
+     // Agregar paneles de recursos
+        panelright1.add(panelright_food);
+        agregarImagenDeFondo(panelright_food, "./src/gui/brown.png",Integer.toString(food));
+        panelright1.add(panelright_wood);
+        agregarImagenDeFondo(panelright_wood, "./src/gui/brown.png",Integer.toString(wood));
+
+        panelright1.add(panelright_iron);
+        agregarImagenDeFondo(panelright_iron, "./src/gui/brown.png",Integer.toString(iron));
+
+        panelright1.add(panelright_mana);
+        agregarImagenDeFondo(panelright_mana, "./src/gui/brown.png",Integer.toString(mana));
+        setLayout(new BorderLayout()); // Establece el layout del Game_gui como BorderLayout
+        
+        
+        
+
+        // Agrega los paneles al contenedor principal
+        add(mainPanel1, BorderLayout.CENTER);
+
+        // Agrega mainPanel2 al centro de mainPanel1
+        mainPanel1.add(containerpanel, BorderLayout.WEST);
+        mainPanel1.add(panelright, BorderLayout.EAST);
+        mainPanel1.add(panelup, BorderLayout.NORTH);
+
+        // agregar subpaneles a panelderecha
+        panelright.add(panelright1, BorderLayout.NORTH);
+        panelright.add(panelright2, BorderLayout.SOUTH);
+
+        // agregar subpanel a panelcontenedor
+        containerpanel.add(mainPanel2);
+
+        // Establece el tamaño preferido para mainPanel1
+        mainPanel1.setPreferredSize(new Dimension(1000, 700));
+        containerpanel.setPreferredSize(new Dimension(750, 700));
+        mainPanel2.setPreferredSize(new Dimension(750, 700));
+
+        panelright.setPreferredSize(new Dimension(250, 700));
+        panelright1.setPreferredSize(new Dimension(250, 350));
+        panelright2.setPreferredSize(new Dimension(250, 350));
+        panelup.setPreferredSize(new Dimension(700, 10));
+
+        // Crear y agregar paneles secundarios
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                subPanels[i][j] = new MiPanelito();
+                mainPanel2.add(subPanels[i][j]);
+            }
+        }
+
+        // Agregar MouseListener a cada panel en subPanels
+        for (MiPanelito[] row : subPanels) {
+            for (MiPanelito panel : row) {
+                panel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        super.mouseEntered(e);
+                        panel.setBorder(BorderFactory.createLineBorder(Color.black));
+                        panel.repaint(); // Repintar el panel para reflejar el cambio
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        super.mouseExited(e);
+                        panel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+                        panel.repaint(); // Repintar el panel para reflejar el cambio
+                    }
+                });
+            }
+        }
+
+        // Agregar MouseWheelListener para el zoom
+        mainPanel2.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                // Obtener la dirección del movimiento de la rueda del ratón
+                int notches = e.getWheelRotation();
+
+                // Realizar el zoom en base a la dirección de desplazamiento
+                if (notches < 0) {
+                    // Zoom in
+                    zoomIn(mainPanel2);
+                } else {
+                    // Zoom out
+                    zoomOut(mainPanel2);
+                }
+            }
+        });
+
+        // Agregar MouseMotionListener para permitir el desplazamiento de mainPanel2
+        mainPanel2.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (isRightClicked) {
+                    int newX = e.getXOnScreen();
+                    int newY = e.getYOnScreen();
+
+                    int deltaX = (int) ((newX - mouseX) / (zoomLevel / INIT_ZOOM));
+                    int deltaY = (int) ((newY - mouseY) / (zoomLevel / INIT_ZOOM));
+
+                    Point currentLocation = mainPanel2.getLocation();
+                    mainPanel2.setLocation(currentLocation.x + deltaX, currentLocation.y + deltaY);
+
+                    mouseX = newX;
+                    mouseY = newY;
+                }
+            }
+        });
+    }
+
+    // Método para hacer zoom in en un panel
+    private void zoomIn(JPanel panel) {
+        float scale = 1.1f; // Factor de escala para el zoom in
+        zoom(panel, scale);
+    }
+
+    // Método para hacer zoom out en un panel
+    private void zoomOut(JPanel panel) {
+        float scale = 0.9f; // Factor de escala para el zoom out
+        zoom(panel, scale);
+    }
+
+    // Método para realizar el zoom en un panel con un factor de escala dado
+    private void zoom(JPanel panel, float scale) {
+        // Obtener el tamaño actual del panel
+        Dimension size = panel.getSize();
+
+        // Calcular el nuevo tamaño del panel después del zoom
+        int newWidth = (int) (size.width * scale);
+        int newHeight = (int) (size.height * scale);
+
+        // Establecer el nuevo tamaño del panel
+        panel.setPreferredSize(new Dimension(newWidth, newHeight));
+
+        // Revalidar y repintar el panel para reflejar el cambio
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        // Aplicar zoom y desplazamiento
+        g2d.scale((double) zoomLevel / 100, (double) zoomLevel / 100);
+        g2d.translate(offsetX, offsetY);
+        g2d.dispose();
+    }
+
+    private void agregarImagenDeFondo(JPanel panel, String rutaImagen,String textopanel) {
+        try {
+            Image imagen = ImageIO.read(new File(rutaImagen));
+            JLabel backgroundLabel = new JLabel(new ImageIcon(imagen));
+            backgroundLabel.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
+            panel.add(backgroundLabel, BorderLayout.CENTER);
+            JLabel textoLabel = new JLabel(textopanel);
+            textoLabel.setForeground(Color.WHITE);
+            textoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            panel.add(textoLabel, BorderLayout.NORTH);
+            panel.setOpaque(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+}
+
+
+
+
+
+
+class MiPanelito extends JPanel {
+    private int lastMouseX; // Última posición X del ratón
+    private int lastMouseY;
+    private Color panelColor = Color.GREEN; // Color de los paneles
+    private Color borderColor = Color.green; // Color del borde
+    private ImageIcon[] buildingImages = new ImageIcon[5]; // Arreglo para las imágenes de los edificios
+    private ImageIcon currentImage; // Imagen actual del panel
+
+    public MiPanelito() {
+        this.setBackground(panelColor);
+        setBorder(BorderFactory.createLineBorder(borderColor));
+
+        // Carga de imágenes de edificios
+        buildingImages[0] = new ImageIcon("path/to/farm.png"); // Granja
+        buildingImages[1] = new ImageIcon("path/to/smithy.png"); // Herrería
+        buildingImages[2] = new ImageIcon("./src/gui/church.png"); // Iglesia
+        buildingImages[3] = new ImageIcon("path/to/magic_tower.png"); // Torre mágica
+        buildingImages[4] = new ImageIcon("path/to/carpentry.png"); // Carpintería
+
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    // Captura la posición inicial del ratón al presionar el botón derecho
+                    lastMouseX = e.getX();
+                    lastMouseY = e.getY();
+                } else if (SwingUtilities.isLeftMouseButton(e)) {
+                    // Pide al usuario que seleccione un edificio al hacer clic izquierdo
+                    String[] options = {"Farm", "Smithy", "Church", "Magic Tower", "Carpentry"};
+                    int choice = JOptionPane.showOptionDialog(null, "Select a building to create:", "Create Building",
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                    // Cambia el panel al fondo de la imagen correspondiente al edificio seleccionado
+                    setCurrentImage(buildingImages[choice]);
+                    repaint();
+                }
+            }
+        });
+    }
+    
+    public void setBorderColor(Color color) {
+        this.borderColor = color;
+        repaint(); // Repintar el panel para reflejar el cambio en el color del borde
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Dibujar la imagen en el panel
+        if (currentImage != null) {
+            Image image = currentImage.getImage();
+            g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
+    public void setCurrentImage(ImageIcon image) {
+        this.currentImage = image;
+    }
+}

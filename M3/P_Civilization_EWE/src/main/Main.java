@@ -1,11 +1,13 @@
 package main;
 
 import java.util.ArrayList;
+import gui.dc_gui;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import classes.Civilization;
+import classes.dc_classes;
 import classes.attackunits.AttackUnit;
 import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
@@ -13,31 +15,121 @@ import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
 import exceptions.MiSQLException;
 import exceptions.ResourceException;
+import interfaces.GameGuiListener;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
 import utils.Battle;
-import utils.ConnectionDB;
+import utils.dc_database;
 
 public class Main {
 	private int countFleet = 0;
-	
-	//Cosas BD
-	private static String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private static String user = "AdminCivilization";
-	private static String pass = "Civi1234";
-	
-	
+    private dc_gui dc_gui;
+    private dc_classes classes;
+	private dc_database database;
+
+	public static void main(String[] args) {		
+        Main m = new Main();
+
+        
+		//Battle b = new Battle();
+        
+        //instanciar controladores de dominio
+        
+        
+        dc_database database = new dc_database();
+        m.database = new dc_database();
+        
+
+
+        
+        dc_classes classes = new dc_classes();
+        m.dc_gui = new dc_gui();
+        m.dc_gui.invoke_main_menu();
+        m.dc_gui.setGgl(new GameGuiListener() {
 			
-	public static void main(String[] args) {
-		
-		Main m = new Main();
-		Battle b = new Battle();
-		Civilization cv = new Civilization();
+			//metodo para cargar juego
+			public void load_game_gui() {
+				
+				//actualizamos los datos en dc_gui, que lo pasara a game gui
+				this.update_resources();
+				
+				m.dc_gui.load_game();
+				
+			}
+
+			public void update_resources() {
+				
+				
+				//aqui obtendremos los datos de la partida de la bd
+				
+				int iron = 15000;
+				int wood = 15000;
+				int food = 15000;
+				int mana = 15000;
+
+				m.dc_gui.setFood(food);
+				m.dc_gui.setWood(wood);
+				m.dc_gui.setIron(iron);
+				m.dc_gui.setMana(mana);
+
+
+			}
+			public void update_resources_db(int food,int wood, int iron, int mana) {
+				System.out.println(food);
+				System.out.println(wood);
+				System.out.println(iron);
+				System.out.println(mana);
+
+				System.out.println("Resources updated");
+			}
+
+			@Override
+			public void update_resources(int food, int wood, int iron, int mana) {
+				
+			}
+
+			@Override
+			public void update_army_db(int tipo_tropa) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void update_structures_db(String structuretype,int number_structures) {
+				
+				if (structuretype == "Church") {
+					classes.getCv().setChurch(classes.getCv().getChurch()+1);
+
+				}else if (structuretype == "Magic Tower") {
+					classes.getCv().setMagicTower(classes.getCv().getMagicTower()+1);
+
+				}else if (structuretype == "Carpentry") {
+					classes.getCv().setCarpentry(classes.getCv().getCarpentry()+1);
+				}else if (structuretype == "Smithy") {
+					classes.getCv().setSmithy(classes.getCv().getSmithy()+1);
+				}else if (structuretype == "Farm") {
+					classes.getCv().setFarm(classes.getCv().getFarm()+1);
+				}
+				System.out.println("Estructura creada!");
+				}
+			
+
+			@Override
+			public void update_technologies_db(int attack_technology, int defense_technology) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        
+        
+        
+        
+        
+        
 		
 //		//TIMER TASK:
 //
 		ConnectionDB cbd = new ConnectionDB(url, user, pass);
-		
 		
 //		
 //		TimerTask actualizarBD = new TimerTask() {
@@ -64,43 +156,43 @@ public class Main {
 		
 //		//BATALLAS:
 //		
-		cv.setWood(1000000000);
-		cv.setFood(1000000000);
-		cv.setIron(1000000000);
+// 		cv.setWood(1000000000);
+// 		cv.setFood(1000000000);
+// 		cv.setIron(1000000000);
 		
-		try {
-			cv.new_Swordsman(2);
-		    cv.new_Spearman(0);
-			cv.new_Crossbow(4);
-			cv.new_Cannon(1);
-			cv.new_Catapult(3);
-		    cv.new_ArrowTower(5);
+// 		try {
+// 			cv.new_Swordsman(2);
+// 		    cv.new_Spearman(0);
+// 			cv.new_Crossbow(4);
+// 			cv.new_Cannon(1);
+// 			cv.new_Catapult(3);
+// 		    cv.new_ArrowTower(5);
 			
-//			
-		} catch (ResourceException e) {
+// //			
+// 		} catch (ResourceException e) {
 
-			e.printStackTrace();
-	    }
-//		
-//		
-		ArrayList<ArrayList> enemy = m.createEnemyArmy();
-//		
-		m.viewThread(enemy);
-//		
-//		
-		b.mainBattle(cv.getArmy(), enemy);
+// 			e.printStackTrace();
+// 	    }
+// //		
+// //		
+// 		ArrayList<ArrayList> enemy = m.createEnemyArmy();
+// //		
+// 		m.viewThread(enemy);
+// //		
+// //		
+// 		b.mainBattle(cv.getArmy(), enemy);
 
-		System.out.println("\n\n" + b.getBattleDevelopment());
+// 		System.out.println("\n\n" + b.getBattleDevelopment());
 		
-		System.out.println("\n\n" + b.getBattleReport(0));
+// 		System.out.println("\n\n" + b.getBattleReport(0));
 		
-		try {
-			cbd.insertarBattleLog(1, 1, b.getBattleReport(0));
+// 		try {
+// 			cbd.insertarBattleLog(1, 1, b.getBattleReport(0));
 			
-			cbd.sacarBattleLog(1, 1);
-		} catch (MiSQLException e) {
-			e.printStackTrace();
-		}
+// 			cbd.sacarBattleLog(1, 1);
+// 		} catch (MiSQLException e) {
+// 			e.printStackTrace();
+// 		}
 		
 		
 		
@@ -111,6 +203,9 @@ public class Main {
 //		
 //			e.printStackTrace();
 //		}
+		classes.getCv().setWood(1000000000);
+		classes.getCv().setFood(1000000000);
+		classes.getCv().setIron(1000000000);
 //		
 //		try {
 //			cbd.sacarBattleLog(1,2);
@@ -157,6 +252,53 @@ public class Main {
 //		Timer timer = new Timer();
 //		timer.schedule(task, 1, 10000);
 //		
+//		
+//		b.mainBattle(cv.getArmy(), enemy);
+
+//		System.out.println("\n\n" + b.getBattleDevelopment());
+		
+		
+		
+		
+		
+		
+//		//TIMER TASK:
+//		cv.setWood(Variables.CIVILIZATION_WOOD_GENERATED);
+//		cv.setFood(Variables.CIVILIZATION_FOOD_GENERATED);
+//		cv.setIron(Variables.CIVILIZATION_IRON_GENERATED);
+//		
+//		try {
+//			cv.new_Carpentry();
+////			cv.new_Farm();
+////			cv.new_Smithy();
+//		} catch (ResourceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		TimerTask task = new TimerTask() {
+//
+//			public void run() {
+//				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+//				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+//				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+//				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+//				
+//				System.out.println("Madera: " + cv.getWood());
+//				System.out.println("Comida: " + cv.getFood());
+//				System.out.println("Hierro: " + cv.getIron());
+//				System.out.println("Mana: " + cv.getMana());
+//				System.out.println("*********************");
+//				
+//			}
+//			
+//		};
+//		
+//		Timer timer = new Timer();
+//		
+//		timer.schedule(task, 1, 10000);
+		
 
 	}
 	
