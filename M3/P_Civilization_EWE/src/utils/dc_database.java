@@ -1,6 +1,7 @@
 package utils;
 
 import gui.dc_gui;
+import interfaces.Variables;
 
 public class dc_database {
     private int food, wood, iron, mana;

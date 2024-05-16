@@ -1,0 +1,8 @@
+package interfaces;
+
+public interface GameGuiListener {
+    void load_game_gui();
+    
+    void update_resources();
+    
+}

@@ -3,6 +3,8 @@ package gui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import interfaces.GameGuiListener;
+import interfaces.MainMenuListener;
 import interfaces.Variables;
 
 import java.awt.*;
@@ -42,36 +44,39 @@ public class Game_gui extends JPanel {
     private ImageIcon resources_img,woodicon,ironicon,manaicon,foodicon,panelbackgroundimage;
     private JPanel panelright_food,panelright_wood,panelright_iron,panelright_mana;
     private JLabel woodlabel,foodlabel,ironlabel,manalabel;
-    //private String[] farmCostInfo,smithyCostInfo,churchCostInfo,magicTowerCostInfo,carpentryCostInfo;
     private dc_gui dcGui = new dc_gui(); // Instancia de dc_gui
+	private GameGuiListener listener;
 
     
     
-    
-    
+
     
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Game GUI");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public GameGuiListener getListener() {
+		return listener;
+	}
 
-            Game_gui gameGui = new Game_gui(10, 10);
-            frame.add(gameGui, BorderLayout.CENTER);
+	public void setListener(GameGuiListener listener) {
+		this.listener = listener;
+	}
 
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
-        
+	// Método para establecer el listener
+    public void setGameguiListener(GameGuiListener listener) {
+        this.listener = listener;
+    }
+    
+    public Game_gui(GameGuiListener listener) {
+        this.listener = listener; // Asignar el listener recibido al atributo listener de MainMenu
     }
     
     
-    
-    
 
 
-	public Game_gui(int rows, int cols) {
+	public Game_gui(int rows, int cols) throws Exception {
+		
+		//cargamos partida
+		//updatePanels();
+		
         
        
 
@@ -96,7 +101,7 @@ public class Game_gui extends JPanel {
         panelright1 = new JPanel(new GridLayout(4, 1));
         panelright2 = new MiPanelito(new BorderLayout());
 
-        // Load the resources_img icon
+        //  the resources_img icon
         try {
             resources_img = new ImageIcon(ImageIO.read(new File("./src/gui/brown.png")));
             woodicon = new ImageIcon(ImageIO.read(new File("./src/gui/wood_icon.png")));
@@ -129,22 +134,22 @@ public class Game_gui extends JPanel {
         // Añadir paneles a subpanel
         panelright1.add(panelright_food);
         agregarImagenTexto(panelright_food, "./src/gui/brown.png",foodlabel,foodicon);
-        update_resources_quantity(this.getFood(),foodlabel);
+        update_resources_quantity(this.getFood(),foodlabel,"food");
         
         
         panelright1.add(panelright_wood);
         agregarImagenTexto(panelright_wood, "./src/gui/brown.png",woodlabel,woodicon);
-        update_resources_quantity(this.getWood(),woodlabel);
+        update_resources_quantity(this.getWood(),woodlabel,"wood");
 
 
         panelright1.add(panelright_iron);
         agregarImagenTexto(panelright_iron, "./src/gui/brown.png",ironlabel,ironicon);
-        update_resources_quantity(this.getIron(),ironlabel);
+        update_resources_quantity(this.getIron(),ironlabel,"iron");
 
 
         panelright1.add(panelright_mana);
         agregarImagenTexto(panelright_mana, "./src/gui/brown.png",manalabel,manaicon);
-        update_resources_quantity(this.getMana(),manalabel);
+        update_resources_quantity(this.getMana(),manalabel,"mana");
 
 
 
@@ -183,6 +188,7 @@ public class Game_gui extends JPanel {
         panelright1.setPreferredSize(new Dimension(300, 400));
         panelright2.setPreferredSize(new Dimension(425, 700));
         panelup.setPreferredSize(new Dimension(1400, 20));
+
         
         
         
@@ -194,6 +200,8 @@ public class Game_gui extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
             	battlelog_frame();
+        		//updatePanels();
+
                 
             }
         });
@@ -289,51 +297,95 @@ public class Game_gui extends JPanel {
     });
 }
 	
+	
+    //metodo para guardar paneles
+    
+    public void updatePanels() {
+        this.listener.load_game_gui();
+
+    }
+	
     public int getFood() {
-        return dcGui.getFood();
+        return food;
     }
 
     public void setFood(int food) {
-        dcGui.setFood(food);
+        listener.update_resources(food, getWood(), getIron(), getMana());
     }
 
     public int getWood() {
-        return dcGui.getWood();
+        return this.wood;
     }
 
     public void setWood(int wood) {
-        dcGui.setWood(wood);
+        listener.update_resources(getFood(), wood, getIron(), getMana());
+    	
     }
 
     public int getIron() {
-        return dcGui.getIron();
+        return iron;
     }
 
     public void setIron(int iron) {
-        dcGui.setIron(iron);
+        listener.update_resources(getFood(), getWood(), iron, getMana());
     }
 
     public int getMana() {
-        return dcGui.getMana();
+        return mana;
     }
 
     public void setMana(int mana) {
-        dcGui.setMana(mana);
+        listener.update_resources(getFood(), getWood(), getIron(), mana);
     }
     
     
     
     
-    public Game_gui() {
+    public MiPanelito[][] getSubPanels() {
+		return subPanels;
+	}
+
+	public void setSubPanels(MiPanelito[][] subPanels) {
+		this.subPanels = subPanels;
+	}
+
+	public Game_gui() {
 
 
 	}
 
 	//metodos
+	
+	
+
+	
+	
+    
+
+	
+	
     
     //este metodo actualiza el label que queramos con un numero
     
-    private void update_resources_quantity(int quantity,JLabel labeltoupdate) {
+    public void update_resources_quantity(int quantity,JLabel labeltoupdate, String resource) throws Exception {
+    	
+    	
+    	if (resource == "food") {
+    		this.food = quantity;
+    		
+    	}else if (resource == "wood") {
+    		this.wood = quantity;
+
+    	}else if (resource == "iron") {
+    		this.iron = quantity;
+
+    	}else if (resource == "mana") {
+    		this.mana = quantity;
+
+    	}else {
+    		
+    		throw new Exception("Incorrect Label");
+    	}
     	int resource_update = quantity;
     	labeltoupdate.setText(Integer.toString(resource_update));
     	labeltoupdate.getParent().revalidate();
@@ -586,6 +638,9 @@ class MiPanelito extends JPanel {
     private ImageIcon currentImage,main_texture;
     private dc_gui dcGui;
     private boolean isoccupied;
+    private String panelcontent;
+	String future_structure;
+
 
 
     
@@ -594,6 +649,7 @@ class MiPanelito extends JPanel {
     
 
     public MiPanelito(dc_gui dcGui) {
+
         this.dcGui = dcGui;
 
     	main_texture = new ImageIcon("./src/gui/main_grass_texture.jpg");
@@ -629,6 +685,7 @@ class MiPanelito extends JPanel {
                                 public void mouseEntered(MouseEvent e) {
                                     // Obtener el texto del botón sobre el que pasó el ratón
                                     String buttonText = ((JButton) e.getSource()).getText();
+                                    future_structure = ((JButton) e.getSource()).getText();
                                     // Obtener información de costo y mostrar el menú emergente
                                     String costInfo = getSpecificCostInfo(buttonText);
                                     JPopupMenu popupMenu = new JPopupMenu();
@@ -682,18 +739,30 @@ class MiPanelito extends JPanel {
                                         setIron(getIron() - ironCost);
                                         setFood(getFood() - foodCost);
                                         setMana(getMana() - manaCost);
-                                        update_resources_quantity(getWood(),woodlabel);
-                                        update_resources_quantity(getIron(),ironlabel);
-                                        update_resources_quantity(getMana(),manalabel);
-                                        update_resources_quantity(getFood(),foodlabel);
+                                        try {
+											update_resources_quantity(getWood(),woodlabel,"wood");
+	                                        update_resources_quantity(getIron(),ironlabel,"iron");
+	                                        update_resources_quantity(getMana(),manalabel,"mana");
+	                                        update_resources_quantity(getFood(),foodlabel,"food");
+	                                        //guardamos datos en base de datos
+	                                        listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
+
+										} catch (Exception e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+
 
 
                                         // Cambiar la imagen del panel al edificio correspondiente
                                         setCurrentImage(buildingImages[index]);
                                         repaint();
                                         isoccupied = true;
+                                        panelcontent = future_structure;
                                         
                                     } else {
+                                    	System.out.println(getWood());
+
                                         JOptionPane.showMessageDialog(null, "¡No tienes suficientes recursos para construir este edificio!", "Recursos insuficientes", JOptionPane.ERROR_MESSAGE);
                                     }
 
@@ -784,6 +853,42 @@ class MiPanelito extends JPanel {
     }
 	}
 
+}
+
+
+
+
+
+public JLabel getWoodlabel() {
+	return woodlabel;
+}
+
+public void setWoodlabel(JLabel woodlabel) {
+	this.woodlabel = woodlabel;
+}
+
+public JLabel getFoodlabel() {
+	return foodlabel;
+}
+
+public void setFoodlabel(JLabel foodlabel) {
+	this.foodlabel = foodlabel;
+}
+
+public JLabel getIronlabel() {
+	return ironlabel;
+}
+
+public void setIronlabel(JLabel ironlabel) {
+	this.ironlabel = ironlabel;
+}
+
+public JLabel getManalabel() {
+	return manalabel;
+}
+
+public void setManalabel(JLabel manalabel) {
+	this.manalabel = manalabel;
 }
 }
 

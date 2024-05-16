@@ -1,6 +1,9 @@
 package gui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import interfaces.MainMenuListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,14 +23,31 @@ public class MainMenu extends JPanel {
 	private ImageIcon quit_button  = new ImageIcon("./src/gui/mm_assets/quit_button.png");
 	private ImageIcon play_button  = new ImageIcon("./src/gui/mm_assets/play_button.png");
 	private ImageIcon settings_button  = new ImageIcon("./src/gui/mm_assets/settings_button.png");
+    private MainMenuListener listener;
 
 
 
+
+   
+    
+    // Método para establecer el listener
+    public void setMainMenuListener(MainMenuListener listener) {
+        this.listener = listener;
+    }
 	
-	
+    
+    public MainMenu(MainMenuListener listener) {
+        this.listener = listener; // Asignar el listener recibido al atributo listener de MainMenu
+        // Otro código de inicialización de MainMenu
+    }
+
 	
 	
     public MainMenu() {
+    	
+    	
+    	
+    	
     	
     	int sizebutton1 = 250;
     	int sizebutton2 = 100;
@@ -60,7 +80,11 @@ public class MainMenu extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-                startGame();
+                try {
+					startGame();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 
 				
 			}
@@ -262,35 +286,16 @@ public class MainMenu extends JPanel {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   
 
-    private void startGame() {
-        // Obtener la referencia a la ventana del menú principal
-        JFrame mainMenuFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+    private void startGame(){
+        dispose_main_menu();
 
-        // Cerrar la ventana del menú principal
-        mainMenuFrame.dispose();
+        // Notificar al listener que la ventana del menú principal se ha cerrado
+          this.listener.onMainMenuClosed();
 
-        // Crear una nueva ventana para el juego
-        JFrame gameFrame = new JFrame("Game GUI");
-        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Crear una instancia de Game_gui y agregarla al frame
-        Game_gui gameGui = new Game_gui(10, 10);
-        gameFrame.add(gameGui, BorderLayout.CENTER);
 
-        // Mostrar la ventana del juego
-        gameFrame.pack();
-        gameFrame.setLocationRelativeTo(null);
-        gameFrame.setVisible(true);
     }
 
     
@@ -315,19 +320,9 @@ public class MainMenu extends JPanel {
         }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
         	
-        	JFrame mainMenuFrame = new JFrame("Main Menu");
 
-            // Crear una instancia del menú principal y agregarla al frame
-            MainMenu mainMenu = new MainMenu();
-            mainMenuFrame.add(mainMenu);
 
-            // Mostrar la ventana del menú principal
-            mainMenuFrame.pack();
-            mainMenuFrame.setLocationRelativeTo(null);
-            mainMenuFrame.setVisible(true);
-        });
     }
 }
 
