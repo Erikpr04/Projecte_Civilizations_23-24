@@ -129,7 +129,7 @@ public class Main {
 		
 //		//TIMER TASK:
 //
-		ConnectionDB cbd = new ConnectionDB(url, user, pass);
+//		ConnectionDB cbd = new ConnectionDB(url, user, pass);
 		
 		classes.getCv().setWood(1000000000);
 		classes.getCv().setFood(1000000000);

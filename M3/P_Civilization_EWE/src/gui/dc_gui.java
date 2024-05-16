@@ -160,9 +160,9 @@ public class dc_gui  {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+        String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
         String user = "root";
-        String pass = "123123";
+        String pass = "P@ssw0rd";
         String[] structureList = new String[]{"farm", "smithy", "church", "magic_tower", "carpentry"};
 
         try {
