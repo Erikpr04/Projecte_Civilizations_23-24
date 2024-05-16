@@ -157,13 +157,13 @@ public interface Variables {
 	public final int CHANCE_ATTACK_AGAIN_SWORDSMAN = 3;
 	public final int CHANCE_ATTACK_AGAIN_SPEARMAN = 7;
 	public final int CHANCE_ATTACK_AGAIN_CROSSBOW = 45;
-	public final int CHANCE_ATTACK_AGAIN_CANNON = 70;
+	public final int CHANCE_ATTACK_AGAIN_CANNON = 60;
 
 	//Defense chance to attack again
 	public final int CHANCE_ATTACK_AGAIN_ARROWTOWER = 5;
 	public final int CHANCE_ATTACK_AGAIN_CATAPULT = 12;
 	public final int CHANCE_ATTACK_AGAIN_ROCKETLAUNCHERTOWER = 30;
-	public final int CHANCE_ATTACK_AGAIN_MAGICIAN = 75;
+	public final int CHANCE_ATTACK_AGAIN_MAGICIAN = 70;
 	public final int CHANCE_ATTACK_AGAIN_PRIEST = 0;
 	
 	//Array with chance attack again of ALL units ----------------

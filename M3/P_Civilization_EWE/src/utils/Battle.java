@@ -11,21 +11,25 @@ import interfaces.Variables;
 public class Battle {
 	private ArrayList<ArrayList> civilizationArmy;
 	private ArrayList<ArrayList> enemyArmy;
-
+	
+//***
 	private ArrayList<ArrayList> armies = new ArrayList(2); //ArrayList de 2 filas y 9 columnas
 	
 	private String battleDevelopment = "";
 	private int[][] initialCostFleet; //Array de 2 filas 
+	
 	private int initialNumberUnitsCivilization;
 	private int initialNumberUnitsEnemy;
 	
 //***
-	private int[][] wasteWoodIron; //Array [madera, iron]
+	private int[] wasteWoodIron; //Array [madera, iron]
 	
 	private int [] enemyDeaths;
 	private int [] civilizationDeaths;
 	
 	private int[][] resourcesLooses; //Array de 2 filas y 4 columnas
+	
+
 	private int[][] initialArmies; //Array de 2 filas y 9 columnas
 	private int[] actualNumberUnitsCivilization;
 	private int[] actualNumberUnitsEnemy; //Arrays para contabilizar unidades
@@ -76,21 +80,29 @@ public class Battle {
 		this.initialCostFleet = initialCostFleet;
 	}
 	public int getInitialNumberUnitsCivilization() {
-		return initialNumberUnitsCivilization;
+		int initialCivilizationUnits = 0;
+		for (int i = 0; i<initialArmies[0].length; i++) {
+			initialCivilizationUnits += initialArmies[0][i]; 
+		}
+		return initialCivilizationUnits;
 	}
 	public void setInitialNumberUnitsCivilization(int initialNumberUnitsCivilization) {
 		this.initialNumberUnitsCivilization = initialNumberUnitsCivilization;
 	}
 	public int getInitialNumberUnitsEnemy() {
-		return initialNumberUnitsEnemy;
+		int initialEnemyUnits = 0;
+		for (int i = 0; i<initialArmies[1].length; i++) {
+			initialEnemyUnits += initialArmies[1][i]; 
+		}
+		return initialEnemyUnits;
 	}
 	public void setInitialNumberUnitsEnemy(int initialNumberUnitsEnemy) {
 		this.initialNumberUnitsEnemy = initialNumberUnitsEnemy;
 	}
-	public int[][] getWasteWoodIron() {
+	public int[] getWasteWoodIron() {
 		return wasteWoodIron;
 	}
-	public void setWasteWoodIron(int[][] wasteWoodIron) {
+	public void setWasteWoodIron(int[] wasteWoodIron) {
 		this.wasteWoodIron = wasteWoodIron;
 	}
 	public int[] getEnemyDeaths() {
@@ -158,14 +170,73 @@ public class Battle {
 	//METODOS
 	
 	public String getBattleReport(int battles) {
-		//Resumen de la batalla, battles es el numero de batallas que hemos acumulado
-		return "";
+		String report = "";
+		String[] nameUnits = {"Swordsman", "Spearman", "Crossbow", "Cannon", 
+		                      "Arrow Tower", "Catapult", "Rocket Launcher Tower", 
+		                      "Magician", "Priest"};
+
+		// Encabezado de las estadísticas de batalla
+		report += " BATTLE STATISTICS\n\n";
+
+		// Encabezado de la sección de batalla
+		report += String.format(" %-25s%4s%8s   %-16s%5s%10s\n\n", 
+								"Civilization Army", 
+								"Units", 
+								"Drops", 
+								"Enemy Army", 
+								"Units", 
+								"Drops\n\n");
+
+
+		// Agregar información de cada tipo de unidad
+		for (int i = 0; i < getCivilizationArmy().size(); i++) {
+		    if (i < 4) {
+		        // Unidades cuerpo a cuerpo y a distancia
+		        report += String.format(" %-25s%5d%8d   %-16s%5d%8d\n\n",
+		                                nameUnits[i],
+		                                getInitialArmies()[0][i],
+		                                getCivilizationDeaths()[i],
+		                                nameUnits[i],
+		                                getInitialArmies()[1][i],
+		                                getEnemyDeaths()[i]);
+		    } else {
+		        // Otras unidades
+		        report += String.format(" %-25s%5d%8d\n\n",
+		                                nameUnits[i],
+		                                getInitialArmies()[0][i],
+		                                getCivilizationDeaths()[i]);
+		    }
+		}
+
+		report += " *************************************************************************\n\n";
+
+		// Encabezado de la sección de costos de recursos
+		report += " Cost Army Civilization                   Cost Army Enemy\n\n";
+		report += String.format(" Food:	 %8d                         Food:	 %8d\n", initialCostFleet[0][0], initialCostFleet[1][0]);
+		report += String.format(" Wood:	 %8d                         Wood:	 %8d\n", initialCostFleet[0][1], initialCostFleet[1][1]);
+		report += String.format(" Iron:	 %8d                         Iron:	 %8d\n\n", initialCostFleet[0][2], initialCostFleet[1][2]);
+		report += " *************************************************************************\n\n";
+
+		// Encabezado de la sección de pérdidas de recursos
+		report += String.format(" Losses Army Civilization                 Losses Army Enemy\n\n", " ");
+		report += String.format(" Food:	 %8d                         Food:	 %8d\n", getResourcesLooses()[0][0], getResourcesLooses()[1][0]);
+		report += String.format(" Wood:	 %8d                         Wood:	 %8d\n", getResourcesLooses()[0][1], getResourcesLooses()[1][1]);
+		report += String.format(" Iron:	 %8d                         Iron:	 %8d\n\n", getResourcesLooses()[0][2], getResourcesLooses()[1][2]);
+		report += " *************************************************************************\n\n";
+
+		// Desperdicios generados
+		report += " Waste Generated:\n\n";
+		report += String.format(" Wood:	 %8d\n", wasteWoodIron[0]);
+		report += String.format(" Iron:	 %8d\n\n", wasteWoodIron[1]);
+
+		// Mensaje final de batalla
+		report += "\n Battle Winned by Civilization, We Collect Rubble\n";
+
+	    report += "\n #########################################################################";
+
+	    return report;
 	}
-	
-	public String BattleDevelopment1() {
-		//Paso a paso de la batalla
-		return "";
-	}
+
 	
 	public void initInitialArmies() {
 		//Inicializar el Array initialArmies y asi poder calcular reportes
@@ -187,31 +258,28 @@ public class Battle {
 				//igualamos a la initialArmies de la clase principal
 				setInitialArmies(initialArmies);
 	}
-	
-	public void updateResourcesLooses() {
-		//Generar el Array de perdidas
-		
-	}
+
+	//************************************************
+//	public void updateResourcesLooses() {
+//		//Generar el Array de perdidas
+//		
+//	}
 	
 	
 //	public void initialFleetNumber(ArrayList<ArrayList> army) {
 //		//Calcular numero de unidades iniciales de cada ejercito
 //		
 //	}
+//************************************************
 	
 	//recuento de las tropas de cada bando (usamos initialArmies para calcular el recuento total de tropas)
 	private boolean remainderPercentageFleet() {
 		
 		boolean stop = true;
 		
-		int initialCivilizationUnits = 0;
-		for (int i = 0; i<initialArmies[0].length; i++) {
-			initialCivilizationUnits += initialArmies[0][i]; 
-		}
-		int initialEnemyUnits = 0;
-		for (int i = 0; i<initialArmies[1].length; i++) {
-			initialEnemyUnits += initialArmies[1][i]; 
-		}
+		
+		int initialCivilizationUnits = getInitialNumberUnitsCivilization();
+		int initialEnemyUnits = getInitialNumberUnitsEnemy();
 		
 		int percentageCivilization = (int) (initialCivilizationUnits * 0.20);
 		int percentageEnemy = (int) (initialEnemyUnits * 0.20);
@@ -407,6 +475,7 @@ public class Battle {
 		int iron_waste_Civilization = 0;
 		int wood_waste_Enemy = 0;
 		int iron_waste_Enemy = 0;
+		int attackGroup = 0;
 	
 //lista de las unidades muertas
 		
@@ -422,22 +491,21 @@ public class Battle {
 		//Seleccionamos el orden de ataque
 		
 		boolean myTurn = false;
-//		boolean enemyTurn = false;
 		boolean endBattle = true;
-		boolean turns = true;
+		boolean extraTurn = false;
 	
 		
-		Random comienzo =  new Random();
+		Random comienzo = new Random();
 		
 		if (comienzo.nextBoolean()) {
 			myTurn = true;
-//			enemyTurn = false;
+
 			
 		
 		}else {
-//			enemyTurn = true;
 			myTurn = false;
 		}
+
 		
 		Random  grupoAleatorio = new Random();
 		Random  chanceAttack = new Random();
@@ -446,201 +514,216 @@ public class Battle {
 			//Turno de Civilizacion
 			if (myTurn && endBattle) {
 				
-				
-				setBattleDevelopment(getBattleDevelopment()+ "\n****************** Civilization Turn ******************");
-				int attackGroup = getCivilizationGroupAttacker();
-				int defenseGroup = getGroupDefender(enemyArmy);
-				
-				while (myArmy.get(attackGroup).size() == 0) {
+				if (!extraTurn) {
 					attackGroup = getCivilizationGroupAttacker();
-				}
-				
-				while (enemyArmy.get(defenseGroup).size() == 0) {
-					defenseGroup = getGroupDefender(enemyArmy);
-				}
-				
-				
-				int randomUnit;
-				MilitaryUnit unitAttacking;
-				MilitaryUnit unitDefending;
-				
-			
-				setBattleDevelopment(getBattleDevelopment()+ "\nCivilization Unit: "+nameUnits[attackGroup]+" will attack...");
-				setBattleDevelopment(getBattleDevelopment()+ "\nEnemy Unit: "+nameUnits[defenseGroup]+" will defend...");
-				
-				
-				//Seleccionamos una unidad ATACANTE aleatoria y una unidad DEFENSORA aleatoria:
-				
-				//unidad atacante
-				Random randomUnitIndexAttack = new Random(); 		
-				randomUnit = randomUnitIndexAttack.nextInt(myArmy.get(attackGroup).size());
-				
-				//aseguramos que el indice corresponde a una unidad valida y existente
-				while (myArmy.get(attackGroup).isEmpty()){
-					randomUnitIndexAttack = new Random(); 		
-					randomUnit = randomUnitIndexAttack.nextInt(myArmy.get(attackGroup).size());
-				}
-				
-				unitAttacking = (MilitaryUnit) myArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
-				
-				//unidad defensora
-				Random randomUnitIndexDefense = new Random(); 	
-				randomUnit = randomUnitIndexDefense.nextInt(enemyArmy.get(defenseGroup).size());
-				
-				//aseguramos que el indice corresponde a una unidad valida y existente
-				while (enemyArmy.get(defenseGroup).isEmpty()){
-					randomUnitIndexDefense = new Random(); 		
-					randomUnit = randomUnitIndexDefense.nextInt(enemyArmy.get(defenseGroup).size());
-				}
-				
-				unitDefending = (MilitaryUnit) enemyArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
-				
-				
-				//COMBATE:
-				
-				//unidad atacante golpea a defensor y baja armadura (armadura = dano - armadura)
-				int dmg = unitAttacking.attack();
-				int armor = unitDefending.getActualArmor();
-				int armorResult = armor - dmg;
-				unitDefending.takeDamage(dmg);
-				enemyArmy.get(defenseGroup).set(randomUnit,unitDefending);
-				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[attackGroup]+" generates the damage = "+dmg);
-				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" stays with = "+armorResult);
-				
-				//si armadura a 0, se generan residuos (prob definida en interfaz Variable)
-				if (armorResult <= 0) {
-					Random waste = new Random();
-					int wasteProbability = waste.nextInt(101);
-					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
-					if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
-						wood_waste_Civilization += (int) (unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100));
-						iron_waste_Civilization += (int) (unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100));
+								
+					while (myArmy.get(attackGroup).size() == 0) {
+						attackGroup = getCivilizationGroupAttacker();
 					}
-					//Elimina la unidad con armor 0 (muere)
-					enemyArmy.get(defenseGroup).remove(randomUnit);
-					setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" of Enemy is dead");
-					
-					//sumamos la unidad perdida en batalla
-					enemyDeaths[defenseGroup] += 1;
-					
+					extraTurn = true;
 				}
 				
-				//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
-				endBattle = remainderPercentageFleet();
-				
-				//probabilidad de turno extra para atacar:
-				Random attackAgain = new Random();
-				int chanceAttackAgain = attackAgain.nextInt(101);
-				if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
-					setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Civilization.");
-					myTurn = true;
-		
+				if (extraTurn) {
+					setBattleDevelopment(getBattleDevelopment()+ "\n****************** Civilization Turn ******************");
+					int defenseGroup = getGroupDefender(enemyArmy);
+
+					while (enemyArmy.get(defenseGroup).size() == 0) {
+						defenseGroup = getGroupDefender(enemyArmy);
+					}
 					
-				}else {
-					//falta poner condicion turno extra
-					myTurn = false;
-				}
+					
+					int randomUnit;
+					MilitaryUnit unitDefending;
+					MilitaryUnit unitAttacking;
+					
+				
+					setBattleDevelopment(getBattleDevelopment()+ "\nCivilization Unit: "+nameUnits[attackGroup]+" will attack...");
+					setBattleDevelopment(getBattleDevelopment()+ "\nEnemy Unit: "+nameUnits[defenseGroup]+" will defend...");
+					
+					
+					//Seleccionamos una unidad ATACANTE aleatoria y una unidad DEFENSORA aleatoria:
+					
+					//unidad atacante
+					Random randomUnitIndexAttack = new Random(); 		
+					randomUnit = randomUnitIndexAttack.nextInt(myArmy.get(attackGroup).size());
+					
+					//aseguramos que el indice corresponde a una unidad valida y existente
+					while (myArmy.get(attackGroup).isEmpty()){
+						randomUnitIndexAttack = new Random(); 		
+						randomUnit = randomUnitIndexAttack.nextInt(myArmy.get(attackGroup).size());
+					}
+					
+					unitAttacking = (MilitaryUnit) myArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
+					
+					//unidad defensora
+					Random randomUnitIndexDefense = new Random(); 	
+					randomUnit = randomUnitIndexDefense.nextInt(enemyArmy.get(defenseGroup).size());
+					
+					//aseguramos que el indice corresponde a una unidad valida y existente
+					while (enemyArmy.get(defenseGroup).isEmpty()){
+						randomUnitIndexDefense = new Random(); 		
+						randomUnit = randomUnitIndexDefense.nextInt(enemyArmy.get(defenseGroup).size());
+					}
+					
+					unitDefending = (MilitaryUnit) enemyArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
+					
+					
+					//COMBATE:
+					
+					//unidad atacante golpea a defensor y baja armadura (armadura = dano - armadura)
+					int dmg = unitAttacking.attack();
+					int armor = unitDefending.getActualArmor();
+					int armorResult = armor - dmg;
+					unitDefending.takeDamage(dmg);
+					enemyArmy.get(defenseGroup).set(randomUnit,unitDefending);
+					setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[attackGroup]+" generates the damage = "+dmg);
+					setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" stays with = "+armorResult);
+					
+					//si armadura a 0, se generan residuos (prob definida en interfaz Variable)
+					if (armorResult <= 0) {
+						Random waste = new Random();
+						int wasteProbability = waste.nextInt(101);
+						//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
+						if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
+							wood_waste_Civilization += (int) ((unitDefending.getWoodCost() * Variables.PERCENTATGE_WASTE)/100);
+							iron_waste_Civilization += (int) ((unitDefending.getIronCost() * Variables.PERCENTATGE_WASTE)/100);
+						}
+						//Elimina la unidad con armor 0 (muere)
+						enemyArmy.get(defenseGroup).remove(randomUnit);
+						setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" of Enemy is dead");
+						
+						//sumamos la unidad perdida en batalla
+						enemyDeaths[defenseGroup] += 1;
+						
+					}
+					
+					//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
+					endBattle = remainderPercentageFleet();
+					
+					if (endBattle) {
+					
+						//probabilidad de turno extra para atacar:
+						Random attackAgain = new Random();
+						int chanceAttackAgain = attackAgain.nextInt(101);
+						if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
+							setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Civilization.");
+							myTurn = true;
+				
+							
+						}else {
+							//falta poner condicion turno extra
+							myTurn = false;
+							extraTurn = false;
+						}
+					}
+				} 
 			}	
 			
 			//Turno de Enemigos //enemyTurn
 			else if (!myTurn && endBattle) {
 				
-				setBattleDevelopment(getBattleDevelopment()+ "\n****************** Enemy Turn ******************");
-				int attackGroup = getEnemyGroupAttacker();
-				int defenseGroup = getGroupDefender(myArmy);
-				
-				while (enemyArmy.get(attackGroup).size() == 0) {
+				if (!extraTurn) {
 					attackGroup = getEnemyGroupAttacker();
-				}
 				
-				while (myArmy.get(defenseGroup).size() == 0) {
-					defenseGroup = getGroupDefender(myArmy);
-				}
-				
-				
-				
-				int randomUnit;
-				MilitaryUnit unitAttacking;
-				MilitaryUnit unitDefending;
-				
-				setBattleDevelopment(getBattleDevelopment()+ "\nEnemy Unit: "+nameUnits[attackGroup]+" will attack...");
-				setBattleDevelopment(getBattleDevelopment()+ "\nCivilization Unit: "+nameUnits[defenseGroup]+" will defend...");
-				
-				
-				//Seleccionamos una unidad ATACANTE aleatoria y una unidad DEFENSORA aleatoria:
-				
-				//unidad atacante
-				Random randomUnitIndexAttack = new Random(); 		
-				randomUnit = randomUnitIndexAttack.nextInt(enemyArmy.get(attackGroup).size());
-				
-				//aseguramos que el indice corresponde a una unidad valida y existente
-				while (enemyArmy.get(attackGroup).isEmpty()){
-					randomUnitIndexAttack = new Random(); 		
-					randomUnit = randomUnitIndexAttack.nextInt(enemyArmy.get(attackGroup).size());
-				}
-				
-				unitAttacking = (MilitaryUnit) enemyArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
-				
-				//unidad defensora
-				Random randomUnitIndexDefense = new Random(); 	
-				randomUnit = randomUnitIndexDefense.nextInt(myArmy.get(defenseGroup).size());
-				
-				//aseguramos que el indice corresponde a una unidad valida y existente
-				while (myArmy.get(defenseGroup).isEmpty()){
-					randomUnitIndexDefense = new Random(); 		
-					randomUnit = randomUnitIndexDefense.nextInt(myArmy.get(defenseGroup).size());
-				}
-				
-				unitDefending = (MilitaryUnit) myArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
-				
-				
-				//COMBATE:
-				
-				//unidad atacante golpea a defensor y baja armadura (armadura = dano - armaduraActual)
-				int dmg = unitAttacking.attack();
-				int armor = unitDefending.getActualArmor();
-				int armorResult = armor - dmg;
-				unitDefending.takeDamage(dmg);
-				
-				myArmy.get(defenseGroup).set(randomUnit,unitDefending);
-				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[attackGroup]+" generates the damage = "+dmg);
-				setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" stays with = "+armorResult);
-				//si armadura a 0, se generan residuos (prob definida en interfaz Variable)
-				if (armorResult <= 0) {
-					Random waste = new Random();
-					int wasteProbability = waste.nextInt(101);
-					//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
-					if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
-						wood_waste_Enemy += (int) (unitDefending.getWoodCost() * (Variables.PERCENTATGE_WASTE/100));
-						iron_waste_Enemy += (int) (unitDefending.getIronCost() * (Variables.PERCENTATGE_WASTE/100));
+					while (enemyArmy.get(attackGroup).size() == 0) {
+						attackGroup = getEnemyGroupAttacker();
 					}
-					//Elimina la unidad con armor 0 (muere)
-					myArmy.get(defenseGroup).remove(randomUnit);
-					setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" of Civilization is dead");
-					
-					//sumamos la unidad perdida en batalla
-					civilizationDeaths[defenseGroup] += 1;
+					extraTurn = true;
 				}
 				
-				//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
-				endBattle = remainderPercentageFleet();
-				if (!endBattle) {
-					turns = false;
+				if (extraTurn) {
+					setBattleDevelopment(getBattleDevelopment()+ "\n****************** Enemy Turn ******************");
+					int defenseGroup = getGroupDefender(myArmy);
+					while (myArmy.get(defenseGroup).size() == 0) {
+						defenseGroup = getGroupDefender(myArmy);
+					}
+				
+				
+				
+					int randomUnit;
+					MilitaryUnit unitAttacking;
+					MilitaryUnit unitDefending;
+					
+					setBattleDevelopment(getBattleDevelopment()+ "\nEnemy Unit: "+nameUnits[attackGroup]+" will attack...");
+					setBattleDevelopment(getBattleDevelopment()+ "\nCivilization Unit: "+nameUnits[defenseGroup]+" will defend...");
+					
+					
+					//Seleccionamos una unidad ATACANTE aleatoria y una unidad DEFENSORA aleatoria:
+					
+					//unidad atacante
+					Random randomUnitIndexAttack = new Random(); 		
+					randomUnit = randomUnitIndexAttack.nextInt(enemyArmy.get(attackGroup).size());
+					
+					//aseguramos que el indice corresponde a una unidad valida y existente
+					while (enemyArmy.get(attackGroup).isEmpty()){
+						randomUnitIndexAttack = new Random(); 		
+						randomUnit = randomUnitIndexAttack.nextInt(enemyArmy.get(attackGroup).size());
+					}
+					
+					unitAttacking = (MilitaryUnit) enemyArmy.get(attackGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Attack Unit
+					
+					//unidad defensora
+					Random randomUnitIndexDefense = new Random(); 	
+					randomUnit = randomUnitIndexDefense.nextInt(myArmy.get(defenseGroup).size());
+					
+					//aseguramos que el indice corresponde a una unidad valida y existente
+					while (myArmy.get(defenseGroup).isEmpty()){
+						randomUnitIndexDefense = new Random(); 		
+						randomUnit = randomUnitIndexDefense.nextInt(myArmy.get(defenseGroup).size());
+					}
+					
+					unitDefending = (MilitaryUnit) myArmy.get(defenseGroup).get(randomUnit); //parse al objecto extraido para convertirlo en Defense Unit
+					
+					
+					//COMBATE:
+					
+					//unidad atacante golpea a defensor y baja armadura (armadura = dano - armaduraActual)
+					int dmg = unitAttacking.attack();
+					int armor = unitDefending.getActualArmor();
+					int armorResult = armor - dmg;
+					unitDefending.takeDamage(dmg);
+					
+					myArmy.get(defenseGroup).set(randomUnit,unitDefending);
+					setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[attackGroup]+" generates the damage = "+dmg);
+					setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" stays with = "+armorResult);
+					//si armadura a 0, se generan residuos (prob definida en interfaz Variable)
+					if (armorResult <= 0) {
+						Random waste = new Random();
+						int wasteProbability = waste.nextInt(101);
+						//si hay prob, se devuelve un 70% de los recursos usados alcrear unidad (solo madera y hierrp)
+						if (wasteProbability <= Variables.CHANCE_GENERATING_WASTE_UNITS[defenseGroup]){
+							wood_waste_Enemy += (int) ((unitDefending.getWoodCost() * Variables.PERCENTATGE_WASTE)/100);
+							iron_waste_Enemy += (int) ((unitDefending.getIronCost() * Variables.PERCENTATGE_WASTE)/100);
+							
+						}
+						//Elimina la unidad con armor 0 (muere)
+						myArmy.get(defenseGroup).remove(randomUnit);
+						setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" of Civilization is dead");
+						
+						//sumamos la unidad perdida en batalla
+						civilizationDeaths[defenseGroup] += 1;
+					}
+					
+					//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
+					endBattle = remainderPercentageFleet();
+					if (endBattle) {
+						//probabilidad de turno extra para atacar:
+						Random attackAgain = new Random();
+						int chanceAttackAgain = attackAgain.nextInt(101);
+						if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
+							setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Enemy.");
+							myTurn = false;
+							
+				
+							
+						}else {
+							myTurn = true;
+							extraTurn = false;
+							
+						}
+					}
 				}
 				
-				//probabilidad de turno extra para atacar:
-				Random attackAgain = new Random();
-				int chanceAttackAgain = attackAgain.nextInt(101);
-				if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
-					setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Enemy.");
-					myTurn = false;
-					
-		
-					
-				}else {
-					myTurn = true;
-					
-				}
 			}
 		}
 		
@@ -649,20 +732,23 @@ public class Battle {
 //Logica para ver que bando gana
 		
 		resourcesLooses = getResourcesLooses();
+		int[] wasteWoodIron = new int[2];
+		
+		wasteWoodIron[0] = wood_waste_Civilization + wood_waste_Enemy;
+		wasteWoodIron[1] = iron_waste_Civilization + iron_waste_Enemy;
+		
+		setWasteWoodIron(wasteWoodIron);
 		
 		// El valor de Points (puntuacion de cada bando en la batalla) mas alto pierde
 		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
-			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nCivilization WIN !!!");
 			
 			//Anadir recursos a la civilizacion
 			
 		} else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
-			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nEnemy WIN !!!");
 			
 		} else {
-			setBattleDevelopment(getBattleDevelopment() + "\nEnemy:" + resourcesLooses[1][3] + ", Civilization: " + resourcesLooses[0][3]);
 			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
 		}
 	}

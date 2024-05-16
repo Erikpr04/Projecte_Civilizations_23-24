@@ -13,6 +13,7 @@ import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
 import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
+import exceptions.MiSQLException;
 import exceptions.ResourceException;
 import interfaces.GameGuiListener;
 import interfaces.MilitaryUnit;
@@ -126,30 +127,58 @@ public class Main {
         
         
 		
-		//BATALLAS:
+//		//TIMER TASK:
+//
+		ConnectionDB cbd = new ConnectionDB(url, user, pass);
 		
 		classes.getCv().setWood(1000000000);
 		classes.getCv().setFood(1000000000);
 		classes.getCv().setIron(1000000000);
 //		
 //		try {
-//			cv.new_Swordsman(2);
-//			cv.new_Spearman(0);
-////			cv.new_Crossbow(4);
-////			cv.new_Cannon(1);
-////			cv.new_Catapult(3);
-//			cv.new_ArrowTower(5);
+//			cbd.sacarBattleLog(1,2);
 //			
-//			
-//		} catch (ResourceException e) {
+//		} catch (MiSQLException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //		
+		
+		
+//		try {
+//			cv.new_Carpentry();
+////			cv.new_Farm();
+////			cv.new_Smithy();
+//		} catch (ResourceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 //		
-//		ArrayList<ArrayList> enemy = m.createEnemyArmy();
+//		TimerTask task = new TimerTask() {
+//
+//			public void run() {
+//				cv.setWood(cv.getWood() + Variables.CIVILIZATION_WOOD_GENERATED);
+//				cv.setFood(cv.getFood() + Variables.CIVILIZATION_FOOD_GENERATED);
+//				cv.setIron(cv.getIron() + Variables.CIVILIZATION_IRON_GENERATED);
+//				
+//				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+//				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+//				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+//				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+//				
+//				System.out.println("Madera: " + cv.getWood());
+//				System.out.println("Comida: " + cv.getFood());
+//				System.out.println("Hierro: " + cv.getIron());
+//				System.out.println("Mana: " + cv.getMana());
+//				System.out.println("*********************");
+//				
+//			}
+//			
+//		};
 //		
-//		m.viewThread(enemy);
+//		Timer timer = new Timer();
+//		timer.schedule(task, 1, 10000);
 //		
 //		
 //		b.mainBattle(cv.getArmy(), enemy);
@@ -201,21 +230,15 @@ public class Main {
 
 	}
 	
+	
+	//METODO PARA CREAR ARMY ENEMIGAS
 	public ArrayList<ArrayList> createEnemyArmy() {
 		int enemyWood;
 		int enemyFood;
 		int enemyIron;
-		
-		if (countFleet == 0) {
-			enemyWood = Variables.WOOD_BASE_ENEMY_ARMY;
-			enemyFood = Variables.FOOD_BASE_ENEMY_ARMY;
-			enemyIron = Variables.IRON_BASE_ENEMY_ARMY;
-		
-		} else {
-			enemyWood = Variables.WOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.WOOD_BASE_ENEMY_ARMY/100);
-			enemyFood = Variables.FOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.FOOD_BASE_ENEMY_ARMY/100);
-			enemyIron = Variables.IRON_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.IRON_BASE_ENEMY_ARMY/100);;
-		}
+		enemyWood = Variables.WOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.WOOD_BASE_ENEMY_ARMY/100);
+		enemyFood = Variables.FOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.FOOD_BASE_ENEMY_ARMY/100);
+		enemyIron = Variables.IRON_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.IRON_BASE_ENEMY_ARMY/100);
 		
 		
 		
@@ -279,6 +302,8 @@ public class Main {
 		return enemy;
 	}
 	
+	
+	//PRINT DE LA ARMY ENEMIGA
 	
 	public void viewThread(ArrayList<ArrayList> enemigos) {
 		System.out.println("NEW threat COMMING\n");
