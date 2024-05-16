@@ -18,7 +18,7 @@ public class ArrowTower extends DefenseUnit{
 		int damage = 0;
 		
 		if (isSanctified()) {
-			damage = getBaseDamage() + (getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED /100);
+			damage = getBaseDamage() + ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
 			
 		} else {
 			damage = getBaseDamage();

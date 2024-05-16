@@ -13,6 +13,7 @@ import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
 import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
+import exceptions.BuildingException;
 import exceptions.MiSQLException;
 import exceptions.ResourceException;
 import interfaces.GameGuiListener;
@@ -129,7 +130,7 @@ public class Main {
 		
 //		//TIMER TASK:
 //
-		ConnectionDB cbd = new ConnectionDB(url, user, pass);
+//		ConnectionDB cbd = new ConnectionDB(url, user, pass);
 		
 //		
 //		TimerTask actualizarBD = new TimerTask() {
@@ -383,6 +384,149 @@ public class Main {
         System.out.printf("%-15s %d\n", "Spearman", enemigos.get(1).size());
         System.out.printf("%-15s %d\n", "Crossbow", enemigos.get(2).size());
         System.out.printf("%-15s %d\n", "Cannon", enemigos.get(3).size());
+	}
+	
+	
+	//FUNCION QUE LLAMA A LAS FUNCIONES DE CREAR UNIDADES DE CIVILIZACION
+	public void createUnits(String unit, int quantity) {
+		
+		if (unit.toLowerCase() == "swordsman") {
+			try {
+				classes.getCv().new_Swordsman(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "spearman") {
+			try {
+				classes.getCv().new_Spearman(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "crossbow") {
+			try {
+				classes.getCv().new_Crossbow(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "cannon") {
+			try {
+				classes.getCv().new_Cannon(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "arrowtower") {
+			try {
+				classes.getCv().new_ArrowTower(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		}else if (unit.toLowerCase() == "catapult") {
+			try {
+				classes.getCv().new_Catapult(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "rocketlaunchertower") {
+			try {
+				classes.getCv().new_RocketLauncher(quantity);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "magician") {
+			try {
+				classes.getCv().new_Magician(quantity);
+			} catch (ResourceException | BuildingException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (unit.toLowerCase() == "priest") {
+			try {
+				classes.getCv().new_Priest(quantity);
+			} catch (ResourceException | BuildingException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+	}
+	
+	
+	
+	
+	//FUNCIÓN QUE LLAMA A LAS FUNCIONES PARA CREAR EDIFICIOS DE CIVILIZACION
+	public void createBuildings(String building) {
+		
+		if (building.toLowerCase() == "farm") {
+			try {
+				classes.getCv().new_Farm();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (building.toLowerCase() == "carpentry") {
+			try {
+				classes.getCv().new_Carpentry();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (building.toLowerCase() == "smithy") {
+			try {
+				classes.getCv().new_Smithy();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (building.toLowerCase() == "magictower") {
+			try {
+				classes.getCv().new_MagicTower();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (building.toLowerCase() == "church") {
+			try {
+				classes.getCv().new_Church();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	
+	//FUNCION QUE LLAMA A LAS FUNCIONES PARA MEJORAR TECNOLOGIAS DE CIVILIZACION
+	public void upgradeTechnology(String tech) {
+		
+		if (tech.toLowerCase() == "attack") {
+			try {
+				classes.getCv().upgradeTechnologyAttack();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		
+		} else if (tech.toLowerCase() == "defense") {
+			try {
+				classes.getCv().upgradeTechnologyDefense();
+			} catch (ResourceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	//FUNCION QUE LLAMA A LA FUNCION PARA SANTIFICAR UNIDADES DE CIVILIZACION
+	public void sanctify() {
+		classes.getCv().sanctifyUnits();
 	}
 
 }
