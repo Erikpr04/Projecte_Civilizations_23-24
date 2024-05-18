@@ -2,6 +2,8 @@ package gui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import interfaces.GameGuiListener;
 import interfaces.MainMenuListener;
@@ -14,11 +16,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
 import gui.dc_gui;
+import gui.CvUpgradeGui.TechnologyUpgradePanel;
 
 public class Game_gui extends JPanel {
     private static final int PANEL_SIZE = 50;
@@ -46,6 +50,8 @@ public class Game_gui extends JPanel {
     private JLabel woodlabel,foodlabel,ironlabel,manalabel;
     private dc_gui dcGui = new dc_gui(); // Instancia de dc_gui
 	private GameGuiListener listener;
+    boolean isUpgradePressed = false;
+
 
     
     
@@ -186,7 +192,7 @@ public class Game_gui extends JPanel {
 
         panelright.setPreferredSize(new Dimension(420, 30));
         panelright1.setPreferredSize(new Dimension(300, 400));
-        panelright2.setPreferredSize(new Dimension(425, 700));
+        panelright2.setPreferredSize(new Dimension(425, 675));
         panelup.setPreferredSize(new Dimension(1400, 20));
 
         
@@ -295,6 +301,147 @@ public class Game_gui extends JPanel {
             }
         }
     });
+    
+    
+    
+    
+    
+    // En el constructor de Game_gui, después de crear panelup
+    JButton upgrade_cvbutton = new JButton("Upgrade Civilization");
+    upgrade_cvbutton.setPreferredSize(new Dimension(300,70));
+    panelright2.setBorder(BorderFactory.createEmptyBorder(80, 20, 50, 20));
+    panelright2.add(upgrade_cvbutton,BorderLayout.NORTH);
+    isUpgradePressed = false;
+    JPanel panelpestañas = new JPanel(new BorderLayout());
+    
+    
+    //cargamos paneles de mejora de civilizacion al empezar la partida
+    
+    CvUpgradeGui cvUpgradeGui = new CvUpgradeGui(); // Instancia de la clase CvUpgradeGui
+
+    // Crear el panel para las pestañas
+
+       // Crear el JTabbedPane para las pestañas
+       JTabbedPane tabbedPane = new JTabbedPane();
+
+       // Upgrade Army tab
+       JPanel upgradeArmyPanel = new JPanel();
+       upgradeArmyPanel.setLayout(new GridLayout(3, 3));
+       String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket Launcher Tower", "Magician", "Priest"};
+       String[] soldierImages = {"./src/gui/unit_assets/swordsman.png", "./src/gui/unit_assets/spearman.png", "./src/gui/unit_assets/crossbow.png", "./src/gui/unit_assets/cannon.png", "./src/gui/unit_assets/arrow_tower.png", "./src/gui/unit_assets/catapult.png", "./src/gui/unit_assets/rocket_launcher.png", "./src/gui/unit_assets/magician.png", "./src/gui/unit_assets/priest.png"};
+
+       int[][] soldierCosts = {
+           {Variables.FOOD_COST_SWORDSMAN, Variables.WOOD_COST_SWORDSMAN, Variables.IRON_COST_SWORDSMAN, Variables.MANA_COST_SWORDSMAN},
+           {Variables.FOOD_COST_SPEARMAN, Variables.WOOD_COST_SPEARMAN, Variables.IRON_COST_SPEARMAN, Variables.MANA_COST_SPEARMAN},
+           {Variables.FOOD_COST_CROSSBOW, Variables.WOOD_COST_CROSSBOW, Variables.IRON_COST_CROSSBOW, Variables.MANA_COST_CROSSBOW},
+           {Variables.FOOD_COST_CANNON, Variables.WOOD_COST_CANNON, Variables.IRON_COST_CANNON, Variables.MANA_COST_CANNON},
+           {Variables.FOOD_COST_ARROWTOWER, Variables.WOOD_COST_ARROWTOWER, Variables.IRON_COST_ARROWTOWER, Variables.MANA_COST_ARROWTOWER},
+           {Variables.FOOD_COST_CATAPULT, Variables.WOOD_COST_CATAPULT, Variables.IRON_COST_CATAPULT, Variables.MANA_COST_CATAPULT},
+           {Variables.FOOD_COST_ROCKETLAUNCHERTOWER, Variables.WOOD_COST_ROCKETLAUNCHERTOWER, Variables.IRON_COST_ROCKETLAUNCHERTOWER, Variables.MANA_COST_ROCKETLAUNCHERTOWER},
+           {Variables.FOOD_COST_MAGICIAN, Variables.WOOD_COST_MAGICIAN, Variables.IRON_COST_MAGICIAN, Variables.MANA_COST_MAGICIAN},
+           {Variables.FOOD_COST_PRIEST, Variables.WOOD_COST_PRIEST, Variables.IRON_COST_PRIEST, Variables.MANA_COST_PRIEST}
+       };
+
+       for (int i = 0; i < soldierNames.length; i++) {
+           upgradeArmyPanel.add(cvUpgradeGui.createSoldierPanel(soldierNames[i], soldierCosts[i], soldierImages[i])); // Llamada al método createSoldierPanel a través de la instancia
+       }
+
+       // Upgrade Technology tab
+       JPanel upgradeTechnologyPanel = cvUpgradeGui.new TechnologyUpgradePanel(); // Utiliza la nueva clase TechnologyUpgradePanel
+
+       // Agregar los paneles de actualización de ejército y tecnología al panel de pestañas
+       tabbedPane.add("Upgrade Army", upgradeArmyPanel);
+       tabbedPane.add("Upgrade Technology", upgradeTechnologyPanel);
+
+       // Agregar el JTabbedPane al panel de pestañas
+       panelpestañas.add(tabbedPane, BorderLayout.CENTER);
+
+
+       // Agregar los paneles al mainPanel en diferentes capas
+       mainpanel.add(panelpestañas, JLayeredPane.PALETTE_LAYER); // Capa por defecto
+
+       // Configurar las posiciones y tamaños de los paneles
+       panelpestañas.setBounds(0, 0, 1500, 1080);
+       
+       panelpestañas.setVisible(false);
+
+
+
+    upgrade_cvbutton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Alternar el estado del botón
+            isUpgradePressed = !isUpgradePressed;
+
+
+            if (isUpgradePressed) {
+                panelpestañas.setVisible(true);
+                upgrade_cvbutton.getModel().setPressed(isUpgradePressed);
+
+               
+            } else {
+            	panelpestañas.setVisible(false);            }
+        }
+    });
+    
+    
+    
+    //añadimos panel en panelright2
+    
+    JPanel userPanel = new JPanel();
+    userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
+
+    // Imagen cuadrada
+    ImageIcon imageIcon = new ImageIcon("./src/gui/user_image.png");
+    Image originalImage = imageIcon.getImage();
+
+    Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
+
+    // Crear un ImageIcon con la imagen redimensionada
+    ImageIcon scaledIcon = new ImageIcon(resizedImage);
+    JLabel imageLabel = new JLabel(scaledIcon);
+    imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userPanel.add(imageLabel);
+    imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+
+
+    // Texto de usuario
+    JLabel usernameLabel = new JLabel("Username");
+    usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userPanel.add(usernameLabel);
+
+    // Temporizador estilo 0:00
+    JLabel timerLabel = new JLabel("0:00", JLabel.CENTER);
+    timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
+    timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+    userPanel.add(timerLabel);
+    userPanel.setOpaque(false);
+    // Temporizador
+    Timer timer = new Timer(1000, new ActionListener() {
+        int seconds = 0;
+        int minutes = 0;
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            seconds++;
+            if (seconds == 60) {
+                seconds = 0;
+                minutes++;
+            }
+            String timeString = String.format("%d:%02d", minutes, seconds);
+            timerLabel.setText(timeString);
+        }
+    });
+    timer.start();
+    userPanel.setPreferredSize(new Dimension(300,300));
+
+
+    panelright2.add(userPanel,BorderLayout.SOUTH);
+
+    
+    
+    
 }
 	
 	
@@ -748,7 +895,7 @@ class MiPanelito extends JPanel {
 	                                        listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
 
 										} catch (Exception e1) {
-											// TODO Auto-generated catch block
+										
 											e1.printStackTrace();
 										}
 
@@ -806,6 +953,10 @@ class MiPanelito extends JPanel {
 
     public MiPanelito(BorderLayout borderLayout) {
     	super(new BorderLayout());
+	}
+
+	public MiPanelito(FlowLayout flowLayout) {
+		super(flowLayout);
 	}
 
 	public void setBorderColor(Color color) {
@@ -890,5 +1041,289 @@ public JLabel getManalabel() {
 public void setManalabel(JLabel manalabel) {
 	this.manalabel = manalabel;
 }
+}
+
+//Clases Paneles para mejorar Civilizacion
+
+
+class CvUpgradeGui {
+
+
+    private static int resources = 1000;
+    private static int multiplier = 1; // Variable para el multiplicador de costos
+
+
+    
+    public class TechnologyUpgradePanel extends BackgroundPanel {
+        public TechnologyUpgradePanel() {
+            setLayout(new BorderLayout());
+
+            JPanel attackPanel = new JPanel(new BorderLayout());
+         // Panel para Upgrade Attack Technology
+            attackPanel.setOpaque(false);
+            attackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 200, 100));
+            JLabel attackTitle = new JLabel("Upgrade Attack Technology");
+            attackTitle.setFont(new Font("Arial", Font.BOLD, 25));  // Aumenta el tamaño de la fuente
+            attackTitle.setHorizontalAlignment(JLabel.CENTER);
+            attackTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Margen superior
+            attackPanel.add(attackTitle, BorderLayout.NORTH);
+
+            // Agrega una imagen en el centro
+            JLabel attackImage = new JLabel();
+            attackImage.setIcon(new ImageIcon(resizeImage("./src/gui/sword.png", 300, 300)));
+            attackImage.setHorizontalAlignment(JLabel.CENTER);
+            attackPanel.add(attackImage, BorderLayout.CENTER);
+
+            // Panel para el spinner y el botón
+            JPanel attackBottomPanel = new JPanel(new BorderLayout());
+
+            // Nivel de tecnología actual
+            JLabel currentLevelLabel = new JLabel("Nivel de Tecnología Actual: 1", JLabel.CENTER);
+            currentLevelLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
+            attackBottomPanel.add(currentLevelLabel, BorderLayout.NORTH);
+
+            // Panel intermedio para el spinner y el botón con FlowLayout
+            JPanel spinnerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            
+            // Agrega un JSpinner y un botón Upgrade
+            JSpinner levelSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
+            levelSpinner.setFont(new Font("Arial", Font.PLAIN, 20));  // Aumenta el tamaño de la fuente
+            Dimension spinnerSize = new Dimension(80, 40);  // Aumenta el tamaño del spinner
+            levelSpinner.setPreferredSize(spinnerSize);
+            levelSpinner.addChangeListener(e -> {
+                int value = (int) levelSpinner.getValue();
+                currentLevelLabel.setText("Nivel de Tecnología Actual: " + value);
+            });
+            spinnerButtonPanel.add(levelSpinner);
+
+            JButton upgradeButton = new JButton("Upgrade");
+            upgradeButton.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
+            Dimension buttonSize = new Dimension(150, 40);  // Aumenta el tamaño del botón
+            upgradeButton.setPreferredSize(buttonSize);
+            spinnerButtonPanel.add(upgradeButton);
+
+            attackBottomPanel.add(spinnerButtonPanel, BorderLayout.CENTER);
+
+            attackPanel.add(attackBottomPanel, BorderLayout.SOUTH);
+
+            // Agrega el panel al upgradeTechnologyPanel
+            add(attackPanel, BorderLayout.WEST);            // ...
+
+         // Panel para Upgrade Defense Technology
+            JPanel defensePanel = new JPanel(new BorderLayout());
+            defensePanel.setOpaque(false);
+            defensePanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 200, 100));
+
+            JLabel defenseTitle = new JLabel("Upgrade Defense Technology");
+            defenseTitle.setFont(new Font("Arial", Font.BOLD, 25));  // Aumenta el tamaño de la fuente
+            defenseTitle.setHorizontalAlignment(JLabel.CENTER);
+            defenseTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Margen superior
+            defensePanel.add(defenseTitle, BorderLayout.NORTH);
+
+            // Agrega una imagen en el centro
+            JLabel defenseImage = new JLabel();
+            defenseImage.setIcon(new ImageIcon(resizeImage("./src/gui/shield.png", 300, 300)));
+            defenseImage.setHorizontalAlignment(JLabel.CENTER);
+            defensePanel.add(defenseImage, BorderLayout.CENTER);
+
+            // Panel para el spinner y el botón
+            JPanel defenseBottomPanel = new JPanel(new BorderLayout());
+
+            // Nivel de tecnología actual
+            JLabel currentLevelLabelDefense = new JLabel("Nivel de Tecnología Actual: 1", JLabel.CENTER);
+            currentLevelLabelDefense.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
+            defenseBottomPanel.add(currentLevelLabelDefense, BorderLayout.NORTH);
+
+            // Panel intermedio para el spinner y el botón con FlowLayout
+            JPanel spinnerButtonPanelDefense = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+            // Agrega un JSpinner y un botón Upgrade
+            JSpinner leveltSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
+            leveltSpinner.setFont(new Font("Arial", Font.PLAIN, 20));  // Aumenta el tamaño de la fuente
+            leveltSpinner.setPreferredSize(spinnerSize);  // Usa el tamaño aumentado del spinner
+            leveltSpinner.addChangeListener(e -> {
+                int value = (int) leveltSpinner.getValue();
+                currentLevelLabelDefense.setText("Nivel de Tecnología Actual: " + value);
+            });
+            spinnerButtonPanelDefense.add(leveltSpinner);
+
+            JButton upgradeButton1 = new JButton("Upgrade");
+            upgradeButton1.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
+            upgradeButton1.setPreferredSize(buttonSize);  // Usa el tamaño aumentado del botón
+            spinnerButtonPanelDefense.add(upgradeButton1);
+
+            defenseBottomPanel.add(spinnerButtonPanelDefense, BorderLayout.CENTER);
+
+            defensePanel.add(defenseBottomPanel, BorderLayout.SOUTH);
+
+
+            add(attackPanel, BorderLayout.WEST);
+            add(defensePanel, BorderLayout.EAST);
+        }
+    }
+
+    
+    // Método para redimensionar una imagen
+    private static Image resizeImage(String imagePath, int width, int height) {
+        try {
+            BufferedImage originalImage = ImageIO.read(new File(imagePath));
+            Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return resizedImage;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    JPanel createSoldierPanel(String soldierName, int[] costs, String imagePath) {
+        JPanel panel = new BackgroundPanel();
+
+        // Creamos un JPanel interno para contener la imagen y lo configuramos con FlowLayout centrado
+        JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        imagePanel.setOpaque(false);
+
+        JLabel imageLabel = new JLabel();
+        ImageIcon soldierIcon = new ImageIcon(imagePath);
+        Image scaledImage = soldierIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        soldierIcon = new ImageIcon(scaledImage);
+        imageLabel.setIcon(soldierIcon);
+
+        // Agregamos el JLabel al JPanel interno
+        imagePanel.add(imageLabel);
+
+        // Agregamos el JPanel interno al JPanel principal con BorderLayout.NORTH
+        panel.add(imagePanel, BorderLayout.NORTH);
+
+        JPanel costPanel = new JPanel();
+        costPanel.setLayout(new GridLayout(1, 4));
+        costPanel.setOpaque(false);
+
+        Font fuente = new Font("Arial", Font.PLAIN, 20);
+
+        JLabel foodLabel = new JLabel("Food: " + costs[0]);
+        JLabel woodLabel = new JLabel("Wood: " + costs[1]);
+        JLabel ironLabel = new JLabel("Iron: " + costs[2]);
+        JLabel manaLabel = new JLabel("Mana: " + costs[3]);
+        
+        foodLabel.setForeground(Color.white);
+        woodLabel.setForeground(Color.white);
+        ironLabel.setForeground(Color.white);
+        manaLabel.setForeground(Color.white);
+
+
+        foodLabel.setFont(fuente);
+        woodLabel.setFont(fuente);
+        ironLabel.setFont(fuente);
+        manaLabel.setFont(fuente);
+
+        costPanel.add(foodLabel);
+        costPanel.add(woodLabel);
+        costPanel.add(ironLabel);
+        costPanel.add(manaLabel);
+
+        panel.add(costPanel, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout());
+
+        JLabel nameLabel = new JLabel(soldierName + " units to create");
+        nameLabel.setForeground(Color.white);
+
+        nameLabel.setFont(fuente);
+
+        bottomPanel.setPreferredSize(new Dimension(500,100));
+        bottomPanel.add(nameLabel);
+        bottomPanel.setOpaque(false);
+
+        SpinnerNumberModel numberModel = new SpinnerNumberModel(1, 1, 5, 1);
+        JSpinner unitSelector = new JSpinner(numberModel);
+        unitSelector.setPreferredSize(new Dimension(50,30));
+        unitSelector.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int value = (int) unitSelector.getValue();
+                foodLabel.setText("Food: " + costs[0] * value);
+                woodLabel.setText("Wood: " + costs[1] * value);
+                ironLabel.setText("Iron: " + costs[2] * value);
+                manaLabel.setText("Mana: " + costs[3] * value);
+            }
+        });
+        bottomPanel.add(unitSelector);
+
+        JButton createButton = new JButton("Create");
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int units = (int) unitSelector.getValue();
+                int foodCost = costs[0] * units;
+                int woodCost = costs[1] * units;
+                int ironCost = costs[2] * units;
+                int manaCost = costs[3] * units;
+
+                if (resources >= foodCost && resources >= woodCost && resources >= ironCost && resources >= manaCost) {
+                    resources -= foodCost;
+                    resources -= woodCost;
+                    resources -= ironCost;
+                    resources -= manaCost;
+                    JOptionPane.showMessageDialog(panel,
+                            "You've created " + units + " units of " + soldierName + ".\nCost: " + (foodCost + woodCost + ironCost + manaCost) + "\nRemaining Resources: " + resources,
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(panel,
+                            "Not enough resources.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        bottomPanel.add(createButton);
+        panel.add(bottomPanel, BorderLayout.SOUTH);
+
+        panel.setOpaque(false);
+
+        return panel;
+    }
+    
+    
+    
+    
+    
+    
+    
+    private class BackgroundPanel extends JPanel {
+        private BufferedImage backgroundImage;
+
+        public BackgroundPanel() {
+            try {
+                backgroundImage = ImageIO.read(new File("./src/gui/panel_background_img.jpg"));
+                this.repaint();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public BackgroundPanel(BorderLayout borderLayout) {
+        	super(borderLayout);
+            try {
+                backgroundImage = ImageIO.read(new File("./src/gui/panel_background_img.jpg"));
+                this.repaint();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+		}
+
+		@Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                // Dibujar la imagen de fondo
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+    
+    
+    
 }
 
