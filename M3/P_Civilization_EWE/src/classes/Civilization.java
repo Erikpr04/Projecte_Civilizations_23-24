@@ -18,6 +18,7 @@ import classes.specialunits.Magician;
 import classes.specialunits.Priest;
 import classes.specialunits.SpecialUnit;
 import exceptions.BuildingException;
+import exceptions.MiSQLException;
 import exceptions.ResourceException;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
@@ -140,7 +141,7 @@ public class Civilization {
 	
 	//METODOS PARA CREAR UNIDADES
 	
-	public void new_Swordsman(int i) throws ResourceException {
+	public void new_Swordsman(int i) throws ResourceException, MiSQLException {
 		//Calculamos la armadura total y el ataque total
 		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*Variables.ARMOR_SWORDSMAN/100);
 		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SWORDSMAN/100);
@@ -168,7 +169,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Spearman(int i) throws ResourceException {
+	public void new_Spearman(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_SPEARMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SPEARMAN_BY_TECHNOLOGY)*Variables.ARMOR_SPEARMAN/100);
 		int total_attack = Variables.BASE_DAMAGE_SPEARMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SPEARMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SPEARMAN/100);
 		int iterator_army;
@@ -194,7 +195,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Crossbow(int i) throws ResourceException {
+	public void new_Crossbow(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_CROSSBOW+((getTechnologyDefense()*Variables.PLUS_ARMOR_CROSSBOW_BY_TECHNOLOGY)*Variables.ARMOR_CROSSBOW/100);
 		int total_attack = Variables.BASE_DAMAGE_CROSSBOW+((getTechnologyAttack()*Variables.PLUS_ATTACK_CROSSBOW_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CROSSBOW/100);
 		int iterator_army;
@@ -203,6 +204,7 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_CROSSBOW &&getWood() >= Variables.WOOD_COST_CROSSBOW && getIron() >= Variables.IRON_COST_CROSSBOW) {
+				
 				army.get(2).add(new CrossBow(total_armor,total_attack));
 				setWood(wood-Variables.WOOD_COST_CROSSBOW);
 				setFood(food-Variables.FOOD_COST_CROSSBOW);
@@ -218,7 +220,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Cannon(int i) throws ResourceException {
+	public void new_Cannon(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_CANNON+((getTechnologyDefense()*Variables.PLUS_ARMOR_CANNON_BY_TECHNOLOGY)*Variables.ARMOR_CANNON/100);
 		int total_attack = Variables.BASE_DAMAGE_CANNON+((getTechnologyAttack()*Variables.PLUS_ATTACK_CANNON_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CANNON/100);
 		int iterator_army;
@@ -242,7 +244,7 @@ public class Civilization {
 		}
 	}
 	
-	public void new_ArrowTower(int i) throws ResourceException {
+	public void new_ArrowTower(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_ARROWTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY)*Variables.ARMOR_ARROWTOWER/100);
 		int total_attack = Variables.BASE_DAMAGE_ARROWTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_ARROWTOWER/100);
 		int iterator_army;
@@ -266,7 +268,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Catapult(int i) throws ResourceException {
+	public void new_Catapult(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_CATAPULT+((getTechnologyDefense()*Variables.PLUS_ARMOR_CATAPULT_BY_TECHNOLOGY)*Variables.ARMOR_CATAPULT/100);
 		int total_attack = Variables.BASE_DAMAGE_CATAPULT+((getTechnologyAttack()*Variables.PLUS_ATTACK_CATAPULT_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CATAPULT/100);
 		int iterator_army;
@@ -290,7 +292,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_RocketLauncher(int i) throws ResourceException {
+	public void new_RocketLauncher(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_ROCKETLAUNCHERTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*Variables.ARMOR_ROCKETLAUNCHERTOWER/100);
 		int total_attack = Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER/100);
 		int iterator_army;
@@ -314,7 +316,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Magician(int i) throws ResourceException, BuildingException {
+	public void new_Magician(int i) throws ResourceException, BuildingException, MiSQLException {
 		//Para el Mago su armadura es 0
 		int total_armor = 0;
 		int total_attack = Variables.BASE_DAMAGE_MAGICIAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_MAGICIAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_MAGICIAN/100);
@@ -344,7 +346,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Priest(int i) throws ResourceException, BuildingException {
+	public void new_Priest(int i) throws ResourceException, BuildingException, MiSQLException {
 		//Para el Sacerdote la armadura y el ataque son 0
 		int total_armor = 0;
 		int total_attack = 0;

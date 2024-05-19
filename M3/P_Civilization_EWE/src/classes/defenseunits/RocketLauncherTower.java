@@ -1,5 +1,6 @@
 package classes.defenseunits;
 
+import exceptions.MiSQLException;
 import interfaces.Variables;
 
 public class RocketLauncherTower extends DefenseUnit {
@@ -7,7 +8,7 @@ public class RocketLauncherTower extends DefenseUnit {
 
 	//CONSTRUCTOR 1
 
-	public RocketLauncherTower(int armor, int baseDamage) {
+	public RocketLauncherTower(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
@@ -76,11 +77,5 @@ public class RocketLauncherTower extends DefenseUnit {
 		setArmor(getInitialArmor());
 	}
 
-	public void setExperience(int n) {
-		setExperience(n);
-	}
 
-	public int getExperience() {
-		return getExperience();
-	}
 }

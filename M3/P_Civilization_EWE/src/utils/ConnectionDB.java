@@ -8,15 +8,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import classes.Civilization;
+import classes.attackunits.*;
+import classes.defenseunits.*;
+import classes.specialunits.*;
 import interfaces.MilitaryUnit;
+import interfaces.Variables;
 import exceptions.MiSQLException;
 
 public class ConnectionDB {
 	
+	private String url;
+	private String user;
+	private String pass;
+
+
 	//Mover a variables
-	private String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private String user = "AdminCivilization";
-	private String pass = "ewe";
 	
 	public ConnectionDB(String url, String user, String pass){
 		this.url = url;
@@ -29,7 +35,7 @@ public class ConnectionDB {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn = DriverManager.getConnection(url,user,pass);
+			Connection conn = DriverManager.getConnection(Variables.url,Variables.user,Variables.pass);
 			return conn;
 			
 		} catch (SQLException e) {
@@ -236,89 +242,163 @@ public class ConnectionDB {
 		}
 	}
 	
+	//Metodo para almacenar el ejercito en la bd
+	
+//	public void guardarArmy(Civilization civilization) throws MiSQLException {
+//
+//		
+//	}
+	
+	public void guardarUnit(MilitaryUnit unit) throws MiSQLException {
+		
+		try {
+			
+			Connection conn = openConnectionDB(); 
+			PreparedStatement ps = null;
+			
+			if (unit instanceof AttackUnit) {
+				
+				String query = "INSERT INTO attackunits (unit_id, civilization_id, unit_type, armor, base_damage, experience, sanctified) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	            ps = conn.prepareStatement(query);
+	            ps.setInt(1, ((AttackUnit) unit).getUnitId());
+	            ps.setInt(2, 1);
+	            
+	            //detecta el tipo de unidad correspondiente
+	            ps.setInt(3, tipoUnitDB(unit));
+	            ps.setInt(4, ((AttackUnit) unit).getArmor());
+	            ps.setInt(5, ((AttackUnit) unit).getBaseDamage());
+	            ps.setInt(6, ((AttackUnit) unit).getExperience());
+	            ps.setBoolean(7, ((AttackUnit) unit).isSanctified());
+	
+	            
+				
+			} else if (unit instanceof DefenseUnit) {
+				
+				String query = "INSERT INTO defenseunits (unit_id, civilization_id, unit_type, armor, base_damage, experience, sanctified) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	            ps = conn.prepareStatement(query);
+	            ps.setInt(1, ((DefenseUnit) unit).getUnitId());
+	            ps.setInt(2, 1);
+	            
+	            //detecta el tipo de unidad correspondiente
+	            ps.setInt(3, tipoUnitDB(unit));
+	            ps.setInt(4, ((DefenseUnit) unit).getArmor());
+	            ps.setInt(5, ((DefenseUnit) unit).getBaseDamage());
+	            ps.setInt(6, ((DefenseUnit) unit).getExperience());
+	            ps.setBoolean(7, ((DefenseUnit) unit).isSanctified());
+				
+			} else if (unit instanceof SpecialUnit) {
+				
+				String query = "INSERT INTO specialunits (unit_id, civilization_id, unit_type, armor, base_damage, experience) VALUES (?, ?, ?, ?, ?, ?)";
+	            ps = conn.prepareStatement(query);
+	            ps.setInt(1, ((SpecialUnit) unit).getUnitId());
+	            ps.setInt(2, 1);
+	            
+	            //detecta el tipo de unidad correspondiente
+	            ps.setInt(3, tipoUnitDB(unit));
+	            ps.setInt(4, ((SpecialUnit) unit).getArmor());
+	            ps.setInt(5, ((SpecialUnit) unit).getBaseDamage());
+	            ps.setInt(6, ((SpecialUnit) unit).getExperience());
+				
+			}
+			
+			//comprobar que no sea nulo el ps apra evitar errores
+			if (ps != null) {
+				int insertRealizado = ps.executeUpdate();
+				System.out.println("insert OK: "+ insertRealizado);
+				
+				ps.close();
+			}
+			
+			conn.close();
+			
+		}catch (Exception e) {
+			throw new MiSQLException("Error al insertar la unidad: " + e.getMessage());
+		}
+		
+		
+	}
+	
+	
+	//detecta el tipo de unidad correspondiente para la BD
+	public int tipoUnitDB(MilitaryUnit unit){
+		
+		int id = 0;
+		
+		if (unit instanceof AttackUnit) {
+			
+			if (unit instanceof Swordsman) {
+				id = 1;
+			}else if (unit instanceof Spearman) {
+				id = 2;
+				
+			}else if (unit instanceof CrossBow) {
+				id = 3;
+				
+			}else if (unit instanceof Cannon) {
+				id = 4;
+			}
+			
+		}else if (unit instanceof DefenseUnit) {
+			
+			if (unit instanceof ArrowTower) {
+				id = 5;
+				
+			}else if (unit instanceof Catapult) {
+				id = 6;
+				
+			}else if (unit instanceof RocketLauncherTower) {
+				id = 7;
+			}
+			
+		}else if (unit instanceof SpecialUnit) {
+			
+			if (unit instanceof Magician) {
+				id = 8;
+				
+			}else if (unit instanceof Priest) {
+				id = 9;
+			}
+		}
+		
+		return id;
+	}
+	
+	
+	//pruebas locales 
+	
 	public static void main(String[] args){
-	    String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	    String user = "AdminCivilization";
-	    String pass = "ewe"; 
-
-	    ConnectionDB cbd = new ConnectionDB(url, user, pass);
-	    Civilization cv = new Civilization();
-	    
-	    cv.setWood(10000);
-        cv.setIron(10000);
-        cv.setFood(10000);
-        cv.setMana(10000);
-        cv.setFarm(4);
-        cv.setSmithy(3);
-        cv.setCarpentry(3);
-        cv.setChurch(1);
-        cv.setMagicTower(2);
-        cv.setTechnologyAttack(4);
-        cv.setTechnologyDefense(5);
-        cv.setBattles(22);
-        
-        System.out.println("Datos viejos: ");
-        System.out.println(cv.getWood());
-        System.out.println(cv.getIron());
-        System.out.println(cv.getFood());
-        System.out.println(cv.getMana());
-        System.out.println(cv.getFarm());
-        System.out.println(cv.getSmithy());
-        System.out.println(cv.getCarpentry());
-        System.out.println(cv.getChurch());
-        System.out.println(cv.getMagicTower());
-        System.out.println(cv.getTechnologyAttack());
-        System.out.println(cv.getTechnologyDefense());
-        System.out.println(cv.getBattles());      
-        System.out.println("__________________________\n");
-
-//	    try {
-//	        // Establecer la conexión con la base de datos
-//	        Connection conn = cbd.openConnectionDB();
-//	        System.out.println("Conexion OK");
-//	        cbd.obtenerDatosCivilization(cv);
-//	        System.out.println("Datos OK");
-//	        
-//	        
-//	        
-//	        
-//	            try {
-//					conn.close();
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//	       
-//	 
-//	    } catch (MiSQLException e) {
-//	        System.out.println("Error al establecer la conexión: " + e.getMessage());
-//	    }
-	    
-	    System.out.println("Datos nuevos: ");
-        System.out.println(cv.getWood());
-        System.out.println(cv.getIron());
-        System.out.println(cv.getFood());
-        System.out.println(cv.getMana());
-        System.out.println(cv.getFarm());
-        System.out.println(cv.getSmithy());
-        System.out.println(cv.getCarpentry());
-        System.out.println(cv.getChurch());
-        System.out.println(cv.getMagicTower());
-        System.out.println(cv.getTechnologyAttack());
-        System.out.println(cv.getTechnologyDefense());
-        System.out.println(cv.getBattles());      
-        System.out.println("__________________________\n");
-        
-        
-
-        try {
-        	
-			cbd.actualizarDatosCivilization(cv);
-			System.out.println("Civilization actualizado con nuevos datos en bd");
+		
+		
+		 ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+		 try {
+			Swordsman sw1 = new Swordsman(100,100);
+			System.out.println("ID Unidad 1: " + sw1.getUnitId());
+			cdb.guardarUnit(sw1);
+			System.out.println("Unidad 1 guardada");
+			
+			Spearman sp1 = new Spearman(100,100);
+			System.out.println("ID Unidad 2: " + sp1.getUnitId());
+			cdb.guardarUnit(sp1);
+			System.out.println("Unidad 2 guardada");
+			
+			
+			ArrowTower at1 = new ArrowTower(100, 100);
+			System.out.println("ID Unidad 3: " + at1.getUnitId());
+			cdb.guardarUnit(at1);
+			System.out.println("Unidad 3 guardada");
+			
+			Magician m1 = new Magician(100, 100);
+			System.out.println("ID Unidad 4: " + m1.getUnitId());
+			cdb.guardarUnit(m1);
+			System.out.println("Unidad 4 guardada");
+			
 		} catch (MiSQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
+
+
 	
 	
 

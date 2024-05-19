@@ -232,7 +232,7 @@ public class Main {
 	
 	
 	//METODO PARA CREAR ARMY ENEMIGAS
-	public ArrayList<ArrayList> createEnemyArmy() {
+	public ArrayList<ArrayList> createEnemyArmy() throws MiSQLException {
 		int enemyWood;
 		int enemyFood;
 		int enemyIron;

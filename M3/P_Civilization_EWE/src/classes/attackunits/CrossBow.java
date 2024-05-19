@@ -1,5 +1,6 @@
 package classes.attackunits;
 
+import exceptions.MiSQLException;
 import interfaces.Variables;
 
 public class CrossBow extends AttackUnit {
@@ -10,16 +11,16 @@ public class CrossBow extends AttackUnit {
 	//CONSTRUCTOR 1
 
 
-	public CrossBow(int armor, int baseDamage) {
+	public CrossBow(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
 	//CONSTRUCTOR 2
 	
 	
-		public CrossBow() {
-			super(ARMOR_CROSSBOW, BASE_DAMAGE_CROSSBOW);
-		}
+	public CrossBow() throws MiSQLException {
+		super(ARMOR_CROSSBOW, BASE_DAMAGE_CROSSBOW);
+	}
 		
 	
 	//METODOS DE MILITARY UNIT
@@ -86,11 +87,4 @@ public class CrossBow extends AttackUnit {
 		setArmor(getInitialArmor());
 	}
 
-	public void setExperience(int n) {
-		setExperience(n);
-	}
-
-	public int getExperience() {
-		return getExperience();
-	}
 }

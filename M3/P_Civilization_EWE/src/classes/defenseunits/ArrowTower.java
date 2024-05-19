@@ -1,5 +1,6 @@
 package classes.defenseunits;
 
+import exceptions.MiSQLException;
 import interfaces.Variables;
 
 public class ArrowTower extends DefenseUnit{
@@ -7,7 +8,7 @@ public class ArrowTower extends DefenseUnit{
 	
 	//CONSTRUCTOR 1
 
-	public ArrowTower(int armor, int baseDamage) {
+	public ArrowTower(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
@@ -76,11 +77,5 @@ public class ArrowTower extends DefenseUnit{
 		setArmor(getInitialArmor());
 	}
 
-	public void setExperience(int n) {
-		setExperience(n);
-	}
 
-	public int getExperience() {
-		return getExperience();
-	}
 }

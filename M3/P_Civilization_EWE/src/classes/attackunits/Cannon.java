@@ -1,5 +1,6 @@
 package classes.attackunits;
 
+import exceptions.MiSQLException;
 import interfaces.Variables;
 
 public class Cannon extends AttackUnit{
@@ -8,14 +9,14 @@ public class Cannon extends AttackUnit{
 	
 	//CONSTRUCTOR 1
 
-	public Cannon(int armor, int baseDamage) {
+	public Cannon(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
 	
 	//CONSTRUCTOR 2
 	
-	public Cannon() {
+	public Cannon() throws MiSQLException {
 		super(ARMOR_CANNON, BASE_DAMAGE_CANNON);
 	}
 
@@ -85,14 +86,6 @@ public class Cannon extends AttackUnit{
 
 	public void resetArmor() {
 		setArmor(getInitialArmor());
-	}
-
-	public void setExperience(int n) {
-		setExperience(n);
-	}
-
-	public int getExperience() {
-		return getExperience();
 	}
 
 }
