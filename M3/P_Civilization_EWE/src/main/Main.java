@@ -13,6 +13,12 @@ import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
 import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
+import classes.defenseunits.ArrowTower;
+import classes.defenseunits.Catapult;
+import classes.defenseunits.RocketLauncherTower;
+import classes.specialunits.Magician;
+import classes.specialunits.Priest;
+import exceptions.BuildingException;
 import exceptions.MiSQLException;
 import exceptions.ResourceException;
 import interfaces.GameGuiListener;
@@ -43,7 +49,7 @@ public class Main {
 
         
         dc_classes classes = new dc_classes();
-        m.dc_gui = new dc_gui();
+        m.dc_gui = new dc_gui(classes.getCv());
         m.dc_gui.invoke_main_menu();
         m.dc_gui.setGgl(new GameGuiListener() {
 			
@@ -59,22 +65,21 @@ public class Main {
 
 			public void update_resources() {
 				
-				
-				//aqui obtendremos los datos de la partida de la bd
-				
-				int iron = 15000;
-				int wood = 15000;
-				int food = 15000;
-				int mana = 15000;
+							
 
-				m.dc_gui.setFood(food);
-				m.dc_gui.setWood(wood);
-				m.dc_gui.setIron(iron);
-				m.dc_gui.setMana(mana);
+				m.dc_gui.setFood(classes.getCv().getFood());
+				m.dc_gui.setWood(classes.getCv().getWood());
+				m.dc_gui.setIron(classes.getCv().getIron());
+				m.dc_gui.setMana(classes.getCv().getMana());
 
 
 			}
 			public void update_resources_db(int food,int wood, int iron, int mana) {
+				classes.getCv().setFood(food);
+				classes.getCv().setWood(wood);
+				classes.getCv().setIron(iron);
+				classes.getCv().setMana(mana);
+
 				System.out.println(food);
 				System.out.println(wood);
 				System.out.println(iron);
@@ -119,7 +124,81 @@ public class Main {
 				// TODO Auto-generated method stub
 				
 			}
-		});
+
+			public int[] getcv_army_values() {
+			    int[] cv_array = new int[11]; // Declaración y creación del array
+
+			    cv_array[0] = classes.getCv().getArmy().get(0).size();
+			    // Repite para las demás posiciones
+			    cv_array[1] = classes.getCv().getArmy().get(1).size();
+			    cv_array[2] = classes.getCv().getArmy().get(2).size();
+			    cv_array[3] = classes.getCv().getArmy().get(3).size();
+			    cv_array[4] = classes.getCv().getArmy().get(4).size();
+			    cv_array[5] = classes.getCv().getArmy().get(5).size();
+			    cv_array[6] = classes.getCv().getArmy().get(6).size();
+			    cv_array[7] = classes.getCv().getArmy().get(7).size();
+			    cv_array[8] = classes.getCv().getArmy().get(8).size();
+			    cv_array[9] = classes.getCv().getTechnologyAttack();
+			    cv_array[10] = classes.getCv().getTechnologyDefense();
+
+				
+				return cv_array;
+			}
+
+			// Método para establecer el ejército de la civilización
+			public void create_troop(int soldierTypeIndex, int numSoldiers) {
+			    if (soldierTypeIndex < 0 || soldierTypeIndex >= classes.getCv().getArmy().size()) {
+			        // Si el índice del tipo de soldado está fuera de los límites del ArrayList, mostrar un mensaje de error
+			        System.out.println("Error: Tipo de soldado inválido.");
+			        return;
+			    }
+
+			   
+
+			    // Crear los soldados del tipo especificado
+	                try {
+			        switch (soldierTypeIndex) {
+		            case 0:
+						classes.getCv().new_Swordsman(numSoldiers);
+						System.out.println("soldados:");
+						System.out.println((classes.getCv().getArmy().get(0).size()));
+						break;
+		            case 1:
+		                classes.getCv().new_Spearman(numSoldiers);
+		                break;
+		            case 2:
+		                classes.getCv().new_Crossbow(numSoldiers);
+		                break;
+		            case 3:
+		                classes.getCv().new_Cannon(numSoldiers);
+		                break;
+		            case 4:
+		                classes.getCv().new_ArrowTower(numSoldiers);
+		                break;
+		            case 5:
+		                classes.getCv().new_Catapult(numSoldiers);
+		                break;
+		            case 6:
+		                classes.getCv().new_RocketLauncher(numSoldiers);
+		                break;
+		            case 7:
+		                classes.getCv().new_Magician(numSoldiers);
+		                break;
+		            case 8:
+		                classes.getCv().new_Priest(numSoldiers);
+		                break;
+		            default:
+		                // Manejo de caso no válido
+		                System.out.println("Tipo de soldado no válido: ");
+		                break;
+		        }
+		    }catch (ResourceException | BuildingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
+			    }});
         
         
         

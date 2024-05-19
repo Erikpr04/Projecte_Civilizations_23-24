@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import gui.dc_gui;
-import gui.CvUpgradeGui.TechnologyUpgradePanel;
 
 public class Game_gui extends JPanel {
     private static final int PANEL_SIZE = 50;
@@ -48,9 +47,17 @@ public class Game_gui extends JPanel {
     private ImageIcon resources_img,woodicon,ironicon,manaicon,foodicon,panelbackgroundimage;
     private JPanel panelright_food,panelright_wood,panelright_iron,panelright_mana;
     private JLabel woodlabel,foodlabel,ironlabel,manalabel;
-    private dc_gui dcGui = new dc_gui(); // Instancia de dc_gui
 	private GameGuiListener listener;
     boolean isUpgradePressed = false;
+    boolean isStatsButtonPressed = false;
+    int[] cv_values = {
+            0, 0, 0, 0, 0, 
+            0, 0, 0, 0, 
+            0, 0
+        };
+    String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket Launcher Tower", "Magician", "Priest"};
+    BackgroundPanel statsPanel;
+
 
 
     
@@ -107,6 +114,7 @@ public class Game_gui extends JPanel {
         panelright1 = new JPanel(new GridLayout(4, 1));
         panelright2 = new MiPanelito(new BorderLayout());
 
+
         //  the resources_img icon
         try {
             resources_img = new ImageIcon(ImageIO.read(new File("./src/gui/brown.png")));
@@ -140,22 +148,22 @@ public class Game_gui extends JPanel {
         // Añadir paneles a subpanel
         panelright1.add(panelright_food);
         agregarImagenTexto(panelright_food, "./src/gui/brown.png",foodlabel,foodicon);
-        update_resources_quantity(this.getFood(),foodlabel,"food");
+        //update_resources_quantity(this.getFood(),foodlabel,"food");
         
         
         panelright1.add(panelright_wood);
         agregarImagenTexto(panelright_wood, "./src/gui/brown.png",woodlabel,woodicon);
-        update_resources_quantity(this.getWood(),woodlabel,"wood");
+        //update_resources_quantity(this.getWood(),woodlabel,"wood");
 
 
         panelright1.add(panelright_iron);
         agregarImagenTexto(panelright_iron, "./src/gui/brown.png",ironlabel,ironicon);
-        update_resources_quantity(this.getIron(),ironlabel,"iron");
+        //update_resources_quantity(this.getIron(),ironlabel,"iron");
 
 
         panelright1.add(panelright_mana);
         agregarImagenTexto(panelright_mana, "./src/gui/brown.png",manalabel,manaicon);
-        update_resources_quantity(this.getMana(),manalabel,"mana");
+        //update_resources_quantity(this.getMana(),manalabel,"mana");
 
 
 
@@ -229,7 +237,7 @@ public class Game_gui extends JPanel {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                subPanels[i][j] = new MiPanelito(dcGui);
+                subPanels[i][j] = new MiPanelito();
                 mainPanel2.add(subPanels[i][j]);
             }
         }
@@ -307,117 +315,161 @@ public class Game_gui extends JPanel {
     
     
     // En el constructor de Game_gui, después de crear panelup
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+
     JButton upgrade_cvbutton = new JButton("Upgrade Civilization");
-    upgrade_cvbutton.setPreferredSize(new Dimension(300,70));
-    panelright2.setBorder(BorderFactory.createEmptyBorder(80, 20, 50, 20));
-    panelright2.add(upgrade_cvbutton,BorderLayout.NORTH);
-    isUpgradePressed = false;
+    upgrade_cvbutton.setMaximumSize(new Dimension(300, 70));
+    upgrade_cvbutton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    JButton see_cvstats = new JButton("Civilization Stats");
+    see_cvstats.setMaximumSize(new Dimension(300, 20));
+    see_cvstats.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    JButton sanctify_button = new JButton("Sanctify Units");
+    sanctify_button.setMaximumSize(new Dimension(300, 20));
+    sanctify_button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+    buttonPanel.add(upgrade_cvbutton);
+    buttonPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre los botones
+    buttonPanel.add(see_cvstats);
+    buttonPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre los botones
+    buttonPanel.add(sanctify_button);
+
+    buttonPanel.setOpaque(false);
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0)); // Margen superior
+
+    panelright2.add(buttonPanel, BorderLayout.NORTH);
+
+    // Crear el panel de estadísticas
+    statsPanel = new BackgroundPanel(new GridLayout(12, 2));
+
+    // Crear un borde compuesto que combine un borde vacío y un borde de línea
+    statsPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+
+    statsPanel.setPreferredSize(new Dimension(500, 200));
+
+    // Añadir etiquetas a la primera columna
+    String[] labels = {
+        "Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", 
+        "Catapult", "Rocket Launcher Tower", "Magician", "Priest", 
+        "Civilization Attack Level", "Civilization Defense Level"
+    };
+
+    // Ejemplo de valores para la segunda columna
+    for (int i = 0; i < labels.length; i++) {
+        JLabel label = new JLabel(labels[i]);
+        label.setForeground(Color.WHITE); // Texto blanco
+        statsPanel.add(label);
+        
+        JLabel valueLabel = new JLabel(Integer.toString(cv_values[i]));
+        valueLabel.setForeground(Color.WHITE); // Texto blanco
+        statsPanel.add(valueLabel);
+    }
+
+    // Añadir el container al JLayeredPane en la capa modal
+    mainpanel.add(statsPanel, JLayeredPane.PALETTE_LAYER);
+    statsPanel.setBounds(1075, 420, 425, 675);
+    statsPanel.setVisible(false);
+
+    // Booleano para controlar el estado del botón
+    // ActionListener para see_cvstats
+    see_cvstats.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            getcv_data();
+            statsPanel.removeAll();
+
+            // Añadir los nuevos componentes con los datos actualizados
+            for (int i = 0; i < labels.length; i++) {
+                JLabel label = new JLabel(labels[i]);
+                label.setForeground(Color.WHITE); // Texto blanco
+                statsPanel.add(label);
+                
+                JLabel valueLabel = new JLabel(Integer.toString(cv_values[i]));
+                valueLabel.setForeground(Color.WHITE); // Texto blanco
+                statsPanel.add(valueLabel);
+            }
+            statsPanel.revalidate();
+            statsPanel.repaint();
+
+            isStatsButtonPressed = !isStatsButtonPressed;
+            statsPanel.setVisible(isStatsButtonPressed);
+            see_cvstats.getModel().setPressed(isStatsButtonPressed);
+        }
+    });
+
+    
+    
+    
+    
+    //panel de actualizacion de civilizacion
+
+    
+    CvUpgradeGui cvUpgradeGui = new CvUpgradeGui();
     JPanel panelpestañas = new JPanel(new BorderLayout());
-    
-    
-    //cargamos paneles de mejora de civilizacion al empezar la partida
-    
-    CvUpgradeGui cvUpgradeGui = new CvUpgradeGui(); // Instancia de la clase CvUpgradeGui
+    JTabbedPane tabbedPane = new JTabbedPane();
 
-    // Crear el panel para las pestañas
+    JPanel upgradeArmyPanel = new JPanel();
+    upgradeArmyPanel.setLayout(new GridLayout(3, 3));
+    String[] soldierImages = {"./src/gui/unit_assets/swordsman.png", "./src/gui/unit_assets/spearman.png", "./src/gui/unit_assets/crossbow.png", "./src/gui/unit_assets/cannon.png", "./src/gui/unit_assets/arrow_tower.png", "./src/gui/unit_assets/catapult.png", "./src/gui/unit_assets/rocket_launcher.png", "./src/gui/unit_assets/magician.png", "./src/gui/unit_assets/priest.png"};
 
-       // Crear el JTabbedPane para las pestañas
-       JTabbedPane tabbedPane = new JTabbedPane();
+    int[][] soldierCosts = {
+        {Variables.FOOD_COST_SWORDSMAN, Variables.WOOD_COST_SWORDSMAN, Variables.IRON_COST_SWORDSMAN, Variables.MANA_COST_SWORDSMAN},
+        {Variables.FOOD_COST_SPEARMAN, Variables.WOOD_COST_SPEARMAN, Variables.IRON_COST_SPEARMAN, Variables.MANA_COST_SPEARMAN},
+        {Variables.FOOD_COST_CROSSBOW, Variables.WOOD_COST_CROSSBOW, Variables.IRON_COST_CROSSBOW, Variables.MANA_COST_CROSSBOW},
+        {Variables.FOOD_COST_CANNON, Variables.WOOD_COST_CANNON, Variables.IRON_COST_CANNON, Variables.MANA_COST_CANNON},
+        {Variables.FOOD_COST_ARROWTOWER, Variables.WOOD_COST_ARROWTOWER, Variables.IRON_COST_ARROWTOWER, Variables.MANA_COST_ARROWTOWER},
+        {Variables.FOOD_COST_CATAPULT, Variables.WOOD_COST_CATAPULT, Variables.IRON_COST_CATAPULT, Variables.MANA_COST_CATAPULT},
+        {Variables.FOOD_COST_ROCKETLAUNCHERTOWER, Variables.WOOD_COST_ROCKETLAUNCHERTOWER, Variables.IRON_COST_ROCKETLAUNCHERTOWER, Variables.MANA_COST_ROCKETLAUNCHERTOWER},
+        {Variables.FOOD_COST_MAGICIAN, Variables.WOOD_COST_MAGICIAN, Variables.IRON_COST_MAGICIAN, Variables.MANA_COST_MAGICIAN},
+        {Variables.FOOD_COST_PRIEST, Variables.WOOD_COST_PRIEST, Variables.IRON_COST_PRIEST, Variables.MANA_COST_PRIEST}
+    };
 
-       // Upgrade Army tab
-       JPanel upgradeArmyPanel = new JPanel();
-       upgradeArmyPanel.setLayout(new GridLayout(3, 3));
-       String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket Launcher Tower", "Magician", "Priest"};
-       String[] soldierImages = {"./src/gui/unit_assets/swordsman.png", "./src/gui/unit_assets/spearman.png", "./src/gui/unit_assets/crossbow.png", "./src/gui/unit_assets/cannon.png", "./src/gui/unit_assets/arrow_tower.png", "./src/gui/unit_assets/catapult.png", "./src/gui/unit_assets/rocket_launcher.png", "./src/gui/unit_assets/magician.png", "./src/gui/unit_assets/priest.png"};
+    for (int i = 0; i < soldierNames.length; i++) {
+        upgradeArmyPanel.add(cvUpgradeGui.createSoldierPanel(i, soldierCosts[i], soldierImages[i]));
+    }
 
-       int[][] soldierCosts = {
-           {Variables.FOOD_COST_SWORDSMAN, Variables.WOOD_COST_SWORDSMAN, Variables.IRON_COST_SWORDSMAN, Variables.MANA_COST_SWORDSMAN},
-           {Variables.FOOD_COST_SPEARMAN, Variables.WOOD_COST_SPEARMAN, Variables.IRON_COST_SPEARMAN, Variables.MANA_COST_SPEARMAN},
-           {Variables.FOOD_COST_CROSSBOW, Variables.WOOD_COST_CROSSBOW, Variables.IRON_COST_CROSSBOW, Variables.MANA_COST_CROSSBOW},
-           {Variables.FOOD_COST_CANNON, Variables.WOOD_COST_CANNON, Variables.IRON_COST_CANNON, Variables.MANA_COST_CANNON},
-           {Variables.FOOD_COST_ARROWTOWER, Variables.WOOD_COST_ARROWTOWER, Variables.IRON_COST_ARROWTOWER, Variables.MANA_COST_ARROWTOWER},
-           {Variables.FOOD_COST_CATAPULT, Variables.WOOD_COST_CATAPULT, Variables.IRON_COST_CATAPULT, Variables.MANA_COST_CATAPULT},
-           {Variables.FOOD_COST_ROCKETLAUNCHERTOWER, Variables.WOOD_COST_ROCKETLAUNCHERTOWER, Variables.IRON_COST_ROCKETLAUNCHERTOWER, Variables.MANA_COST_ROCKETLAUNCHERTOWER},
-           {Variables.FOOD_COST_MAGICIAN, Variables.WOOD_COST_MAGICIAN, Variables.IRON_COST_MAGICIAN, Variables.MANA_COST_MAGICIAN},
-           {Variables.FOOD_COST_PRIEST, Variables.WOOD_COST_PRIEST, Variables.IRON_COST_PRIEST, Variables.MANA_COST_PRIEST}
-       };
+    JPanel upgradeTechnologyPanel = cvUpgradeGui.new TechnologyUpgradePanel();
+    tabbedPane.add("Upgrade Army", upgradeArmyPanel);
+    tabbedPane.add("Upgrade Technology", upgradeTechnologyPanel);
 
-       for (int i = 0; i < soldierNames.length; i++) {
-           upgradeArmyPanel.add(cvUpgradeGui.createSoldierPanel(soldierNames[i], soldierCosts[i], soldierImages[i])); // Llamada al método createSoldierPanel a través de la instancia
-       }
-
-       // Upgrade Technology tab
-       JPanel upgradeTechnologyPanel = cvUpgradeGui.new TechnologyUpgradePanel(); // Utiliza la nueva clase TechnologyUpgradePanel
-
-       // Agregar los paneles de actualización de ejército y tecnología al panel de pestañas
-       tabbedPane.add("Upgrade Army", upgradeArmyPanel);
-       tabbedPane.add("Upgrade Technology", upgradeTechnologyPanel);
-
-       // Agregar el JTabbedPane al panel de pestañas
-       panelpestañas.add(tabbedPane, BorderLayout.CENTER);
-
-
-       // Agregar los paneles al mainPanel en diferentes capas
-       mainpanel.add(panelpestañas, JLayeredPane.PALETTE_LAYER); // Capa por defecto
-
-       // Configurar las posiciones y tamaños de los paneles
-       panelpestañas.setBounds(0, 0, 1500, 1080);
-       
-       panelpestañas.setVisible(false);
-
-
+    panelpestañas.add(tabbedPane, BorderLayout.CENTER);
+    mainpanel.add(panelpestañas, JLayeredPane.PALETTE_LAYER);
+    panelpestañas.setBounds(0, 0, 1500, 1080);
+    panelpestañas.setVisible(false);
 
     upgrade_cvbutton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Alternar el estado del botón
             isUpgradePressed = !isUpgradePressed;
-
-
-            if (isUpgradePressed) {
-                panelpestañas.setVisible(true);
-                upgrade_cvbutton.getModel().setPressed(isUpgradePressed);
-
-               
-            } else {
-            	panelpestañas.setVisible(false);            }
+            panelpestañas.setVisible(isUpgradePressed);
+            upgrade_cvbutton.getModel().setPressed(isUpgradePressed);
         }
     });
-    
-    
-    
-    //añadimos panel en panelright2
-    
+
     JPanel userPanel = new JPanel();
     userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
 
-    // Imagen cuadrada
     ImageIcon imageIcon = new ImageIcon("./src/gui/user_image.png");
     Image originalImage = imageIcon.getImage();
-
     Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
-
-    // Crear un ImageIcon con la imagen redimensionada
     ImageIcon scaledIcon = new ImageIcon(resizedImage);
     JLabel imageLabel = new JLabel(scaledIcon);
     imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(imageLabel);
     imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-
-    // Texto de usuario
     JLabel usernameLabel = new JLabel("Username");
     usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(usernameLabel);
 
-    // Temporizador estilo 0:00
     JLabel timerLabel = new JLabel("0:00", JLabel.CENTER);
     timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
     timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
     userPanel.add(timerLabel);
     userPanel.setOpaque(false);
-    // Temporizador
+
     Timer timer = new Timer(1000, new ActionListener() {
         int seconds = 0;
         int minutes = 0;
@@ -434,18 +486,34 @@ public class Game_gui extends JPanel {
         }
     });
     timer.start();
-    userPanel.setPreferredSize(new Dimension(300,300));
+    userPanel.setPreferredSize(new Dimension(300, 300));
 
-
-    panelright2.add(userPanel,BorderLayout.SOUTH);
-
+    panelright2.add(userPanel, BorderLayout.SOUTH);
     
     
     
 }
 	
 	
-    //metodo para guardar paneles
+    private void getcv_data() {
+    	
+	    int[] cv_array = new int[11]; // Declaración y creación del array
+
+	    cv_array[0] = listener.getcv_army_values()[0];
+	    cv_array[1] =listener.getcv_army_values()[1];
+	    cv_array[2] =listener.getcv_army_values()[2];
+	    cv_array[3] =listener.getcv_army_values()[3];
+	    cv_array[4] =listener.getcv_army_values()[4];
+	    cv_array[5] =listener.getcv_army_values()[5];
+	    cv_array[6] =listener.getcv_army_values()[6];
+	    cv_array[7] =listener.getcv_army_values()[7];
+	    cv_array[8] = listener.getcv_army_values()[8];
+	    cv_array[9] =listener.getcv_army_values()[9];
+	    cv_array[10] =listener.getcv_army_values()[10];	
+	    this.cv_values = cv_array;
+	}
+
+	//metodo para guardar paneles
     
     public void updatePanels() {
         this.listener.load_game_gui();
@@ -457,6 +525,8 @@ public class Game_gui extends JPanel {
     }
 
     public void setFood(int food) {
+    	this.food = food;
+
         listener.update_resources(food, getWood(), getIron(), getMana());
     }
 
@@ -465,6 +535,7 @@ public class Game_gui extends JPanel {
     }
 
     public void setWood(int wood) {
+    	this.wood = wood;
         listener.update_resources(getFood(), wood, getIron(), getMana());
     	
     }
@@ -474,6 +545,7 @@ public class Game_gui extends JPanel {
     }
 
     public void setIron(int iron) {
+    	this.iron = iron;
         listener.update_resources(getFood(), getWood(), iron, getMana());
     }
 
@@ -482,6 +554,8 @@ public class Game_gui extends JPanel {
     }
 
     public void setMana(int mana) {
+    	this.mana = mana;
+
         listener.update_resources(getFood(), getWood(), getIron(), mana);
     }
     
@@ -518,16 +592,17 @@ public class Game_gui extends JPanel {
     	
     	
     	if (resource == "food") {
-    		this.food = quantity;
+    		setFood(quantity);
     		
     	}else if (resource == "wood") {
-    		this.wood = quantity;
+    		setWood(quantity);
 
     	}else if (resource == "iron") {
-    		this.iron = quantity;
+    		setIron(quantity);
+
 
     	}else if (resource == "mana") {
-    		this.mana = quantity;
+    		setMana(quantity);
 
     	}else {
     		
@@ -795,9 +870,8 @@ class MiPanelito extends JPanel {
     
     
 
-    public MiPanelito(dc_gui dcGui) {
+    public MiPanelito() {
 
-        this.dcGui = dcGui;
 
     	main_texture = new ImageIcon("./src/gui/main_grass_texture.jpg");
     	this.setCurrentImage(main_texture);
@@ -886,6 +960,7 @@ class MiPanelito extends JPanel {
                                         setIron(getIron() - ironCost);
                                         setFood(getFood() - foodCost);
                                         setMana(getMana() - manaCost);
+                                        
                                         try {
 											update_resources_quantity(getWood(),woodlabel,"wood");
 	                                        update_resources_quantity(getIron(),ironlabel,"iron");
@@ -957,6 +1032,10 @@ class MiPanelito extends JPanel {
 
 	public MiPanelito(FlowLayout flowLayout) {
 		super(flowLayout);
+	}
+
+	public MiPanelito(BoxLayout boxLayout) {
+		super(boxLayout);
 	}
 
 	public void setBorderColor(Color color) {
@@ -1041,7 +1120,7 @@ public JLabel getManalabel() {
 public void setManalabel(JLabel manalabel) {
 	this.manalabel = manalabel;
 }
-}
+
 
 //Clases Paneles para mejorar Civilizacion
 
@@ -1049,8 +1128,6 @@ public void setManalabel(JLabel manalabel) {
 class CvUpgradeGui {
 
 
-    private static int resources = 1000;
-    private static int multiplier = 1; // Variable para el multiplicador de costos
 
 
     
@@ -1175,8 +1252,17 @@ class CvUpgradeGui {
         }
     }
 
+ // Método para verificar si hay suficientes recursos disponibles y cambiar el color del texto
+    private void checkResourceAvailability(JLabel label, int cost, int available) {
+        if (available < cost) {
+            label.setForeground(Color.RED); // Cambiar el color del texto a rojo si no hay suficientes recursos
+        } else {
+            label.setForeground(Color.WHITE); // Cambiar el color del texto a blanco si hay suficientes recursos
+        }
+    }
 
-    JPanel createSoldierPanel(String soldierName, int[] costs, String imagePath) {
+    // Método para crear el panel de creación de soldados
+    JPanel createSoldierPanel(int soldierIndex, int[] costs, String imagePath) {
         JPanel panel = new BackgroundPanel();
 
         // Creamos un JPanel interno para contener la imagen y lo configuramos con FlowLayout centrado
@@ -1205,12 +1291,12 @@ class CvUpgradeGui {
         JLabel woodLabel = new JLabel("Wood: " + costs[1]);
         JLabel ironLabel = new JLabel("Iron: " + costs[2]);
         JLabel manaLabel = new JLabel("Mana: " + costs[3]);
-        
-        foodLabel.setForeground(Color.white);
-        woodLabel.setForeground(Color.white);
-        ironLabel.setForeground(Color.white);
-        manaLabel.setForeground(Color.white);
 
+        // Establecer el color inicial del texto de los JLabels como blanco
+        foodLabel.setForeground(Color.WHITE);
+        woodLabel.setForeground(Color.WHITE);
+        ironLabel.setForeground(Color.WHITE);
+        manaLabel.setForeground(Color.WHITE);
 
         foodLabel.setFont(fuente);
         woodLabel.setFont(fuente);
@@ -1227,26 +1313,32 @@ class CvUpgradeGui {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        JLabel nameLabel = new JLabel(soldierName + " units to create");
-        nameLabel.setForeground(Color.white);
+        JLabel nameLabel = new JLabel(soldierNames[soldierIndex] + " units to create");
+        nameLabel.setForeground(Color.WHITE);
 
         nameLabel.setFont(fuente);
 
-        bottomPanel.setPreferredSize(new Dimension(500,100));
+        bottomPanel.setPreferredSize(new Dimension(500, 100));
         bottomPanel.add(nameLabel);
         bottomPanel.setOpaque(false);
 
-        SpinnerNumberModel numberModel = new SpinnerNumberModel(1, 1, 5, 1);
+        SpinnerNumberModel numberModel = new SpinnerNumberModel(1, 1, 99, 1);
         JSpinner unitSelector = new JSpinner(numberModel);
-        unitSelector.setPreferredSize(new Dimension(50,30));
+        unitSelector.setPreferredSize(new Dimension(50, 30));
         unitSelector.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 int value = (int) unitSelector.getValue();
+                // Actualizar el texto de los JLabels de recursos según la cantidad seleccionada
                 foodLabel.setText("Food: " + costs[0] * value);
                 woodLabel.setText("Wood: " + costs[1] * value);
                 ironLabel.setText("Iron: " + costs[2] * value);
                 manaLabel.setText("Mana: " + costs[3] * value);
+                // Cambiar el color del texto según si hay suficientes recursos disponibles
+                checkResourceAvailability(foodLabel, costs[0] * value, getFood());
+                checkResourceAvailability(woodLabel, costs[1] * value, getWood());
+                checkResourceAvailability(ironLabel, costs[2] * value, getIron());
+                checkResourceAvailability(manaLabel, costs[3] * value, getMana());
             }
         });
         bottomPanel.add(unitSelector);
@@ -1261,13 +1353,38 @@ class CvUpgradeGui {
                 int ironCost = costs[2] * units;
                 int manaCost = costs[3] * units;
 
-                if (resources >= foodCost && resources >= woodCost && resources >= ironCost && resources >= manaCost) {
-                    resources -= foodCost;
-                    resources -= woodCost;
-                    resources -= ironCost;
-                    resources -= manaCost;
+                // Verificar si hay suficientes recursos disponibles
+                if (getFood() >= foodCost && getWood() >= woodCost && getIron() >= ironCost && getMana() >= manaCost) {
+                    // Restar los recursos necesarios para crear las unidades
+                    setFood(getFood() - foodCost);
+                    setWood(getWood() - woodCost);
+                    setIron(getIron() - ironCost);
+                    setMana(getMana() - manaCost);
+                    System.out.println("Soldierindex");
+                    
+                    System.out.println(soldierIndex);
+                    
+                    listener.create_troop(soldierIndex, units);
+                    
+                    try {
+						update_resources_quantity(getWood(),woodlabel,"wood");
+                        update_resources_quantity(getIron(),ironlabel,"iron");
+                        update_resources_quantity(getMana(),manalabel,"mana");
+                        update_resources_quantity(getFood(),foodlabel,"food");
+                        //guardamos datos en base de datos
+                        listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
+                        getcv_data();
+
+                        
+
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+                    
+
                     JOptionPane.showMessageDialog(panel,
-                            "You've created " + units + " units of " + soldierName + ".\nCost: " + (foodCost + woodCost + ironCost + manaCost) + "\nRemaining Resources: " + resources,
+                            "You've created " + units + " units of " + soldierNames[soldierIndex] + ".\nCost: " + (foodCost + woodCost + ironCost + manaCost),
                             "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(panel,
@@ -1284,14 +1401,16 @@ class CvUpgradeGui {
 
         return panel;
     }
+
+
+}
     
     
     
     
     
     
-    
-    private class BackgroundPanel extends JPanel {
+    class BackgroundPanel extends JPanel {
         private BufferedImage backgroundImage;
 
         public BackgroundPanel() {
@@ -1313,6 +1432,16 @@ class CvUpgradeGui {
             }
 		}
 
+		public BackgroundPanel(GridLayout gridLayout) {
+			super(gridLayout);
+            try {
+                backgroundImage = ImageIO.read(new File("./src/gui/panel_background_img.jpg"));
+                this.repaint();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+		}
+
 		@Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -1322,8 +1451,9 @@ class CvUpgradeGui {
             }
         }
     }
-    
-    
-    
 }
+    
+    
+    
+
 

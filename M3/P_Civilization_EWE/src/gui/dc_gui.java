@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import classes.Civilization;
 import gui.Game_gui.MiPanelito;
 import interfaces.GameGuiListener;
 import interfaces.MainMenuListener;
@@ -27,16 +28,21 @@ public class dc_gui  {
 
 	private Game_gui gui_obj;
 	
+    private Civilization civilization;
+
 	
-	
+
+
 	
 	
 
     
 
 
-	public dc_gui() {
+	public dc_gui(Civilization civilization) {
         super();
+        this.civilization = civilization;
+
 
 
     	mmi = new MainMenuListener() {
