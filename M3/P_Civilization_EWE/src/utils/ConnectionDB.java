@@ -244,12 +244,7 @@ public class ConnectionDB {
 	
 	//Metodo para almacenar el ejercito en la bd
 	
-//	public void guardarArmy(Civilization civilization) throws MiSQLException {
-//
-//		
-//	}
-	
-	public void guardarUnit(MilitaryUnit unit) throws MiSQLException {
+	public void crearUnit(MilitaryUnit unit) throws MiSQLException {
 		
 		try {
 			
@@ -267,8 +262,8 @@ public class ConnectionDB {
 	            ps.setInt(3, tipoUnitDB(unit));
 	            ps.setInt(4, ((AttackUnit) unit).getArmor());
 	            ps.setInt(5, ((AttackUnit) unit).getBaseDamage());
-	            ps.setInt(6, ((AttackUnit) unit).getExperience());
-	            ps.setBoolean(7, ((AttackUnit) unit).isSanctified());
+	            ps.setInt(6, 0);
+	            ps.setBoolean(7, false);
 	
 	            
 				
@@ -283,8 +278,8 @@ public class ConnectionDB {
 	            ps.setInt(3, tipoUnitDB(unit));
 	            ps.setInt(4, ((DefenseUnit) unit).getArmor());
 	            ps.setInt(5, ((DefenseUnit) unit).getBaseDamage());
-	            ps.setInt(6, ((DefenseUnit) unit).getExperience());
-	            ps.setBoolean(7, ((DefenseUnit) unit).isSanctified());
+	            ps.setInt(6, 0);
+	            ps.setBoolean(7, false);
 				
 			} else if (unit instanceof SpecialUnit) {
 				
@@ -297,7 +292,7 @@ public class ConnectionDB {
 	            ps.setInt(3, tipoUnitDB(unit));
 	            ps.setInt(4, ((SpecialUnit) unit).getArmor());
 	            ps.setInt(5, ((SpecialUnit) unit).getBaseDamage());
-	            ps.setInt(6, ((SpecialUnit) unit).getExperience());
+	            ps.setInt(6, 0);
 				
 			}
 			
@@ -363,46 +358,258 @@ public class ConnectionDB {
 		return id;
 	}
 	
+//METODO PARA ELIMINAR UNIDADES SEGUN ID EN LA BD
 	
+	public void eliminarUnits(ArrayList<Integer> attackUnitIds, ArrayList<Integer> defenseUnitIds, ArrayList<Integer> specialUnitIds) throws MiSQLException {
+	    try {
+	        Connection conn = openConnectionDB();
+	        int unidadesEliminadas = 0; 
+	        // Elimina las unidades de ataque
+	        if (!attackUnitIds.isEmpty()) {
+	            String query = "DELETE FROM attackunits WHERE unit_id IN (";
+	            for (int i = 0; i < attackUnitIds.size(); i++) {
+	                query += "?";
+	                if (i < attackUnitIds.size() - 1) {
+	                    query += ", ";
+	                }
+	            }
+	            query += ")";
+
+	            try (PreparedStatement ps = conn.prepareStatement(query)) {
+	                for (int i = 0; i < attackUnitIds.size(); i++) {
+	                    ps.setInt(i + 1, attackUnitIds.get(i));
+	                }
+	                unidadesEliminadas += ps.executeUpdate();
+	            }
+	        }
+
+	        // Elimina las unidades de defensa
+	        if (!defenseUnitIds.isEmpty()) {
+	            String query = "DELETE FROM defenseunits WHERE unit_id IN (";
+	            for (int i = 0; i < defenseUnitIds.size(); i++) {
+	                query += "?";
+	                if (i < defenseUnitIds.size() - 1) {
+	                    query += ", ";
+	                }
+	            }
+	            query += ")";
+
+	            try (PreparedStatement ps = conn.prepareStatement(query)) {
+	                for (int i = 0; i < defenseUnitIds.size(); i++) {
+	                    ps.setInt(i + 1, defenseUnitIds.get(i));
+	                }
+	                unidadesEliminadas += ps.executeUpdate();
+	            }
+	        }
+
+	        // Elimina las unidades especiales
+	        if (!specialUnitIds.isEmpty()) {
+	            String query = "DELETE FROM specialunits WHERE unit_id IN (";
+	            for (int i = 0; i < specialUnitIds.size(); i++) {
+	                query += "?";
+	                if (i < specialUnitIds.size() - 1) {
+	                    query += ", ";
+	                }
+	            }
+	            query += ")";
+
+	            try (PreparedStatement ps = conn.prepareStatement(query)) {
+	                for (int i = 0; i < specialUnitIds.size(); i++) {
+	                    ps.setInt(i + 1, specialUnitIds.get(i));
+	                }
+	                unidadesEliminadas += ps.executeUpdate();
+	            }
+	        }
+	        System.out.println("Total de unidades eliminadas = " +unidadesEliminadas);
+
+	        conn.close();
+	    } catch (SQLException e) {
+	        throw new MiSQLException("Error al actualizar la base de datos con las unidades eliminadas: " + e.getMessage());
+	    }
+	}
+
+//METODO PARA ACTUALIZAR LAS UNIDADES RESTANTES EN LA BD
+	
+	public void actualizarUnitsBD(ArrayList<ArrayList> myArmy) throws MiSQLException {
+	    try {
+	        Connection conn = openConnectionDB();
+
+	        // Iterar sobre las sublistas de myArmy apra obtener los Grupos
+	        for (int i = 0; i < myArmy.size(); i++) {
+	            ArrayList<MilitaryUnit> units = myArmy.get(i);
+
+	            // Determina la tabla segun el indice del grupo
+	            String table;
+	            if (i <= 3) {
+	                table = "attackunits";
+	            } else if (i <= 6) {
+	                table = "defenseunits";
+	            } else {
+	                table = "specialunits";
+	            }
+
+	            // Iterar sobre las unidades en la sublista
+	            for (MilitaryUnit unit : units) {
+	                // Obtener el ID de la unidad según su tipo
+	                int unitId;
+	                if (unit instanceof AttackUnit) {
+	                    unitId = ((AttackUnit) unit).getUnitId();
+	                } else if (unit instanceof DefenseUnit) {
+	                    unitId = ((DefenseUnit) unit).getUnitId();
+	                } else if (unit instanceof SpecialUnit) {
+	                    unitId = ((SpecialUnit) unit).getUnitId();
+	                } else {
+	                    throw new IllegalArgumentException("Tipo de unidad no válido: " + unit.getClass().getName());
+	                }
+
+	                // Actualizar los campos correspondientes en la base de datos
+	                String updateQuery;
+	                
+	                //detecta si es special unit (No tiene sanctified)
+	                if (unit instanceof SpecialUnit) {
+	                    updateQuery = "UPDATE " + table + " SET armor = ?, experience = ? WHERE unit_id = ?";
+	                } else {
+	                    updateQuery = "UPDATE " + table + " SET armor = ?, experience = ?, sanctified = ? WHERE unit_id = ?";
+	                }
+	                	                
+	                try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+	                    ps.setInt(1, unit.getActualArmor());
+	                    ps.setInt(2, unit.getExperience());
+	                    
+	                    //otro if para detectar si es special unit o no
+	                    if (!(unit instanceof SpecialUnit)) {
+	                        if (unit instanceof AttackUnit) {
+	                            ps.setBoolean(3, ((AttackUnit) unit).isSanctified());
+	                            
+	                        } else if (unit instanceof DefenseUnit) {
+	                            ps.setBoolean(3, ((DefenseUnit) unit).isSanctified());
+	                        }
+	                        ps.setInt(4, unitId);
+	                    } else {
+	                        ps.setInt(3, unitId);
+	                    }
+	                    ps.executeUpdate();
+	                }
+	            }
+	        }
+
+	        conn.close();
+	    } catch (SQLException e) {
+	        throw new MiSQLException("Error al actualizar las unidades en la base de datos: " + e.getMessage());
+	    }
+	}
+
+//Metodos para guardar la info de las unidades de la batalla:
+	
+	public void insertBattleAttackUnitStats(int civilizationId, int numBattle, int unitType, int initial, int death) throws MiSQLException {
+        try {
+            Connection conn = openConnectionDB();
+            String query = "INSERT INTO battle_attackunits_stats (civilization_id, num_battle, unit_type, initial, death) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, civilizationId);
+            ps.setInt(2, numBattle);
+            ps.setInt(3, unitType);
+            ps.setInt(4, initial);
+            ps.setInt(5, death);
+            ps.executeUpdate();
+            System.out.println("Se ha insertado el registro en la tabla battle_attackunits_stats.");
+            conn.close();
+        } catch (SQLException e) {
+            throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
+        }
+	}
+	public void insertBattleDefenseUnitStats(int civilizationId, int numBattle, int unitType, int initial, int death) throws MiSQLException {
+        try {
+            Connection conn = openConnectionDB();
+            String query = "INSERT INTO battle_defenseunits_stats (civilization_id, num_battle, unit_type, initial, death) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, civilizationId);
+            ps.setInt(2, numBattle);
+            ps.setInt(3, unitType);
+            ps.setInt(4, initial);
+            ps.setInt(5, death);
+            ps.executeUpdate();
+            System.out.println("Se ha insertado el registro en la tabla battle_defenseunits_stats.");
+            conn.close();
+        } catch (SQLException e) {
+            throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
+        }
+    }
+	public void insertBattleSpecialUnitStats(int civilizationId, int numBattle, int unitType, int initial, int death) throws MiSQLException {
+        try {
+            Connection conn = openConnectionDB();
+            String query = "INSERT INTO battle_specialunits_stats (civilization_id, num_battle, unit_type, initial, death) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, civilizationId);
+            ps.setInt(2, numBattle);
+            ps.setInt(3, unitType);
+            ps.setInt(4, initial);
+            ps.setInt(5, death);
+            ps.executeUpdate();
+            System.out.println("Se ha insertado el registro en la tabla battle_specialunits_stats.");
+            conn.close();
+        } catch (SQLException e) {
+            throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
+        }
+    }
+	
+	public void insertBattleEnemyUnitStats(int civilizationId, int numBattle, int unitType, int initial, int death) throws MiSQLException {
+        try {
+            Connection conn = openConnectionDB();
+            String query = "INSERT INTO enemy_attack_stats (civilization_id, num_battle, unit_type, initial, death) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, civilizationId);
+            ps.setInt(2, numBattle);
+            ps.setInt(3, unitType);
+            ps.setInt(4, initial);
+            ps.setInt(5, death);
+            ps.executeUpdate();
+            System.out.println("Se ha insertado el registro en la tabla enemy_attack_stats.");
+            conn.close();
+        } catch (SQLException e) {
+            throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
+        }
+    }
 	//pruebas locales 
 	
 	public static void main(String[] args){
 		
-		
 		 ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
-		 try {
-			Swordsman sw1 = new Swordsman(100,100);
-			System.out.println("ID Unidad 1: " + sw1.getUnitId());
-			cdb.guardarUnit(sw1);
-			System.out.println("Unidad 1 guardada");
-			
-			Spearman sp1 = new Spearman(100,100);
-			System.out.println("ID Unidad 2: " + sp1.getUnitId());
-			cdb.guardarUnit(sp1);
-			System.out.println("Unidad 2 guardada");
-			
-			
-			ArrowTower at1 = new ArrowTower(100, 100);
-			System.out.println("ID Unidad 3: " + at1.getUnitId());
-			cdb.guardarUnit(at1);
-			System.out.println("Unidad 3 guardada");
-			
-			Magician m1 = new Magician(100, 100);
-			System.out.println("ID Unidad 4: " + m1.getUnitId());
-			cdb.guardarUnit(m1);
-			System.out.println("Unidad 4 guardada");
-			
-		} catch (MiSQLException e) {
-			
-			e.printStackTrace();
-		}
+	        try {
+	        	int civilization_Id = 1;
+	        	int numBattle = 3;
+	        	int[][] initialArmies = {{1,5,10,7,2,3,4,5,9},{1,10,0,4}};
+	        	int[] enemyDeaths = {1,5,0,2};
+	        	int[] civilizationDeaths = {1,3,6,0,3,10,0,0,0};
+	        	//CivilizationUnits
+	   		 for (int i = 0; i < initialArmies[0].length; i++) {
+	   			 int unitType = i + 1;
+	   			 
+	   			 if (i < 4) {
+	   				//battle_attackunits_stats: civilization_id, num_battle, unit_type, initial, death
+	   				 cdb.insertBattleAttackUnitStats(civilization_Id, numBattle, unitType, initialArmies[0][i], civilizationDeaths[i]);
+	   				 
+	   			 }else if (i >= 4 && i <= 6){
+	   				//battle_defenseunits_stats: civilization_id, num_battle, unit_type, initial, death
+	   				 cdb.insertBattleDefenseUnitStats(civilization_Id, numBattle, unitType, initialArmies[0][i], civilizationDeaths[i]);
+	   				 
+	   			 }else if (i > 6) {
+	   				//battle_specialunits_stats: civilization_id, num_battle, unit_type, initial, death
+	   				 cdb.insertBattleSpecialUnitStats(civilization_Id, numBattle, unitType,initialArmies[0][i], civilizationDeaths[i]);		 
+	   			 }			
+	   		 }
+	   		 
+	   		 //EnemyUnits
+	   		 for (int i = 0; i < initialArmies[1].length; i++) {
+	   			 int unitType = i+1;
+	   			//enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
+	   			 cdb.insertBattleEnemyUnitStats(civilization_Id, numBattle, unitType, initialArmies[1][i], enemyDeaths[i]);
+	   		 } 
+
+	        } catch (MiSQLException e) {
+	            e.printStackTrace();
+	        }
 	}
-
-
-	
-	
-
-	
 }
 
 

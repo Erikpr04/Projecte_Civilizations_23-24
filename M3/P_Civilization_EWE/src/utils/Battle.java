@@ -5,6 +5,8 @@ import java.util.Random;
 
 import classes.attackunits.AttackUnit;
 import classes.defenseunits.DefenseUnit;
+import classes.specialunits.SpecialUnit;
+import exceptions.MiSQLException;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
 
@@ -20,6 +22,7 @@ public class Battle {
 	
 	private int initialNumberUnitsCivilization;
 	private int initialNumberUnitsEnemy;
+	
 	
 //***
 	private int[] wasteWoodIron; //Array [madera, iron]
@@ -117,7 +120,7 @@ public class Battle {
 	public void setCivilizationDeaths(int[] civilizationDeaths) {
 		this.civilizationDeaths = civilizationDeaths;
 	}
-//****
+
 	//introducimos los datos de cada army en una array conjunta para obtener las perdidas de los dos bandos
 	public int[][] getResourcesLooses() {
 	
@@ -258,19 +261,6 @@ public class Battle {
 				//igualamos a la initialArmies de la clase principal
 				setInitialArmies(initialArmies);
 	}
-
-	//************************************************
-//	public void updateResourcesLooses() {
-//		//Generar el Array de perdidas
-//		
-//	}
-	
-	
-//	public void initialFleetNumber(ArrayList<ArrayList> army) {
-//		//Calcular numero de unidades iniciales de cada ejercito
-//		
-//	}
-//************************************************
 	
 	//recuento de las tropas de cada bando (usamos initialArmies para calcular el recuento total de tropas)
 	private boolean remainderPercentageFleet() {
@@ -458,8 +448,10 @@ public class Battle {
 		return fleetResourceLooses;
 	}
 	
-	public void mainBattle(ArrayList<ArrayList> myArmy, ArrayList<ArrayList> enemyArmy) {
-		//metodo donde trascurre la logica de la batalla
+	
+	
+//METODO DONDE TRANSCURRE LA BATALLA:
+	public void mainBattle(ArrayList<ArrayList> myArmy, ArrayList<ArrayList> enemyArmy) throws MiSQLException {
 		
 		
 		//Generacion de los ejercitos de la batalla: 
@@ -475,12 +467,20 @@ public class Battle {
 		int iron_waste_Civilization = 0;
 		int wood_waste_Enemy = 0;
 		int iron_waste_Enemy = 0;
+		
+		//variable inicializada apra el turno extra
 		int attackGroup = 0;
 	
-//lista de las unidades muertas
+		//lista de las unidades muertas
 		
 		civilizationDeaths = new int[9];
 		enemyDeaths = new int [4];
+		
+		//listas para almacenar las ids y eliminar en la BASE DE DATOS
+		
+		ArrayList<Integer> deathAttackUnitIds = new ArrayList<>();
+		ArrayList<Integer> deathDefenseUnitIds = new ArrayList<>();
+		ArrayList<Integer> deathSpecialUnitsIds = new ArrayList<>();
 			
 		setActualNumberUnitsCivilization(getActualNumberUnitsCivilization());
 		setActualNumberUnitsEnemy(getActualNumberUnitsEnemy());
@@ -570,7 +570,7 @@ public class Battle {
 					
 					//COMBATE:
 					
-					//unidad atacante golpea a defensor y baja armadura (armadura = dano - armadura)
+					//unidad atacante golpea a defensor y baja armadura
 					int dmg = unitAttacking.attack();
 					int armor = unitDefending.getActualArmor();
 					int armorResult = armor - dmg;
@@ -594,6 +594,7 @@ public class Battle {
 						
 						//sumamos la unidad perdida en batalla
 						enemyDeaths[defenseGroup] += 1;
+						
 						
 					}
 					
@@ -696,12 +697,26 @@ public class Battle {
 							iron_waste_Enemy += (int) ((unitDefending.getIronCost() * Variables.PERCENTATGE_WASTE)/100);
 							
 						}
+						
+						//anadimos la perdida a la lista correspondiente
+						if (defenseGroup <= 3){
+							deathAttackUnitIds.add(((AttackUnit) unitDefending).getUnitId());
+							
+						}else if (defenseGroup <=6) {
+							deathDefenseUnitIds.add(((DefenseUnit) unitDefending).getUnitId());
+							
+						}else if (defenseGroup <= 8) {
+							deathSpecialUnitsIds.add(((SpecialUnit) unitDefending).getUnitId());
+						}
+						
 						//Elimina la unidad con armor 0 (muere)
 						myArmy.get(defenseGroup).remove(randomUnit);
 						setBattleDevelopment(getBattleDevelopment()+ "\n"+nameUnits[defenseGroup]+" of Civilization is dead");
 						
 						//sumamos la unidad perdida en batalla
 						civilizationDeaths[defenseGroup] += 1;
+						
+						
 					}
 					
 					//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
@@ -751,17 +766,67 @@ public class Battle {
 		} else {
 			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
 		}
-	}
+			
+		
 	//GUARDAR DATOS EN LA BASE DE DATOS:
-	
-	//INSERT: 
-	//  - Battle stats: civilization_id, num battle, wood_adquired, iron_adquired
-	//		  Battle log: civilization_id, num_battle, num_line, log entry
-	
-	//		  battle_attackUnits_stats: civilization_id, num_battle, unit_type, initial, death
-	//		  battle_defenseUnits_stats: civilization_id, num_battle, unit_type, initial, death
-	//		  battle_specialUnits_stats: civilization_id, num_battle, unit_type, initial, death
-	//		  enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
+		//intanciamos una clase conexion para poder realizar todos los cambios
+		ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+		
+		int numBattle = 0; //aqui hay que recuperar el count de batallas de la clase civilization o SELECT del ultimo num_batalla
+		int civilization_Id = 1; //en un principio solo hay una civilizacion "1"
+		
+		
+		//Actualizar Civilization local
+		
+		 	//sumar recursos
+		 	//sumar battle
+		
+		//Actualziar EXPERIENCIA local unidades
+		
+		
+		//Actualizar civilizacion en bd
+		 cdb.actualizarDatosCivilization(null);
+		 
+		 
+		 //eliminamos unidades muertas:
+		 cdb.eliminarUnits(deathAttackUnitIds, deathDefenseUnitIds, deathSpecialUnitsIds);
+		 
+		 //update de las unidades restantes
+		 
+		 cdb.actualizarUnitsBD(myArmy);		 
+		 
+		 //insertar battleStats y battleLog  (REVISAR EN CLASE) -------------------------------------
+		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(0));
+		 cdb.insertarBattleLog(civilization_Id, numBattle, getBattleDevelopment());
+		 
+		
+		 //INSERT apra las tablas de informacion extra de la batalla:
+		
+		 //CivilizationUnits
+		 for (int i = 0; i < initialArmies[0].length; i++) {
+			 int unitType = i + 1;
+			 
+			 if (i < 4) {
+				//battle_attackunits_stats: civilization_id, num_battle, unit_type, initial, death
+				 cdb.insertBattleAttackUnitStats(civilization_Id, numBattle, unitType, initialArmies[0][i], civilizationDeaths[i]);
+				 
+			 }else if (i >= 4 && i <= 6){
+				//battle_defenseunits_stats: civilization_id, num_battle, unit_type, initial, death
+				 cdb.insertBattleDefenseUnitStats(civilization_Id, numBattle, unitType, initialArmies[0][i], civilizationDeaths[i]);
+				 
+			 }else if (i > 6) {
+				//battle_specialunits_stats: civilization_id, num_battle, unit_type, initial, death
+				 cdb.insertBattleSpecialUnitStats(civilization_Id, numBattle, unitType,initialArmies[0][i], civilizationDeaths[i]);		 
+			 }			
+		 }
+		 
+		 //EnemyUnits
+		 for (int i = 0; i < initialArmies[1].length; i++) {
+			 int unitType = i+1;
+			//enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
+			 cdb.insertBattleEnemyUnitStats(civilization_Id, numBattle, unitType, initialArmies[1][i], enemyDeaths[i]);
+		 } 
+	}
 }
 	
 
