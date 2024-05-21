@@ -15,7 +15,7 @@ public class ConnectionDB {
 	
 	private String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private String user = "AdminCivilization";
-	private String pass = "Civi1234";
+	private String pass = "ewe";
 	
 	public ConnectionDB(String url, String user, String pass){
 		this.url = url;
@@ -133,7 +133,7 @@ public class ConnectionDB {
 	public static void main(String[] args){
 	    String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	    String user = "AdminCivilization";
-	    String pass = "Civi1234";
+	    String pass = "ewe";
 
 	    ConnectionDB cbd = new ConnectionDB(url, user, pass);
 
