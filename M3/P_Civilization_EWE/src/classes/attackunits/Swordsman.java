@@ -1,5 +1,6 @@
 package classes.attackunits;
 
+import exceptions.MiSQLException;
 import interfaces.Variables;
 
 public class Swordsman extends AttackUnit {
@@ -9,14 +10,14 @@ public class Swordsman extends AttackUnit {
 	
 	//CONSTRUCTOR 1
 	
-	public Swordsman(int armor, int baseDamage) {
+	public Swordsman(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
 	//CONSTRUCTOR 2
 	
 	
-	public Swordsman() {
+	public Swordsman() throws MiSQLException {
 		super(ARMOR_SWORDSMAN, BASE_DAMAGE_SWORDSMAN);
 	}
 	

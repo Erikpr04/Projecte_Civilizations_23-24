@@ -1,26 +1,19 @@
 package classes;
 
-import java.io.ObjectInputStream.GetField;
-import java.text.ChoiceFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
 
-import classes.attackunits.AttackUnit;
-import classes.attackunits.Cannon;
-import classes.attackunits.CrossBow;
-import classes.attackunits.Spearman;
-import classes.attackunits.Swordsman;
-import classes.defenseunits.ArrowTower;
-import classes.defenseunits.Catapult;
-import classes.defenseunits.DefenseUnit;
-import classes.defenseunits.RocketLauncherTower;
-import classes.specialunits.Magician;
-import classes.specialunits.Priest;
-import classes.specialunits.SpecialUnit;
+import java.util.ArrayList;
+
+
+import classes.attackunits.*;
+import classes.defenseunits.*;
+import classes.specialunits.*;
+
 import exceptions.BuildingException;
+import exceptions.MiSQLException;
 import exceptions.ResourceException;
-import interfaces.MilitaryUnit;
+
 import interfaces.Variables;
+import utils.ConnectionDB;
 
 public class Civilization {
 	
@@ -38,7 +31,7 @@ public class Civilization {
 	private int carpentry;
 	private int battles;
 	private ArrayList<ArrayList> army = new ArrayList<ArrayList>(9);
-	private int id;
+	private int id = 1;
 	
 	
 	//CONSTRUCTOR PARA INICIALIZAR EL ARRAY
@@ -140,7 +133,7 @@ public class Civilization {
 	
 	//METODOS PARA CREAR UNIDADES
 	
-	public void new_Swordsman(int i) throws ResourceException {
+	public void new_Swordsman(int i) throws ResourceException, MiSQLException {
 		//Calculamos la armadura total y el ataque total
 		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*Variables.ARMOR_SWORDSMAN/100);
 		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SWORDSMAN/100);
@@ -151,7 +144,12 @@ public class Civilization {
 			//Comprobamos que tenga los recursos
 			if (getFood() >= Variables.FOOD_COST_SWORDSMAN && getWood() >= Variables.WOOD_COST_SWORDSMAN && getIron() >= Variables.IRON_COST_SWORDSMAN) {
 				//Si los tiene, lo añadimos al ArrayList
-				army.get(0).add(new Swordsman(total_armor,total_attack));
+				Swordsman newUnit = new Swordsman(total_armor,total_attack);
+				army.get(0).add(newUnit);
+				
+				ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+				cdb.crearUnit(newUnit);
+				
 				
 				setWood(wood-Variables.WOOD_COST_SWORDSMAN);
 				setFood(food-Variables.FOOD_COST_SWORDSMAN);
@@ -168,7 +166,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Spearman(int i) throws ResourceException {
+	public void new_Spearman(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_SPEARMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SPEARMAN_BY_TECHNOLOGY)*Variables.ARMOR_SPEARMAN/100);
 		int total_attack = Variables.BASE_DAMAGE_SPEARMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SPEARMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SPEARMAN/100);
 		int iterator_army;
@@ -177,7 +175,13 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_SPEARMAN &&getWood() >= Variables.WOOD_COST_SPEARMAN && getIron() >= Variables.IRON_COST_SPEARMAN) {
-				army.get(1).add(new Spearman(total_armor,total_attack));
+				
+				Spearman newUnit = new Spearman(total_armor, total_attack);
+	            army.get(1).add(newUnit);
+	            
+	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            cdb.crearUnit(newUnit);
+	            
 				setWood(wood-Variables.WOOD_COST_SPEARMAN);
 				setFood(food-Variables.FOOD_COST_SPEARMAN);
 				setIron(iron-Variables.IRON_COST_SPEARMAN);
@@ -194,7 +198,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Crossbow(int i) throws ResourceException {
+	public void new_Crossbow(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_CROSSBOW+((getTechnologyDefense()*Variables.PLUS_ARMOR_CROSSBOW_BY_TECHNOLOGY)*Variables.ARMOR_CROSSBOW/100);
 		int total_attack = Variables.BASE_DAMAGE_CROSSBOW+((getTechnologyAttack()*Variables.PLUS_ATTACK_CROSSBOW_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CROSSBOW/100);
 		int iterator_army;
@@ -203,7 +207,13 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_CROSSBOW &&getWood() >= Variables.WOOD_COST_CROSSBOW && getIron() >= Variables.IRON_COST_CROSSBOW) {
-				army.get(2).add(new CrossBow(total_armor,total_attack));
+				
+				CrossBow newUnit = new CrossBow(total_armor, total_attack);
+	            army.get(2).add(newUnit);
+	            
+	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            cdb.crearUnit(newUnit);
+	            
 				setWood(wood-Variables.WOOD_COST_CROSSBOW);
 				setFood(food-Variables.FOOD_COST_CROSSBOW);
 				setIron(iron-Variables.IRON_COST_CROSSBOW);
@@ -218,7 +228,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Cannon(int i) throws ResourceException {
+	public void new_Cannon(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_CANNON+((getTechnologyDefense()*Variables.PLUS_ARMOR_CANNON_BY_TECHNOLOGY)*Variables.ARMOR_CANNON/100);
 		int total_attack = Variables.BASE_DAMAGE_CANNON+((getTechnologyAttack()*Variables.PLUS_ATTACK_CANNON_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CANNON/100);
 		int iterator_army;
@@ -227,7 +237,12 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_CANNON &&getWood() >= Variables.WOOD_COST_CANNON && getIron() >= Variables.IRON_COST_CANNON) {
-				army.get(3).add(new Cannon(total_armor,total_attack));
+				
+				Cannon newUnit = new Cannon(total_armor, total_attack);
+	            army.get(3).add(newUnit);
+	            
+	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            cdb.crearUnit(newUnit);
 				
 				setWood(wood-Variables.WOOD_COST_CANNON);
 				setFood(food-Variables.FOOD_COST_CANNON);
@@ -242,7 +257,7 @@ public class Civilization {
 		}
 	}
 	
-	public void new_ArrowTower(int i) throws ResourceException {
+	public void new_ArrowTower(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_ARROWTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY)*Variables.ARMOR_ARROWTOWER/100);
 		int total_attack = Variables.BASE_DAMAGE_ARROWTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_ARROWTOWER/100);
 		int iterator_army;
@@ -251,7 +266,13 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_ARROWTOWER &&getWood() >= Variables.WOOD_COST_ARROWTOWER && getIron() >= Variables.IRON_COST_ARROWTOWER) {
-				army.get(4).add(new ArrowTower(total_armor,total_attack));
+				
+				ArrowTower newUnit = new ArrowTower(total_armor, total_attack);
+	            army.get(4).add(newUnit);
+	            
+	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            cdb.crearUnit(newUnit);
+	            
 				setWood(wood-Variables.WOOD_COST_ARROWTOWER);
 				setFood(food-Variables.FOOD_COST_ARROWTOWER);
 				setIron(iron-Variables.IRON_COST_ARROWTOWER);
@@ -266,7 +287,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Catapult(int i) throws ResourceException {
+	public void new_Catapult(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_CATAPULT+((getTechnologyDefense()*Variables.PLUS_ARMOR_CATAPULT_BY_TECHNOLOGY)*Variables.ARMOR_CATAPULT/100);
 		int total_attack = Variables.BASE_DAMAGE_CATAPULT+((getTechnologyAttack()*Variables.PLUS_ATTACK_CATAPULT_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_CATAPULT/100);
 		int iterator_army;
@@ -275,7 +296,13 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_CATAPULT && getWood() >= Variables.WOOD_COST_CATAPULT && getIron() >= Variables.IRON_COST_CATAPULT) {
-				army.get(5).add(new Catapult(total_armor,total_attack));
+				
+				Catapult newUnit = new Catapult(total_armor, total_attack);
+	            army.get(5).add(newUnit);
+	            
+	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            cdb.crearUnit(newUnit);
+	            
 				setWood(wood-Variables.WOOD_COST_CATAPULT);
 				setFood(food-Variables.FOOD_COST_CATAPULT);
 				setIron(iron-Variables.IRON_COST_CATAPULT);
@@ -290,7 +317,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_RocketLauncher(int i) throws ResourceException {
+	public void new_RocketLauncher(int i) throws ResourceException, MiSQLException {
 		int total_armor = Variables.ARMOR_ROCKETLAUNCHERTOWER+((getTechnologyDefense()*Variables.PLUS_ARMOR_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*Variables.ARMOR_ROCKETLAUNCHERTOWER/100);
 		int total_attack = Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER+((getTechnologyAttack()*Variables.PLUS_ATTACK_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_ROCKETLAUNCHERTOWER/100);
 		int iterator_army;
@@ -299,7 +326,13 @@ public class Civilization {
 			
 			
 			if (getFood() >= Variables.FOOD_COST_ROCKETLAUNCHERTOWER && getWood() >= Variables.WOOD_COST_ROCKETLAUNCHERTOWER && getIron() >= Variables.IRON_COST_ROCKETLAUNCHERTOWER) {
-				army.get(6).add(new RocketLauncherTower(total_armor,total_attack));
+				
+				RocketLauncherTower newUnit = new RocketLauncherTower(total_armor, total_attack);
+	            army.get(6).add(newUnit);
+	            
+	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            cdb.crearUnit(newUnit);
+	            
 				setWood(wood-Variables.WOOD_COST_ROCKETLAUNCHERTOWER);
 				setFood(food-Variables.FOOD_COST_ROCKETLAUNCHERTOWER);
 				setIron(iron-Variables.IRON_COST_ROCKETLAUNCHERTOWER);
@@ -314,7 +347,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Magician(int i) throws ResourceException, BuildingException {
+	public void new_Magician(int i) throws ResourceException, BuildingException, MiSQLException {
 		//Para el Mago su armadura es 0
 		int total_armor = 0;
 		int total_attack = Variables.BASE_DAMAGE_MAGICIAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_MAGICIAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_MAGICIAN/100);
@@ -325,7 +358,13 @@ public class Civilization {
 			//Y hay que comprobar que tengas almenos 1 Magic Tower 
 			if (getMagicTower() >= 1) {
 				if (getFood() >= Variables.FOOD_COST_MAGICIAN && getWood() >= Variables.WOOD_COST_MAGICIAN && getIron() >= Variables.IRON_COST_MAGICIAN && getMana() >= Variables.MANA_COST_MAGICIAN) {
-					army.get(7).add(new Magician(total_armor,total_attack));
+					
+					Magician newUnit = new Magician(total_armor, total_attack);
+	                army.get(7).add(newUnit);
+	                
+	                ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	                cdb.crearUnit(newUnit);
+	                
 					setWood(wood-Variables.WOOD_COST_MAGICIAN);
 					setFood(food-Variables.FOOD_COST_MAGICIAN);
 					setIron(iron-Variables.IRON_COST_MAGICIAN);
@@ -344,7 +383,7 @@ public class Civilization {
 	}
 	
 	
-	public void new_Priest(int i) throws ResourceException, BuildingException {
+	public void new_Priest(int i) throws ResourceException, BuildingException, MiSQLException {
 		//Para el Sacerdote la armadura y el ataque son 0
 		int total_armor = 0;
 		int total_attack = 0;
@@ -355,7 +394,12 @@ public class Civilization {
 			//Y hay que comprobar que tengas almenos 1 iglesia
 			if (getChurch() >= 1) {
 				if (getFood() >= Variables.FOOD_COST_PRIEST && getWood() >= Variables.WOOD_COST_PRIEST && getIron() >= Variables.IRON_COST_PRIEST && getMana() >= Variables.MANA_COST_PRIEST) {
-					army.get(8).add(new Priest(total_armor,total_attack));
+					
+					Priest newUnit = new Priest(total_armor, total_attack);
+	                army.get(8).add(newUnit);
+	                
+	                ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	                cdb.crearUnit(newUnit);
 					
 					setWood(wood-Variables.WOOD_COST_PRIEST);
 					setFood(food-Variables.FOOD_COST_PRIEST);

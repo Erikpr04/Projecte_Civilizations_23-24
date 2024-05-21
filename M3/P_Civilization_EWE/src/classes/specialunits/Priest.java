@@ -1,11 +1,13 @@
 package classes.specialunits;
 
+import exceptions.MiSQLException;
+
 public class Priest extends SpecialUnit {
 	
 	
 	//CONSTRUCTOR 1
 
-	public Priest(int armor, int baseDamage) {
+	public Priest(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	

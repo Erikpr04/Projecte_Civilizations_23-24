@@ -1,7 +1,14 @@
 package classes.attackunits;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import exceptions.MiSQLException;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
+import utils.ConnectionDB;
 
 public abstract class AttackUnit implements MilitaryUnit, Variables {
 	
@@ -12,18 +19,22 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
 	private int experience;
 	private boolean sanctified;
 	
+	private int unitId;
+	
 	
 	 
 	//CONSTRUCTOR 1
 	
-	public AttackUnit(int armor, int baseDamage) {
+	public AttackUnit(int armor, int baseDamage) throws MiSQLException {
 		super();
 		this.armor = armor;
 		this.initialArmor = armor;
 		this.baseDamage = baseDamage;
 		this.experience = 0;
 		this.sanctified = false;
+		this.unitId = lastIdAttackUnit();
 	}
+	
 
 
 	//GETTERS Y SETTERS
@@ -88,5 +99,39 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
 	
 	
 	
-	
+	public int getUnitId() {
+		return unitId;
+	}
+
+	//metodo para asignar la id de la unidad atacante
+	public int lastIdAttackUnit() throws MiSQLException {
+		
+		int last_id = 0;
+		try {
+			ConnectionDB cbd = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+			Connection conn = cbd.openConnectionDB();
+			
+			String query = "SELECT MAX(unit_id) AS last_id FROM attackunits";
+			
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (rs.next()) {
+				last_id =  rs.getInt("last_Id");
+			}
+			
+			//cerramos consutas y conexion
+			rs.close();
+			stmt.close();
+			conn.close();
+			
+			
+		}catch (SQLException e) {
+			throw new MiSQLException("Error al obtener el ultimo id: " + e.getMessage());
+		}
+		
+
+		return last_id +1;
+		
+	}
 }
