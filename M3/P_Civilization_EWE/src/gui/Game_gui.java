@@ -13,6 +13,8 @@ import interfaces.Variables;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -85,7 +87,7 @@ public class Game_gui extends JPanel {
 
 	public void setPpindex(String ppindex) {
 		this.ppindex = ppindex;
-	    selectedpp = ppphotos[Integer.parseInt(ppindex)];
+	    selectedpp = ppphotos[Integer.parseInt(ppindex)-1];
 	    Image originalImage = selectedpp.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
 	    ImageIcon scaledIcon = new ImageIcon(resizedImage);
@@ -275,7 +277,7 @@ public class Game_gui extends JPanel {
 
      
               
-        
+        showBattleWindow("This is the first line.\nThis is the second line.\nThis is the third line.\nThis is the fourth line.\nThis is the fifth line.");
         
         
         
@@ -289,7 +291,7 @@ public class Game_gui extends JPanel {
                     mainPanel2.add(subPanels[i][j]);
                 }
             }
-			
+            			
 
 
     
@@ -315,51 +317,58 @@ public class Game_gui extends JPanel {
         }
         
         
+        mainPanel2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    isRightClicked = true;
+                    mouseX = e.getXOnScreen();
+                    mouseY = e.getYOnScreen();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    isRightClicked = false;
+                }
+            }
+        });
+
+        mainPanel2.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (isRightClicked) {
+                    int newX = e.getXOnScreen();
+                    int newY = e.getYOnScreen();
+
+                    int deltaX = newX - mouseX;
+                    int deltaY = newY - mouseY;
+
+                    Point currentLocation = mainPanel2.getLocation();
+                    mainPanel2.setLocation(currentLocation.x + deltaX, currentLocation.y + deltaY);
+
+                    mouseX = newX;
+                    mouseY = newY;
+                }
+            }
+        });
+
+
+
         // Agregar MouseWheelListener para el zoom
         mainPanel2.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                // Obtener la dirección del movimiento de la rueda del ratón
                 int notches = e.getWheelRotation();
 
-                // Realizar el zoom en base a la dirección de desplazamiento
                 if (notches < 0) {
-                    // Zoom in
                     zoomIn(mainPanel2);
                 } else {
-                    // Zoom out
                     zoomOut(mainPanel2);
                 }
             }
         });
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-    mainPanel2.addMouseMotionListener(new MouseAdapter() {
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            if (isRightClicked) {
-                int newX = e.getXOnScreen();
-                int newY = e.getYOnScreen();
-
-                int deltaX = (int) ((newX - mouseX) / (zoomLevel / INIT_ZOOM));
-                int deltaY = (int) ((newY - mouseY) / (zoomLevel / INIT_ZOOM));
-
-                Point currentLocation = mainPanel2.getLocation();
-                mainPanel2.setLocation(currentLocation.x + deltaX, currentLocation.y + deltaY);
-
-                mouseX = newX;
-                mouseY = newY;
-            }
-        }
-    });
     
     
     
@@ -631,6 +640,69 @@ public class Game_gui extends JPanel {
     userPanel.setPreferredSize(new Dimension(300, 300));
 
     panelright2.add(userPanel, BorderLayout.SOUTH);
+	 }
+    
+    
+    
+    
+
+    void showBattleWindow(String text) {
+        // Crear la ventana
+        JFrame battleFrame = new JFrame("Battle Window");
+        battleFrame.setSize(600, 400);
+        battleFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        battleFrame.setLayout(new BorderLayout());
+
+        // Crear y agregar el título
+        JLabel titleLabel = new JLabel("The battle begins!", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        battleFrame.add(titleLabel, BorderLayout.NORTH);
+
+        // Crear y agregar el área de texto
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        battleFrame.add(scrollPane, BorderLayout.CENTER);
+
+        // Crear y agregar la etiqueta de continuar
+        JLabel continueLabel = new JLabel("Press Enter to continue", SwingConstants.CENTER);
+        continueLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+        battleFrame.add(continueLabel, BorderLayout.SOUTH);
+
+        // Dividir el texto en líneas
+        String[] lines = text.split("\n");
+        int[] currentLineIndex = {0}; // Usar un array para permitir acceso en la clase anónima
+
+        // Agregar el KeyListener para la tecla Enter
+        textArea.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (currentLineIndex[0] < lines.length) {
+                        textArea.append(lines[currentLineIndex[0]] + "\n");
+                        currentLineIndex[0]++;
+                        if (currentLineIndex[0] >= lines.length) {
+                            continueLabel.setVisible(false);
+                        }
+                    }
+                }
+            }
+        });
+
+        // Hacer visible la ventana
+        battleFrame.setVisible(true);
+        // Solicitar el foco para el textArea para que reciba eventos de teclado
+        textArea.requestFocusInWindow();
+    
+    
+	 
+    
+    
+    
+    
 	}
     
 //metodo notificacion

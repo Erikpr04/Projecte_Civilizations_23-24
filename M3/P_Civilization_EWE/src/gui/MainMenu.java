@@ -147,6 +147,40 @@ public class MainMenu extends JPanel {
     	resizedIcon = new ImageIcon(resizedImage);
     	loadGameButton.setIcon(resizedIcon);
     	
+    	
+    	
+    	loadGameButton.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+        		JOptionPane.showMessageDialog(null, "No games found in database","Error Loading Game", JOptionPane.ERROR_MESSAGE);
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
     	//options button
     	LabelButton optionsButton = new LabelButton("");
     	originalIcon = new ImageIcon("./src/gui/mm_assets/options_button.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
@@ -449,7 +483,8 @@ public class MainMenu extends JPanel {
                     try {
                     	listener.getUserData();
     					startGame();
-                    } catch (Exception ex) {
+    					creategameframe.dispose();
+    					} catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
