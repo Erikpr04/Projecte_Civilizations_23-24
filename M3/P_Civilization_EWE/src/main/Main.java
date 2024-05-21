@@ -389,7 +389,7 @@ public class Main {
 	
 	
 	//FUNCION QUE LLAMA A LAS FUNCIONES DE CREAR UNIDADES DE CIVILIZACION
-	public void createUnits(String unit, int quantity) {
+	public void createUnits(String unit, int quantity) throws MiSQLException {
 		
 		if (unit.toLowerCase() == "swordsman") {
 			try {
