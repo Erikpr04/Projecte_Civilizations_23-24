@@ -31,7 +31,7 @@ public class Civilization {
 	private int carpentry;
 	private int battles;
 	private ArrayList<ArrayList> army = new ArrayList<ArrayList>(9);
-	private int id;
+	private int id = 1;
 	
 	
 	//CONSTRUCTOR PARA INICIALIZAR EL ARRAY

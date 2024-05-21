@@ -769,6 +769,7 @@ public class Battle {
 			
 		
 	//GUARDAR DATOS EN LA BASE DE DATOS:
+		
 		//intanciamos una clase conexion para poder realizar todos los cambios
 		ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
 		
