@@ -24,13 +24,11 @@ public class Cannon extends AttackUnit{
 	//METODOS DE MILITARY UNIT
 	
 	public int attack() {
-		int damage = 0;
+		int damage = getBaseDamage() + (getExperience() * Variables.PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
 		
 		if (isSanctified()) {
-			damage = getBaseDamage() + ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
+			damage += ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
 			
-		} else {
-			damage = getBaseDamage();
 		}
 		
 		return damage;
@@ -38,7 +36,7 @@ public class Cannon extends AttackUnit{
 
 	public void takeDamage(int receivedDamage) {
 		//Se resta el daño a la armadura
-		setArmor(getArmor() - receivedDamage);
+		setArmor(getActualArmor() - receivedDamage);
 		
 		//Si al restar, la armadura es negativa, se cambia a 0
         if (getArmor() < 0) {
@@ -47,13 +45,11 @@ public class Cannon extends AttackUnit{
 	}
 
 	public int getActualArmor() {
-		int armadura = 0;
+		int armadura = getArmor() + (getExperience() * Variables.PLUS_ARMOR_UNIT_PER_EXPERIENCE_POINT);
 		
 		if (isSanctified()) {
-			armadura = getArmor() + ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
+			armadura += ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
 		
-		} else {
-			armadura = getArmor();
 		}
 		
 		

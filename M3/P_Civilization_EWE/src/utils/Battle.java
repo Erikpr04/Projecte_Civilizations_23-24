@@ -573,6 +573,8 @@ public class Battle {
 					//unidad atacante golpea a defensor y baja armadura
 					int dmg = unitAttacking.attack();
 					int armor = unitDefending.getActualArmor();
+					dmg += Variables.PLUS_ATTACK_TECHNOLOGY[attackGroup];
+					
 					int armorResult = armor - dmg;
 					unitDefending.takeDamage(dmg);
 					enemyArmy.get(defenseGroup).set(randomUnit,unitDefending);

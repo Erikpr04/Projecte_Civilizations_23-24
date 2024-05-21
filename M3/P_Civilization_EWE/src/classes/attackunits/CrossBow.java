@@ -25,34 +25,33 @@ public class CrossBow extends AttackUnit {
 	
 	//METODOS DE MILITARY UNIT
 	
-		public int attack() {
-			int damage = 0;
+	public int attack() {
+		int damage = getBaseDamage() + (getExperience() * Variables.PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+		
+		if (isSanctified()) {
+			damage += ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
 			
-			if (isSanctified()) {
-				damage = getBaseDamage() + ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
-				
-			} else {
-				damage = getBaseDamage();
-			}
-			
-			return damage;
 		}
+		
+		return damage;
+	}
 
 	public void takeDamage(int receivedDamage) {
-		setArmor(getArmor() - receivedDamage);
+		//Se resta el daño a la armadura
+		setArmor(getActualArmor() - receivedDamage);
+		
+		//Si al restar, la armadura es negativa, se cambia a 0
         if (getArmor() < 0) {
             setArmor(0);
         }
 	}
 
 	public int getActualArmor() {
-		int armadura = 0;
+		int armadura = getArmor() + (getExperience() * Variables.PLUS_ARMOR_UNIT_PER_EXPERIENCE_POINT);
 		
 		if (isSanctified()) {
-			armadura = getArmor() + ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
+			armadura += ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
 		
-		} else {
-			armadura = getArmor();
 		}
 		
 		

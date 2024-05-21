@@ -1,6 +1,7 @@
 package classes.specialunits;
 
 import exceptions.MiSQLException;
+import interfaces.Variables;
 
 public class Magician extends SpecialUnit {
 
@@ -14,9 +15,11 @@ public class Magician extends SpecialUnit {
 	
 	//METODOS DE MILITARY UNIT
 	
-		public int attack() {
-			return getBaseDamage();
-		}
+	public int attack() {
+		int damage = getBaseDamage() + (getExperience() * Variables.PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+		
+		return damage;
+	}
 
 		public void takeDamage(int receivedDamage) {
 			setArmor(getArmor() - receivedDamage);
