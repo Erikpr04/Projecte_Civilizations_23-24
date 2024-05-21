@@ -32,16 +32,15 @@ public class Main {
     private dc_gui dc_gui;
     private dc_classes classes;
 	private dc_database database;
+	private boolean shownotification;
+	
+	
+	
+	
+
 
 	public static void main(String[] args) {		
         Main m = new Main();
-
-        
-		//Battle b = new Battle();
-        
-        //instanciar controladores de dominio
-        
-        
         dc_database database = new dc_database();
         m.database = new dc_database();
         
@@ -51,6 +50,82 @@ public class Main {
         dc_classes classes = new dc_classes();
         m.dc_gui = new dc_gui(classes.getCv());
         m.dc_gui.invoke_main_menu();
+        
+        
+        
+        
+        
+        
+		//TIMER TASK:
+		classes.getCv().setWood(Variables.CIVILIZATION_WOOD_GENERATED+20000);
+		classes.getCv().setFood(Variables.CIVILIZATION_FOOD_GENERATED+20000);
+		classes.getCv().setIron(Variables.CIVILIZATION_IRON_GENERATED+32000);
+		
+		
+		
+		TimerTask task = new TimerTask() {
+
+			public void run() {
+				try {
+					
+				System.out.println(classes.getCv().getFarm());
+				
+				classes.getCv().setWood(classes.getCv().getWood() + (classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+				classes.getCv().setFood(classes.getCv().getFood() + (classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+				classes.getCv().setIron(classes.getCv().getIron() + (classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+				classes.getCv().setMana(classes.getCv().getMana() + (classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+				
+				
+				
+				System.out.println("Madera: " + classes.getCv().getWood());
+				System.out.println("Comida: " + classes.getCv().getFood());
+				System.out.println("Hierro: " + classes.getCv().getIron());
+				System.out.println("Mana: " + classes.getCv().getMana());
+				System.out.println("*********************");
+	            //m.dc_gui.getGui_obj().showCustomPanel(m.dc_gui.getGui_obj().getMainpanel());
+	            
+	    		m.dc_gui.setFood(classes.getCv().getFood());
+	    		m.dc_gui.setWood(classes.getCv().getWood());
+	    		m.dc_gui.setIron(classes.getCv().getIron());
+	    		m.dc_gui.setMana(classes.getCv().getMana());
+	    		m.dc_gui.update_resources_gui();
+
+
+
+				
+				
+
+				}catch (Exception e){
+					e.printStackTrace();
+					
+				}
+				
+			}
+			
+		};
+		
+		Timer maintimer = new Timer();
+		
+
+        
+        
+
+		
+		
+        
+        
+        
+        
+        
+        
+
+        
+		//Battle b = new Battle();
+        
+        //instanciar controladores de dominio
+        
+        
+
         m.dc_gui.setGgl(new GameGuiListener() {
 			
 			//metodo para cargar juego
@@ -60,6 +135,8 @@ public class Main {
 				this.update_resources();
 				
 				m.dc_gui.load_game();
+				maintimer.schedule(task, 10000, 10000);
+
 				
 			}
 
@@ -198,7 +275,74 @@ public class Main {
 				}
 
 
-			    }});
+			    }
+
+			@Override
+			public boolean shownotification() {
+				return false;
+			}
+
+			@Override
+			public void create_farm() {
+				try {
+					classes.getCv().new_Farm();
+				} catch (ResourceException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void create_church() {
+				try {
+					classes.getCv().new_Church();
+				} catch (ResourceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+
+			@Override
+			public void create_carpentry() {
+				try {
+					classes.getCv().new_Carpentry();
+				} catch (ResourceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+
+			@Override
+			public void create_smithy() {
+				try {
+					classes.getCv().new_Smithy();
+				} catch (ResourceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				
+			}
+
+			@Override
+			public void create_magic_tower() {
+				try {
+					classes.getCv().new_MagicTower();
+				} catch (ResourceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+
+			@Override
+			public void sanctifyunits() {
+			classes.getCv().sanctifyUnits();
+				
+			}
+
+});
         
         
         
@@ -210,9 +354,6 @@ public class Main {
 //
 		//ConnectionDB cbd = new ConnectionDB(url, user, pass);
 		
-		classes.getCv().setWood(1000000000);
-		classes.getCv().setFood(1000000000);
-		classes.getCv().setIron(1000000000);
 //		
 //		try {
 //			cbd.sacarBattleLog(1,2);
@@ -268,43 +409,8 @@ public class Main {
 		
 		
 		
+	
 		
-//		//TIMER TASK:
-//		cv.setWood(Variables.CIVILIZATION_WOOD_GENERATED);
-//		cv.setFood(Variables.CIVILIZATION_FOOD_GENERATED);
-//		cv.setIron(Variables.CIVILIZATION_IRON_GENERATED);
-//		
-//		try {
-//			cv.new_Carpentry();
-////			cv.new_Farm();
-////			cv.new_Smithy();
-//		} catch (ResourceException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		TimerTask task = new TimerTask() {
-//
-//			public void run() {
-//				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-//				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-//				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-//				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
-//				
-//				System.out.println("Madera: " + cv.getWood());
-//				System.out.println("Comida: " + cv.getFood());
-//				System.out.println("Hierro: " + cv.getIron());
-//				System.out.println("Mana: " + cv.getMana());
-//				System.out.println("*********************");
-//				
-//			}
-//			
-//		};
-//		
-//		Timer timer = new Timer();
-//		
-//		timer.schedule(task, 1, 10000);
 		
 
 	}

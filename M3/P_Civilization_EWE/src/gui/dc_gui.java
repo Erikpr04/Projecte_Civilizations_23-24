@@ -7,10 +7,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
 import classes.Civilization;
 import gui.Game_gui.MiPanelito;
@@ -27,8 +30,20 @@ public class dc_gui  {
     private GameGuiListener ggl;
 
 	private Game_gui gui_obj;
+	private String username;
+	private String profileindex;
+
 	
-    private Civilization civilization;
+    public Game_gui getGui_obj() {
+		return gui_obj;
+	}
+
+
+	public void setGui_obj(Game_gui gui_obj) {
+		this.gui_obj = gui_obj;
+	}
+
+	private Civilization civilization;
 
 	
 
@@ -52,6 +67,13 @@ public class dc_gui  {
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();				
 			}
+
+			@Override
+			public void getUserData() {
+				username = mainMenu.getUserData()[0];
+				profileindex = mainMenu.getUserData()[1];
+
+			}
 		};
 		
 
@@ -73,6 +95,8 @@ public class dc_gui  {
 
     // Método para invocar la GUI del juego
     public void invoke_game_gui() {
+    	Timer timer = new Timer();
+
 
     
 
@@ -95,6 +119,13 @@ public class dc_gui  {
         frame.setVisible(true);
         
         gui_obj.updatePanels();
+        gui_obj.setUsername(username);
+        gui_obj.setPpindex(profileindex);
+        
+       
+
+
+
         
     }
 
@@ -280,6 +311,7 @@ public class dc_gui  {
 	public void setMana(int mana) {
 		this.mana = mana;
 	}
+
 
 
 

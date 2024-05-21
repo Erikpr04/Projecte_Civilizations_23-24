@@ -1,5 +1,7 @@
 package interfaces;
 
+import java.util.Timer;
+
 public interface GameGuiListener {
     void load_game_gui();
     
@@ -25,5 +27,14 @@ public interface GameGuiListener {
     
     int[] getcv_army_values(); // primeras 9 posiciones army, posicion 10 attack level, posicion 11 defense level
     void create_troop(int TroopNumber,int Unitstocreate);
+    
+    
+    void create_farm();
+    void create_church();
+    void create_carpentry();
+    void create_smithy();
+    void create_magic_tower();
+    boolean shownotification();
+    void sanctifyunits();
     
 }
