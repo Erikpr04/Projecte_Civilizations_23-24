@@ -53,8 +53,8 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables{
 		return experience;
 	}
 
-	public void setExperience(int experience) {
-		this.experience = experience;
+	public void setExperience() {
+		this.experience = getExperience() + 1;
 	}
 
 	public boolean isSanctified() {

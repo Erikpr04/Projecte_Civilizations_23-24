@@ -30,10 +30,4 @@ public interface MilitaryUnit extends Variables {
 	
 	abstract void resetArmor();
 	//Nos restablecerá nuestro blindaje a su valor original.
-	
-	abstract void setExperience(int n);
-	//Establecerá la experiencia a un nuevo valor.
-	
-	abstract int getExperience();
-	//Nos devolverá la experiencia actual de la unidad.
 }

@@ -13,7 +13,7 @@ import exceptions.MiSQLException;
 
 public class ConnectionDB {
 	
-	private String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	private String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private String user = "AdminCivilization";
 	private String pass = "Civi1234";
 	
@@ -131,7 +131,7 @@ public class ConnectionDB {
 	}
 	
 	public static void main(String[] args){
-	    String url = "jdbc:mysql://localhost/civilizationEWE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	    String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	    String user = "AdminCivilization";
 	    String pass = "Civi1234";
 

@@ -23,10 +23,10 @@ import utils.Battle;
 import utils.dc_database;
 
 public class Main {
-	private int countFleet = 0;
     private dc_gui dc_gui;
     private dc_classes classes;
 	private dc_database database;
+	private int countFleet = classes.getCv().getBattles();
 
 	public static void main(String[] args) {		
         Main m = new Main();
@@ -309,6 +309,7 @@ public class Main {
 		int enemyWood;
 		int enemyFood;
 		int enemyIron;
+		
 		enemyWood = Variables.WOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.WOOD_BASE_ENEMY_ARMY/100);
 		enemyFood = Variables.FOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.FOOD_BASE_ENEMY_ARMY/100);
 		enemyIron = Variables.IRON_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.IRON_BASE_ENEMY_ARMY/100);

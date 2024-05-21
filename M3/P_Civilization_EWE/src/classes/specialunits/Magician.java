@@ -54,13 +54,4 @@ public class Magician extends SpecialUnit {
 		public void resetArmor() {
 			setArmor(getInitialArmor());
 		}
-
-		public void setExperience(int n) {
-			setExperience(n);
-		}
-
-		public int getExperience() {
-			return getExperience();
-		}
-	
 }

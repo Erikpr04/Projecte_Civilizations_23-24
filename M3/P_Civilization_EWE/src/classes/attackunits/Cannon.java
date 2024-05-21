@@ -87,12 +87,4 @@ public class Cannon extends AttackUnit{
 		setArmor(getInitialArmor());
 	}
 
-	public void setExperience(int n) {
-		setExperience(n);
-	}
-
-	public int getExperience() {
-		return getExperience();
-	}
-
 }

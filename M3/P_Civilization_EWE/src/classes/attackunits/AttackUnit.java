@@ -70,8 +70,8 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
 
 
 
-	public void setExperience(int experience) {
-		this.experience = experience;
+	public void setExperience() {
+		this.experience = getExperience() + 1;
 	}
 
 
