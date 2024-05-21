@@ -1,5 +1,6 @@
 package classes.defenseunits;
 
+import exceptions.MiSQLException;
 import interfaces.Variables;
 
 public class Catapult extends DefenseUnit {
@@ -7,7 +8,7 @@ public class Catapult extends DefenseUnit {
 	
 	//CONSTRUCTOR 1
 
-	public Catapult(int armor, int baseDamage) {
+	public Catapult(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
@@ -80,7 +81,5 @@ public class Catapult extends DefenseUnit {
 		setExperience(n);
 	}
 
-	public int getExperience() {
-		return getExperience();
-	}
+
 }

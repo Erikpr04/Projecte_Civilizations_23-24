@@ -1,6 +1,13 @@
 package interfaces;
 
 public interface Variables {
+	//CONEXION CON LA DB
+	
+	public final String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	public final String user = "AdminCivilization";
+	public final String pass = "ewe";
+	
+	
 	// resources available to create the first enemy fleet
 	public final int IRON_BASE_ENEMY_ARMY = 26000;
 	public final int WOOD_BASE_ENEMY_ARMY = 180000;

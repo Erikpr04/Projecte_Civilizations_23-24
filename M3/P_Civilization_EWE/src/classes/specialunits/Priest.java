@@ -1,11 +1,13 @@
 package classes.specialunits;
 
+import exceptions.MiSQLException;
+
 public class Priest extends SpecialUnit {
 	
 	
 	//CONSTRUCTOR 1
 
-	public Priest(int armor, int baseDamage) {
+	public Priest(int armor, int baseDamage) throws MiSQLException {
 		super(armor, baseDamage);
 	}
 	
@@ -55,11 +57,5 @@ public class Priest extends SpecialUnit {
 		setArmor(getInitialArmor());
 	}
 
-	public void setExperience(int n) {
-		setExperience(n);
-	}
 
-	public int getExperience() {
-		return getExperience();
-	}
 }
