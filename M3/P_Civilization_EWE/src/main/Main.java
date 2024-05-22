@@ -26,7 +26,7 @@ public class Main {
     private dc_gui dc_gui;
     private dc_classes classes;
 	private dc_database database;
-	private int countFleet = classes.getCv().getBattles();
+	private int countFleet;
 
 	public static void main(String[] args) {		
         Main m = new Main();
@@ -306,6 +306,8 @@ public class Main {
 	
 	//METODO PARA CREAR ARMY ENEMIGAS
 	public ArrayList<ArrayList> createEnemyArmy() throws MiSQLException {
+		countFleet = classes.getCv().getBattles();
+		
 		int enemyWood;
 		int enemyFood;
 		int enemyIron;
