@@ -276,8 +276,8 @@ public class Game_gui extends JPanel {
 
 
      
-              
-        showBattleWindow("This is the first line.\nThis is the second line.\nThis is the third line.\nThis is the fourth line.\nThis is the fifth line.");
+         //panel de batalla     
+        //showBattleWindow("This is the first line.\nThis is the second line.\nThis is the third line.\nThis is the fourth line.\nThis is the fifth line.");
         
         
         
@@ -464,15 +464,19 @@ public class Game_gui extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//comprobamos si hay priest en nuestra army
-			if (cv_values[8] > 1) {
-				listener.sanctifyunits();
-        		JOptionPane.showMessageDialog(null, "All units were successfully sanctified","Units Sanctified", JOptionPane.INFORMATION_MESSAGE);
+			if (cv_values[8] >= 1) {
+				if (listener.sanctifyunits()) {
+					JOptionPane.showMessageDialog(null, "All units were successfully sanctified","Units Sanctified", JOptionPane.INFORMATION_MESSAGE);
+
+				}else {
+	        		JOptionPane.showMessageDialog(null, "No units to sanctify found","No units found error", JOptionPane.ERROR_MESSAGE);
+				}
 
 			}else {
         		JOptionPane.showMessageDialog(null, "No priest found, can't sanctify units","No Priest Error", JOptionPane.ERROR_MESSAGE);
 
-			}
-		} 
+
+			}}
 	});
     
     
@@ -612,11 +616,14 @@ public class Game_gui extends JPanel {
     imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
     usernameLabel = new JLabel("username");
+    usernameLabel.setFont(new Font("Arial", Font.PLAIN, 21));
+    usernameLabel.setForeground(Color.WHITE);
     usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(usernameLabel);
 
     JLabel timerLabel = new JLabel("0:00", JLabel.CENTER);
     timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
+    timerLabel.setForeground(Color.WHITE);
     timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(timerLabel);
     userPanel.setOpaque(false);
@@ -644,66 +651,85 @@ public class Game_gui extends JPanel {
     
     
     
-    
+	void showBattleWindow(String text) {
+	    // Crear la ventana
+	    JPanel battleFrame = new JPanel();
+	    battleFrame.setSize(500, 600);
+	    battleFrame.setLayout(new BorderLayout());
 
-    void showBattleWindow(String text) {
-        // Crear la ventana
-        JFrame battleFrame = new JFrame("Battle Window");
-        battleFrame.setSize(600, 400);
-        battleFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        battleFrame.setLayout(new BorderLayout());
+	    // Crear y agregar el título
+	    JLabel titleLabel = new JLabel("The battle begins!", SwingConstants.CENTER);
+	    titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+	    battleFrame.add(titleLabel, BorderLayout.NORTH);
 
-        // Crear y agregar el título
-        JLabel titleLabel = new JLabel("The battle begins!", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        battleFrame.add(titleLabel, BorderLayout.NORTH);
+	    // Crear y agregar el área de texto
+	    JTextArea textArea = new JTextArea();
+	    textArea.setEditable(false);
+	    textArea.setFont(new Font("Arial", Font.PLAIN, 16));
+	    textArea.setLineWrap(true);
+	    textArea.setWrapStyleWord(true);
+	    JScrollPane scrollPane = new JScrollPane(textArea);
+	    battleFrame.add(scrollPane, BorderLayout.CENTER);
 
-        // Crear y agregar el área de texto
-        JTextArea textArea = new JTextArea();
-        textArea.setEditable(false);
-        textArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        battleFrame.add(scrollPane, BorderLayout.CENTER);
+	    // Crear el botón para mostrar todo el texto
+	    JButton showAllButton = new JButton("Show All");
+	    showAllButton.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            textArea.setText(text); // Mostrar todo el texto
+	            showAllButton.setEnabled(false); // Deshabilitar el botón después de hacer clic
+	            JButton deleteButton = new JButton("Delete Panel");
+	            deleteButton.addActionListener(new ActionListener() {
+	                @Override
+	                public void actionPerformed(ActionEvent e) {
+	                    battleFrame.setVisible(false); // Ocultar el panel
+	                    battleFrame.getParent().remove(battleFrame); // Eliminar el panel del contenedor principal
+	                }
+	            });
+	            battleFrame.add(deleteButton, BorderLayout.SOUTH); // Agregar el botón para eliminar el panel
+	        }
+	    });
+	    battleFrame.add(showAllButton, BorderLayout.SOUTH);
 
-        // Crear y agregar la etiqueta de continuar
-        JLabel continueLabel = new JLabel("Press Enter to continue", SwingConstants.CENTER);
-        continueLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-        battleFrame.add(continueLabel, BorderLayout.SOUTH);
+	    // Dividir el texto en líneas
+	    String[] lines = text.split("\n");
+	    int[] currentLineIndex = {0}; // Usar un array para permitir acceso en la clase anónima
 
-        // Dividir el texto en líneas
-        String[] lines = text.split("\n");
-        int[] currentLineIndex = {0}; // Usar un array para permitir acceso en la clase anónima
+	    // Agregar el KeyListener para la tecla Enter
+	    textArea.addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyPressed(KeyEvent e) {
+	            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	                if (currentLineIndex[0] < lines.length) {
+	                    textArea.append(lines[currentLineIndex[0]] + "\n");
+	                    currentLineIndex[0]++;
+	                    if (currentLineIndex[0] >= lines.length) {
+	                        showAllButton.setEnabled(false); // Si ya se han mostrado todas las líneas, deshabilitar el botón
+	                        JButton deleteButton = new JButton("Delete Panel");
+	                        deleteButton.addActionListener(new ActionListener() {
+	                            @Override
+	                            public void actionPerformed(ActionEvent e) {
+	                                battleFrame.setVisible(false); // Ocultar el panel
+	                                battleFrame.getParent().remove(battleFrame); // Eliminar el panel del contenedor principal
+	                            }
+	                        });
+	                        battleFrame.add(deleteButton, BorderLayout.NORTH); // Agregar el botón para eliminar el panel
+	                    }
+	                }
+	            }
+	        }
+	    });
 
-        // Agregar el KeyListener para la tecla Enter
-        textArea.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (currentLineIndex[0] < lines.length) {
-                        textArea.append(lines[currentLineIndex[0]] + "\n");
-                        currentLineIndex[0]++;
-                        if (currentLineIndex[0] >= lines.length) {
-                            continueLabel.setVisible(false);
-                        }
-                    }
-                }
-            }
-        });
+	    mainpanel.add(battleFrame, JLayeredPane.PALETTE_LAYER);
+	    battleFrame.setLocation(650, 280);
 
-        // Hacer visible la ventana
-        battleFrame.setVisible(true);
-        // Solicitar el foco para el textArea para que reciba eventos de teclado
-        textArea.requestFocusInWindow();
-    
-    
-	 
-    
-    
-    
-    
+	    // Hacer visible la ventana
+	    battleFrame.setVisible(true);
+	    // Solicitar el foco para el textArea para que reciba eventos de teclado
+	    textArea.requestFocusInWindow();
 	}
+
+
     
 //metodo notificacion
     
@@ -802,10 +828,6 @@ public class Game_gui extends JPanel {
 
 	//metodo para guardar paneles
     
-    public void updatePanels() {
-        this.listener.load_game_gui();
-
-    }
 	
     public int getFood() {
         return food;
@@ -1056,7 +1078,7 @@ public class Game_gui extends JPanel {
     
 
 
-class MiPanelito extends JPanel {
+public class MiPanelito extends JPanel {
     private int lastMouseX;
     private int lastMouseY;
     private Color panelColor = Color.GREEN;
@@ -1069,13 +1091,21 @@ class MiPanelito extends JPanel {
 	String future_structure;
 
 
-
+	
     
     
     
     
 
-    public MiPanelito() {
+    public boolean isIsoccupied() {
+		return isoccupied;
+	}
+
+	public void setIsoccupied(boolean isoccupied) {
+		this.isoccupied = isoccupied;
+	}
+
+	public MiPanelito() {
     	
     	main_texture = new ImageIcon("./src/gui/main_grass_texture.jpg");
 		this.setCurrentImage(main_texture);
@@ -1366,10 +1396,6 @@ public void setMainpanel(JLayeredPane mainpanel) {
 
 
 class CvUpgradeGui {
-
-
-
-
     
     public class TechnologyUpgradePanel extends BackgroundPanel {
         public TechnologyUpgradePanel() {
@@ -1626,7 +1652,8 @@ class CvUpgradeGui {
                     JOptionPane.showMessageDialog(panel,
                             "You've created " + units + " units of " + soldierNames[soldierIndex],
                             "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
+                    getcv_data();
+                    } else {
                     JOptionPane.showMessageDialog(panel,
                             "Not enough resources.",
                             "Error", JOptionPane.ERROR_MESSAGE);

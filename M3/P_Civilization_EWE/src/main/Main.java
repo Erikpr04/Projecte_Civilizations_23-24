@@ -1,6 +1,10 @@
 package main;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import gui.Game_gui.MiPanelito;
 import gui.dc_gui;
 import java.util.Random;
 import java.util.Timer;
@@ -31,8 +35,9 @@ public class Main {
 	private int countFleet = 0;
     private dc_gui dc_gui;
     private dc_classes classes;
-	private dc_database database;
 	private boolean shownotification;
+    private dc_database database = new dc_database();
+
 	
 	
 	
@@ -57,23 +62,21 @@ public class Main {
         
         
 		//TIMER TASK:
-		classes.getCv().setWood(Variables.CIVILIZATION_WOOD_GENERATED+20000);
-		classes.getCv().setFood(Variables.CIVILIZATION_FOOD_GENERATED+20000);
-		classes.getCv().setIron(Variables.CIVILIZATION_IRON_GENERATED+32000);
-		
-		
+
 		
 		TimerTask task = new TimerTask() {
 
 			public void run() {
 				try {
-					
-				System.out.println(classes.getCv().getFarm());
+									
 				
-				classes.getCv().setWood(classes.getCv().getWood() + (classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-				classes.getCv().setFood(classes.getCv().getFood() + (classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-				classes.getCv().setIron(classes.getCv().getIron() + (classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-				classes.getCv().setMana(classes.getCv().getMana() + (classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+
+				System.out.println("carpentries " +classes.getCv().getCarpentry());
+				System.out.println("smithy " +classes.getCv().getSmithy());
+				classes.getCv().setWood(classes.getCv().getWood()+100000+ Variables.CIVILIZATION_WOOD_GENERATED+ (classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+				classes.getCv().setFood(classes.getCv().getFood() + Variables.CIVILIZATION_FOOD_GENERATED+(classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+				classes.getCv().setIron(classes.getCv().getIron() + Variables.CIVILIZATION_IRON_GENERATED+(classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+				classes.getCv().setMana(classes.getCv().getMana() +100000+ (classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
 				
 				
 				
@@ -86,6 +89,8 @@ public class Main {
 	            
 	    		m.dc_gui.setFood(classes.getCv().getFood());
 	    		m.dc_gui.setWood(classes.getCv().getWood());
+	    		System.out.println("iron actual" + classes.getCv().getIron());
+	    		System.out.println(classes.getCv().getSmithy());
 	    		m.dc_gui.setIron(classes.getCv().getIron());
 	    		m.dc_gui.setMana(classes.getCv().getMana());
 	    		m.dc_gui.update_resources_gui();
@@ -108,16 +113,6 @@ public class Main {
 		
 
         
-        
-
-		
-		
-        
-        
-        
-        
-        
-        
 
         
 		//Battle b = new Battle();
@@ -131,11 +126,8 @@ public class Main {
 			//metodo para cargar juego
 			public void load_game_gui() {
 				
-				//actualizamos los datos en dc_gui, que lo pasara a game gui
-				this.update_resources();
-				
-				m.dc_gui.load_game();
 				maintimer.schedule(task, 10000, 10000);
+				m.update_panels();
 
 				
 			}
@@ -337,8 +329,23 @@ public class Main {
 			}
 
 			@Override
-			public void sanctifyunits() {
-			classes.getCv().sanctifyUnits();
+			public boolean sanctifyunits() {
+			    int totalUnits = 0;
+			    ArrayList<ArrayList> armies = classes.getCv().getArmy();
+			    
+			    // Iterar sobre cada array en el ArrayList, excluyendo el último
+			    for (int i = 0; i < armies.size() - 1; i++) {
+			        totalUnits += armies.get(i).size(); // Sumar el tamaño de cada array
+			    }
+			    System.out.println("terminado de iterar" + totalUnits);
+				
+				if (totalUnits >= 1) {
+					classes.getCv().sanctifyUnits();
+					return true;
+				}
+				else {
+					return false;
+				}
 				
 			}
 
@@ -497,5 +504,71 @@ public class Main {
         System.out.printf("%-15s %d\n", "Crossbow", enemigos.get(2).size());
         System.out.printf("%-15s %d\n", "Cannon", enemigos.get(3).size());
 	}
+	
 
+    public void update_panels() {
+        MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
+        dc_database database = new dc_database();
+        ResultSet resultSet = database.getOccupiedPanels();
+        String[] structureList = new String[]{"farm", "smithy", "church", "magic_tower", "carpentry"};
+
+        if (resultSet != null) {
+            try {
+                // Iterar sobre los resultados
+                while (resultSet.next()) {
+                    // Obtener datos de la base de datos
+                    String structureType = resultSet.getString("structure_type");
+                    boolean isOccupied = resultSet.getInt("is_occupied") == 1; // Convertir el entero a booleano
+                    int xPosition = resultSet.getInt("x_position");
+                    int yPosition = resultSet.getInt("y_position");
+
+                    // Buscar la posición en structureList
+                    int position = -1; // Inicializamos en -1 para indicar que no se encontró el elemento
+                    for (int i = 0; i < structureList.length; i++) {
+                        if (structureList[i].equals(structureType)) {
+                            position = i;
+                            break;
+                        }
+                    }
+
+                    if (position != -1 && isOccupied) {
+                        subPanels[yPosition][xPosition].setCurrentImage(subPanels[yPosition][xPosition].getBuildingImages()[position]);
+                        subPanels[yPosition][xPosition].setIsoccupied(isOccupied);
+
+                        switch (position) {
+                            case 0:
+                                dc_gui.getGui_obj().getListener().create_farm();
+                                break;
+                            case 1:
+                                dc_gui.getGui_obj().getListener().create_smithy();
+                                break;
+                            case 2:
+                                dc_gui.getGui_obj().getListener().create_church();
+                                break;
+                            case 3:
+                                dc_gui.getGui_obj().getListener().create_magic_tower();
+                                break;
+                            case 4:
+                                dc_gui.getGui_obj().getListener().create_carpentry();
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        System.out.println("Structure isn't occupied");
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                // Cerrar el ResultSet y liberar recursos
+                try {
+                    if (resultSet != null) resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+	
 }

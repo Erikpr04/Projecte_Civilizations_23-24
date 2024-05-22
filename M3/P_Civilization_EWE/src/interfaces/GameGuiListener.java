@@ -35,6 +35,6 @@ public interface GameGuiListener {
     void create_smithy();
     void create_magic_tower();
     boolean shownotification();
-    void sanctifyunits();
+    boolean sanctifyunits();
     
 }

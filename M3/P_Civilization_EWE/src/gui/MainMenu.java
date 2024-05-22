@@ -158,8 +158,8 @@ public class MainMenu extends JPanel {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-        		JOptionPane.showMessageDialog(null, "No games found in database","Error Loading Game", JOptionPane.ERROR_MESSAGE);
-				
+				startGame();	
+
 			}
 			
 			@Override
@@ -481,7 +481,9 @@ public class MainMenu extends JPanel {
                     int photoIndex = Integer.parseInt(photoGroup.getSelection().getActionCommand());
                     userData = new String[]{username, String.valueOf(photoIndex)};
                     try {
+                    	//listener para empezar nueva partida
                     	listener.getUserData();
+                    	
     					startGame();
     					creategameframe.dispose();
     					} catch (Exception ex) {
