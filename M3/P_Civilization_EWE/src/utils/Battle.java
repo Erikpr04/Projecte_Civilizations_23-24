@@ -775,7 +775,7 @@ public class Battle {
 		
 		int numBattle = 0; //aqui hay que recuperar el count de batallas de la clase civilization o SELECT del ultimo num_batalla
 		int civilization_Id = 1; //en un principio solo hay una civilizacion "1"
-		
+
 		
 		//Actualizar Civilization local
 		
@@ -797,7 +797,7 @@ public class Battle {
 		 cdb.actualizarUnitsBD(myArmy);		 
 		 
 		 //insertar battleStats y battleLog  (REVISAR EN CLASE) -------------------------------------
-		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(0));
+		 cdb.insertarBattleStats(numBattle,civilization_Id ,getBattleReport(0));
 		 cdb.insertarBattleLog(civilization_Id, numBattle, getBattleDevelopment());
 		 
 		

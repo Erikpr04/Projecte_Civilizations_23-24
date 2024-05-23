@@ -32,6 +32,17 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables{
 		this.sanctified = false;
 		this.unitId = lastIdDefenseUnit();
 	}
+	
+	// CONSTRUCTOR 2 (RECUPERAR BD)
+	public DefenseUnit(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super();
+		this.armor = armor;
+		this.initialArmor = armor;
+		this.baseDamage = baseDamage;
+		this.experience = experience;
+		this.sanctified = sanctified;
+		this.unitId = unitId;
+	}
 
 	
 	//GETTERS Y SETTERS
@@ -79,6 +90,13 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables{
 	public int getUnitId() {
 		return unitId;
 	}
+	
+	
+	public String toString() {
+		return " DefenseUnit armor=" + armor + ", initialArmor=" + initialArmor + ", baseDamage=" + baseDamage
+				+ ", experience=" + experience + ", sanctified=" + sanctified + ", unitId=" + unitId;
+	}
+
 	//metodo para calcular la ultima id
 	public int lastIdDefenseUnit() throws MiSQLException {
 		int last_id = 0;

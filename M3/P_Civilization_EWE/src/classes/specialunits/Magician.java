@@ -11,6 +11,12 @@ public class Magician extends SpecialUnit {
 		super(armor, baseDamage);
 	}
 	
+	//CONSTRUCTOR 2 (BD )
+	public Magician(int unitId, int armor, int baseDamage, int experience) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience);
+		
+	}
+	
 	
 	//METODOS DE MILITARY UNIT
 	

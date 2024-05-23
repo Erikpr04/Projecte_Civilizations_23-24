@@ -21,6 +21,11 @@ public class Swordsman extends AttackUnit {
 		super(ARMOR_SWORDSMAN, BASE_DAMAGE_SWORDSMAN);
 	}
 	
+	//CONSTRUCTOR 3 (BD )
+	public Swordsman(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience, sanctified);
+		
+	}
 	
 	//METODOS DE MILITARY UNIT
 	
@@ -36,6 +41,7 @@ public class Swordsman extends AttackUnit {
 		
 		return damage;
 	}
+
 
 	public void takeDamage(int receivedDamage) {
 		setArmor(getArmor() - receivedDamage);
@@ -86,7 +92,9 @@ public class Swordsman extends AttackUnit {
 		setArmor(getInitialArmor());
 	}
 
-
+	public String toString() {
+		return "Swordsman: " + super.toString();
+	}
 
 
 }
