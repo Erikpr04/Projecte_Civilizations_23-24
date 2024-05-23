@@ -365,7 +365,7 @@ public class Main {
 			}
 
 			@Override
-			public void update_army_db(int tipo_tropa) {
+			public void update_army_db() {
 				// TODO Auto-generated method stub
 				
 			}
@@ -390,8 +390,7 @@ public class Main {
 				}
 			
 
-			@Override
-			public void update_technologies_db(int attack_technology, int defense_technology) {
+			public void update_technologies_db() {
 				// TODO Auto-generated method stub
 				
 			}
@@ -431,8 +430,7 @@ public class Main {
 			        switch (soldierTypeIndex) {
 		            case 0:
 						m.classes.getCv().new_Swordsman(numSoldiers);
-						System.out.println("soldados:");
-						System.out.println((m.classes.getCv().getArmy().get(0).size()));
+
 						break;
 		            case 1:
 		                m.classes.getCv().new_Spearman(numSoldiers);
