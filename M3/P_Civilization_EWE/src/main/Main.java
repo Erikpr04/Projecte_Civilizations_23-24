@@ -24,11 +24,14 @@ import classes.specialunits.Magician;
 import classes.specialunits.Priest;
 import exceptions.BuildingException;
 import exceptions.MiSQLException;
+import exceptions.NoUnitsException;
 import exceptions.ResourceException;
+import interfaces.BattleListener;
 import interfaces.GameGuiListener;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
 import utils.Battle;
+import utils.ConnectionDB;
 import utils.dc_database;
 
 public class Main {
@@ -38,6 +41,8 @@ public class Main {
     private dc_database database = new dc_database();
     private ArrayList<ArrayList> enemy_army;
     private Battle b;
+    private int countFleet = classes.getCv().getBattles();
+    private ConnectionDB  cbd = new ConnectionDB();
 
 	
     
@@ -198,8 +203,8 @@ public class Main {
 				System.out.println("carpentries " +m.classes.getCv().getCarpentry());
 				System.out.println("smithy " +m.classes.getCv().getSmithy());
 				m.classes.getCv().setWood(m.classes.getCv().getWood()+100000+ Variables.CIVILIZATION_WOOD_GENERATED+ (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-				m.classes.getCv().setFood(m.classes.getCv().getFood() + Variables.CIVILIZATION_FOOD_GENERATED+(m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-				m.classes.getCv().setIron(m.classes.getCv().getIron() + Variables.CIVILIZATION_IRON_GENERATED+(m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+				m.classes.getCv().setFood(m.classes.getCv().getFood() +100000+ Variables.CIVILIZATION_FOOD_GENERATED+(m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+				m.classes.getCv().setIron(m.classes.getCv().getIron() +100000+ Variables.CIVILIZATION_IRON_GENERATED+(m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
 				m.classes.getCv().setMana(m.classes.getCv().getMana() +100000+ (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
 				
 				
@@ -239,7 +244,27 @@ public class Main {
 		
         m.b = new Battle();
 
-		
+		m.b.setBattlelistener(new BattleListener() {
+			
+			@Override
+			public Civilization getCV_Battle() {
+				return m.classes.getCv();
+			}
+
+			public void updatecv_after_battle(int[] resources) {
+				
+				m.classes.getCv().setWood(m.classes.getCv().getWood() + resources[0]); 
+				m.classes.getCv().setIron(m.classes.getCv().getIron() + resources[1]); 
+
+				
+			}
+		});
+        
+        
+        
+        
+        
+        
 		
 		TimerTask shownotificationtask = new TimerTask() {
 
@@ -265,6 +290,8 @@ public class Main {
 			
 		};
 		
+	
+		
 		
 		TimerTask startbattle = new TimerTask() {
 
@@ -272,14 +299,20 @@ public class Main {
 				try {
 									
 					//en esta tarea mostraremos la notificacion que avisara que viene un ejercito
-					System.out.println("hola");
+					
+					try {
+						m.b.mainBattle(m.classes.getCv().getArmy(), m.enemy_army);
 
-					m.b.mainBattle(m.classes.getCv().getArmy(), m.enemy_army);
+					} catch (NoUnitsException e) {
+						System.out.println(e.getMessage());
+					}
+
 					System.out.println(m.b.getBattleDevelopment());
 
 					
 					m.dc_gui.getGui_obj().showBattleWindow(m.b.getBattleDevelopment());
 					
+					m.cbd.actualizarDatosCivilization(m.classes.getCv());
 					
 					
 
@@ -317,6 +350,9 @@ public class Main {
 
         
 		//Battle b = new Battle();
+		
+		
+		
         
         //instanciar controladores de dominio
         
@@ -366,7 +402,7 @@ public class Main {
 
 			@Override
 			public void update_army_db() {
-				// TODO Auto-generated method stub
+				
 				
 			}
 
@@ -385,6 +421,11 @@ public class Main {
 					m.classes.getCv().setSmithy(m.classes.getCv().getSmithy()+1);
 				}else if (structuretype == "Farm") {
 					m.classes.getCv().setFarm(m.classes.getCv().getFarm()+1);
+				}
+				try {
+					m.cbd.actualizarDatosCivilization(m.classes.getCv());
+				} catch (MiSQLException e) {
+					e.printStackTrace();
 				}
 				System.out.println("Estructura creada!");
 				}
@@ -416,7 +457,7 @@ public class Main {
 			}
 
 			// Método para establecer el ejército de la civilización
-			public void create_troop(int soldierTypeIndex, int numSoldiers) {
+			public void create_troop(int soldierTypeIndex, int numSoldiers) throws MiSQLException {
 			    if (soldierTypeIndex < 0 || soldierTypeIndex >= m.classes.getCv().getArmy().size()) {
 			        // Si el índice del tipo de soldado está fuera de los límites del ArrayList, mostrar un mensaje de error
 			        System.out.println("Error: Tipo de soldado inválido.");

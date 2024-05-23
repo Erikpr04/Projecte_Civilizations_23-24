@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import exceptions.MiSQLException;
 import exceptions.ResourceException;
 import interfaces.GameGuiListener;
 import interfaces.MainMenuListener;
@@ -1646,7 +1647,11 @@ class CvUpgradeGui {
                     
                     System.out.println(soldierIndex);
                     
-                    listener.create_troop(soldierIndex, units);
+                    try {
+						listener.create_troop(soldierIndex, units);
+					} catch (MiSQLException e1) {
+						e1.printStackTrace();
+					}
                     
                     try {
 						update_resources_quantity(getWood(),"wood");

@@ -11,9 +11,7 @@ import interfaces.Variables;
 
 public class dc_database {
     private int food, wood, iron, mana;
-    private static final String URL = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-    private static final String USER = "root";
-    private static final String PASS = "123123";
+
 
         public ResultSet getOccupiedPanels() {
             Connection connection = null;
@@ -21,8 +19,8 @@ public class dc_database {
             ResultSet resultSet = null;
 
             try {
-                connection = DriverManager.getConnection(URL, USER, PASS);
-                String query = "SELECT structure_type, is_occupied, x_position, y_position FROM gui WHERE is_occupied = true";
+                connection = DriverManager.getConnection(Variables.url, Variables.user, Variables.pass);
+                String query = "SELECT structure_type, is_occupied, x_position, y_position FROM gui WHERE is_occupied = 1";
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 return resultSet;

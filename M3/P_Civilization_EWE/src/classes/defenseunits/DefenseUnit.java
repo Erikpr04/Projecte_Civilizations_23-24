@@ -102,7 +102,7 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables{
 		int last_id = 0;
 		
 		try {
-			ConnectionDB cbd = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+			ConnectionDB cbd = new ConnectionDB();
 			Connection conn = cbd.openConnectionDB();
 			
 			String query = "SELECT MAX(unit_id) AS last_id FROM defenseunits";

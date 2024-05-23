@@ -154,7 +154,7 @@ public class Civilization {
 				Swordsman newUnit = new Swordsman(total_armor,total_attack);
 				army.get(0).add(newUnit);
 				
-				ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+				ConnectionDB cdb = new ConnectionDB();
 				cdb.crearUnit(newUnit);
 				
 				
@@ -164,6 +164,7 @@ public class Civilization {
 
 		}
 //			
+	}
 	}
 	
 	
