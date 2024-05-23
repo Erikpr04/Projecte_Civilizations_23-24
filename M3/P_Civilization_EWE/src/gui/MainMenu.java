@@ -1,6 +1,8 @@
 package gui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import interfaces.MainMenuListener;
 
@@ -24,13 +26,25 @@ public class MainMenu extends JPanel {
 	private ImageIcon play_button  = new ImageIcon("./src/gui/mm_assets/play_button.png");
 	private ImageIcon settings_button  = new ImageIcon("./src/gui/mm_assets/settings_button.png");
     private MainMenuListener listener;
+    String[] userData;
+    JFrame creategameframe;
 
 
 
 
    
     
-    // Método para establecer el listener
+    public String[] getUserData() {
+		return userData;
+	}
+
+
+	public void setUserData(String[] userData) {
+		this.userData = userData;
+	}
+
+
+	// Método para establecer el listener
     public void setMainMenuListener(MainMenuListener listener) {
         this.listener = listener;
     }
@@ -59,7 +73,11 @@ public class MainMenu extends JPanel {
     	setLayout(new BorderLayout());
 
     	// Crear el título del juego
-    	JLabel titleLabel = new JLabel("Civilization");
+        ImageIcon gamelogo = new ImageIcon("./src/gui/GAME LOGO.png");
+        
+
+    	JLabel titleLabel = new JLabel(gamelogo);
+    	
     	titleLabel.setForeground(Color.WHITE);
     	
     	titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -81,7 +99,8 @@ public class MainMenu extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
                 try {
-					startGame();
+					//tartGame();
+                	createAndShowGUI();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -127,6 +146,40 @@ public class MainMenu extends JPanel {
     	resizedImage = originalImage.getScaledInstance(sizebutton1, sizebutton2, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
     	resizedIcon = new ImageIcon(resizedImage);
     	loadGameButton.setIcon(resizedIcon);
+    	
+    	
+    	
+    	loadGameButton.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				startGame();	
+
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
     	
     	//options button
     	LabelButton optionsButton = new LabelButton("");
@@ -324,6 +377,134 @@ public class MainMenu extends JPanel {
 
 
     }
+    
+    
+    
+
+    private void createAndShowGUI() {
+        creategameframe = new JFrame("Game Launcher");
+        creategameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        creategameframe.setSize(600, 400);
+        creategameframe.setLayout(new BorderLayout());
+        creategameframe.setLocationRelativeTo(null);
+
+        // Panel principal con margen
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Panel para los inputs
+        JPanel inputPanel = new JPanel(new BorderLayout(10, 10)); // Añadir espacio entre componentes
+
+        // Panel para el nombre de usuario
+        JPanel usernamePanel = new JPanel();
+        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JTextField usernameField = new JTextField();
+        usernamePanel.add(usernameLabel);
+        usernamePanel.add(Box.createVerticalStrut(5)); // Espacio entre etiqueta y campo de texto
+        usernamePanel.add(usernameField);
+
+        inputPanel.add(usernamePanel, BorderLayout.NORTH);
+
+        // Panel para las fotos de perfil
+        JPanel profilePhotoPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel photoLabelPanel = new JPanel(new BorderLayout());
+        JLabel pickPhotoLabel = new JLabel("Pick one profile photo:");
+        pickPhotoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        photoLabelPanel.add(pickPhotoLabel, BorderLayout.WEST);
+        photoLabelPanel.add(Box.createHorizontalGlue(), BorderLayout.CENTER); // Añadir espacio para ocupar el ancho
+
+        profilePhotoPanel.add(photoLabelPanel, BorderLayout.NORTH);
+        JPanel photoGridPanel = new JPanel(new GridLayout(3, 3, 10, 10));
+        ButtonGroup photoGroup = new ButtonGroup();
+        
+        
+        
+    	ImageIcon[] ppphotos= new ImageIcon[9];
+		ppphotos[0] = new ImageIcon("./src/gui/ppphotos/pp1.png");
+    	ppphotos[1] = new ImageIcon("./src/gui/ppphotos/pp2.png");
+    	ppphotos[2] = new ImageIcon("./src/gui/ppphotos/pp3.png");
+    	ppphotos[3] = new ImageIcon("./src/gui/ppphotos/pp4.png");
+    	ppphotos[4] = new ImageIcon("./src/gui/ppphotos/pp5.png");
+    	ppphotos[5] = new ImageIcon("./src/gui/ppphotos/pp6.png");
+    	ppphotos[6] = new ImageIcon("./src/gui/ppphotos/pp7.png");
+    	ppphotos[7] = new ImageIcon("./src/gui/ppphotos/pp8.png");
+    	ppphotos[8] = new ImageIcon("./src/gui/ppphotos/pp9.png");
+
+
+    	for (int i = 0; i < 9; i++) {
+    	    ImageIcon originalIcon = ppphotos[i];
+    	    Image originalImage = originalIcon.getImage();
+    	    Image resizedImage = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+    	    ImageIcon resizedIcon = new ImageIcon(resizedImage);
+    	    
+    	    JToggleButton photoButton = new JToggleButton(resizedIcon);
+    	    photoButton.setActionCommand(String.valueOf(i + 1)); // Índice base 1
+    	    photoGroup.add(photoButton);
+    	    photoGridPanel.add(photoButton);
+    	}
+
+
+
+        profilePhotoPanel.add(photoGridPanel, BorderLayout.CENTER);
+        inputPanel.add(profilePhotoPanel, BorderLayout.CENTER);
+
+        // Botón "Play"
+        JButton playButton = new JButton("Play");
+        playButton.setEnabled(false);
+
+        // Habilitar el botón "Play" cuando se han llenado ambos campos
+        usernameField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { checkFields(); }
+            public void removeUpdate(DocumentEvent e) { checkFields(); }
+            public void changedUpdate(DocumentEvent e) { checkFields(); }
+            private void checkFields() {
+                playButton.setEnabled(!usernameField.getText().trim().isEmpty() && photoGroup.getSelection() != null);
+            }
+        });
+
+        for (Component comp : photoGridPanel.getComponents()) {
+            if (comp instanceof JToggleButton) {
+                ((JToggleButton) comp).addItemListener(e -> {
+                    playButton.setEnabled(!usernameField.getText().trim().isEmpty() && photoGroup.getSelection() != null);
+                });
+            }
+        }
+
+        // Acción al presionar el botón "Play"
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (playButton.isEnabled()) {
+                    String username = usernameField.getText();
+                    int photoIndex = Integer.parseInt(photoGroup.getSelection().getActionCommand());
+                    userData = new String[]{username, String.valueOf(photoIndex)};
+                    try {
+                    	//listener para empezar nueva partida
+                    	listener.getUserData();
+                    	
+    					startGame();
+    					creategameframe.dispose();
+    					} catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        // Agregar componentes al panel principal
+        mainPanel.add(inputPanel, BorderLayout.CENTER);
+        mainPanel.add(playButton, BorderLayout.SOUTH);
+
+        // Agregar el panel principal al frame
+        creategameframe.add(mainPanel);
+        creategameframe.setVisible(true);
+        creategameframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    }
+
+
 }
 
 
@@ -367,11 +548,13 @@ class ImageBackgroundPanel extends JPanel {
 
 //CLASE BOTON LABEL
 
-class LabelButton extends JLabel {
+class LabelButton extends JButton {
     public LabelButton(String text) {
         super(text);
+        this.setOpaque(false);
+        this.setContentAreaFilled(false);
+        this.setBorderPainted(false);
         setForeground(Color.BLACK); // Color de texto predeterminado
-        setBorder(BorderFactory.createEmptyBorder()); // Borde predeterminado
 
 //        addMouseListener(new MouseAdapter() {
 //            public void mouseEntered(MouseEvent e) {
@@ -395,4 +578,6 @@ class LabelButton extends JLabel {
 //        });
     }
 }
+
+
     
