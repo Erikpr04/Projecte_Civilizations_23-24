@@ -237,6 +237,8 @@ public class Main {
 			
 		};
 		
+        m.b = new Battle();
+
 		
 		
 		TimerTask shownotificationtask = new TimerTask() {
@@ -250,7 +252,7 @@ public class Main {
 					
 					m.dc_gui.getGui_obj().showCustomPanel(m.dc_gui.getGui_obj().getMainpanel(),m.viewThread(m.enemy_army));
 
-			        m.b = new Battle(m.classes.getCv().getArmy(),m.enemy_army);
+			        
 
 				
 

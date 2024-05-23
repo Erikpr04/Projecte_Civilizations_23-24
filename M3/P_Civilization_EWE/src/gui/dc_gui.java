@@ -87,6 +87,7 @@ public class dc_gui  {
 				//borrar datos de la bd si hay
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();
+		        ggl.load_game_gui();
 		        
 				
 			}

@@ -44,10 +44,9 @@ public class Battle {
 	
 	
 	
-	public Battle(ArrayList<ArrayList> civilizationArmy, ArrayList<ArrayList> enemyArmy) {
+	public Battle() {
 		super();
-		this.civilizationArmy = civilizationArmy;
-		this.enemyArmy = enemyArmy;
+
 	}
 	
 	
