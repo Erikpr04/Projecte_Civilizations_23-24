@@ -99,7 +99,6 @@ public class MainMenu extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
                 try {
-					//tartGame();
                 	createAndShowGUI();
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -158,7 +157,7 @@ public class MainMenu extends JPanel {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				startGame();	
+				listener.loadgame();	
 
 			}
 			
@@ -183,7 +182,7 @@ public class MainMenu extends JPanel {
     	
     	//options button
     	LabelButton optionsButton = new LabelButton("");
-    	originalIcon = new ImageIcon("./src/gui/mm_assets/options_button.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
+    	originalIcon = new ImageIcon("./src/gui/mm_assets/CREDITS.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
     	originalImage = originalIcon.getImage();
     	resizedImage = originalImage.getScaledInstance(sizebutton1, sizebutton2, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
     	resizedIcon = new ImageIcon(resizedImage);
@@ -479,12 +478,9 @@ public class MainMenu extends JPanel {
                 if (playButton.isEnabled()) {
                     String username = usernameField.getText();
                     int photoIndex = Integer.parseInt(photoGroup.getSelection().getActionCommand());
-                    userData = new String[]{username, String.valueOf(photoIndex)};
                     try {
-                    	//listener para empezar nueva partida
-                    	listener.getUserData();
-                    	
-    					startGame();
+                    	//listener para empezar nueva partida                    	
+    					listener.startnewgame(username,String.valueOf(photoIndex));
     					creategameframe.dispose();
     					} catch (Exception ex) {
                         ex.printStackTrace();

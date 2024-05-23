@@ -38,6 +38,21 @@ public class Battle {
 	private int[] actualNumberUnitsEnemy; //Arrays para contabilizar unidades
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public Battle() {
+		super();
+
+	}
+	
+	
 	//GETTERS Y SETTERS
 	
 	public ArrayList<ArrayList> getCivilizationArmy() {

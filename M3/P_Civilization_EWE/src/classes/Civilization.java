@@ -158,23 +158,6 @@ public class Civilization {
 
 		}
 //			
-//			//Comprobamos que tenga los recursos
-//			if (getFood() >= Variables.FOOD_COST_SWORDSMAN && getWood() >= Variables.WOOD_COST_SWORDSMAN && getIron() >= Variables.IRON_COST_SWORDSMAN) {
-//				//Si los tiene, lo añadimos al ArrayList
-//				army.get(0).add(new Swordsman(total_armor,total_attack));
-//				
-//				setWood(wood-Variables.WOOD_COST_SWORDSMAN);
-//				setFood(food-Variables.FOOD_COST_SWORDSMAN);
-//				setIron(iron-Variables.IRON_COST_SWORDSMAN);
-//
-//			}
-//			else {
-//				//Si no los tiene, creamos excepcion de Resources
-//				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Swordsman");
-//			}
-//			
-//			//Y asi con las demás unidades
-//		}
 	}
 	
 	

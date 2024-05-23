@@ -68,19 +68,27 @@ public class dc_gui  {
 		        invoke_game_gui();				
 			}
 
-			@Override
-			public void getUserData() {
-				username = mainMenu.getUserData()[0];
-				profileindex = mainMenu.getUserData()[1];
-
-			}
 
 			@Override
 			public void loadgame() {
 		        invoke_game_gui();	
 				load_game();
+
 		        
 
+				
+			}
+
+			public void startnewgame(String username1,String photoindex) {
+				
+				username = username1;
+				profileindex = photoindex;
+				
+				//borrar datos de la bd si hay
+		        mainMenuFrame.dispose(); // Dispose of the main menu frame
+		        invoke_game_gui();
+		        ggl.load_game_gui();
+		        
 				
 			}
 
@@ -129,7 +137,6 @@ public class dc_gui  {
                 
         gui_obj.setUsername(username);
         gui_obj.setPpindex(profileindex);
-        ggl.load_game_gui();
 
 
 
@@ -140,27 +147,13 @@ public class dc_gui  {
     //metodo para actualizar recursos en game gui
     
     
-    public void update_resources_gui() {
-    	try {
-			gui_obj.update_resources_quantity(wood,gui_obj.getWoodlabel(),"wood");
-			gui_obj.update_resources_quantity(food,gui_obj.getFoodlabel(),"food");
-			gui_obj.update_resources_quantity(iron,gui_obj.getIronlabel(),"iron");
-			gui_obj.update_resources_quantity(mana,gui_obj.getManalabel(),"mana");
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-    }
-    
     
     
     //metodo cargar partida
     
     public void load_game() {
-    	update_resources_gui();
     	ggl.load_game_gui();
+    	ggl.load_db_data();
 
     }
     
