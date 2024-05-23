@@ -15,10 +15,14 @@ public class Spearman extends AttackUnit {
 	//CONSTRUCTOR 2
 	
 	
-		public Spearman() throws MiSQLException {
-			super(ARMOR_SPEARMAN, BASE_DAMAGE_SPEARMAN);
-		}
-	
+	public Spearman() throws MiSQLException {
+		super(ARMOR_SPEARMAN, BASE_DAMAGE_SPEARMAN);
+	}
+	//CONSTRUCTOR 3 (BD )
+	public Spearman(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience, sanctified);
+		
+	}
 	
 	//METODOS DE MILITARY UNIT
 	
@@ -82,5 +86,9 @@ public class Spearman extends AttackUnit {
 
 	public void resetArmor() {
 		setArmor(getInitialArmor());
+	}
+
+	public String toString() {
+		return "Spearman: " + super.toString();
 	}
 }

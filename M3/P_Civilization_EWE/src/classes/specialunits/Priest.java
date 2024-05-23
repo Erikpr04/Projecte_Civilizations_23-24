@@ -11,6 +11,12 @@ public class Priest extends SpecialUnit {
 		super(armor, baseDamage);
 	}
 	
+	//CONSTRUCTOR 2 (BD )
+	public Priest(int unitId, int armor, int baseDamage, int experience) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience);
+		
+	}
+	
 	
 	//METODOS DE MILITARY UNIT
 	

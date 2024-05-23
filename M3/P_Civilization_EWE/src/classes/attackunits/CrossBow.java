@@ -21,6 +21,12 @@ public class CrossBow extends AttackUnit {
 	public CrossBow() throws MiSQLException {
 		super(ARMOR_CROSSBOW, BASE_DAMAGE_CROSSBOW);
 	}
+	
+	//CONSTRUCTOR 3 (BD )
+	public CrossBow(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience, sanctified);
+		
+	}
 		
 	
 	//METODOS DE MILITARY UNIT
@@ -86,4 +92,9 @@ public class CrossBow extends AttackUnit {
 	public void resetArmor() {
 		setArmor(getInitialArmor());
 	}
+	
+	public String toString() {
+		return "Crossbow: " + super.toString();
+	}
+
 }

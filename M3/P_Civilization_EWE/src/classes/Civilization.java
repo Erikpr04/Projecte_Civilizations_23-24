@@ -32,6 +32,7 @@ public class Civilization {
 	private int battles;
 	private ArrayList<ArrayList> army = new ArrayList<ArrayList>(9);
 	private int id = 1;
+	private String name;
 	
 	
 	//CONSTRUCTOR PARA INICIALIZAR EL ARRAY
@@ -130,7 +131,12 @@ public class Civilization {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+	public String getName() {
+		return name;
+	}
+	public void setName( String name) {
+		this.name = name;
+	}
 	//METODOS PARA CREAR UNIDADES
 	
 	public void new_Swordsman(int i) throws ResourceException, MiSQLException {

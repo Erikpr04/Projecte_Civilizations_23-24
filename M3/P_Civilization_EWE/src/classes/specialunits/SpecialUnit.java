@@ -11,7 +11,8 @@ import interfaces.Variables;
 import utils.ConnectionDB;
 
 public abstract class SpecialUnit implements MilitaryUnit, Variables{
-	
+
+
 	//Atributos
 	private int armor;
 	private int initialArmor;
@@ -30,6 +31,16 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables{
 		this.baseDamage = baseDamage;
 		this.experience = 0;
 		this.unitId = lastIdSpecialUnit();
+	}
+	
+	// CONSTRUCTOR 2 (RECUPERAR BD)
+	public SpecialUnit(int unitId, int armor, int baseDamage, int experience) throws MiSQLException {
+		super();
+		this.armor = armor;
+		this.initialArmor = armor;
+		this.baseDamage = baseDamage;
+		this.experience = experience;
+		this.unitId = unitId;
 	}
 
 	
@@ -70,6 +81,12 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables{
 	
 	public int getUnitId() {
 		return unitId;
+	}
+	
+
+	public String toString() {
+		return " SpecialUnit armor=" + armor + ", initialArmor=" + initialArmor + ", baseDamage=" + baseDamage
+				+ ", experience=" + experience + ", unitId=" + unitId;
 	}
 	
 	//metodo para calcular la ultima id

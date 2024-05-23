@@ -19,7 +19,12 @@ public class Cannon extends AttackUnit{
 	public Cannon() throws MiSQLException {
 		super(ARMOR_CANNON, BASE_DAMAGE_CANNON);
 	}
-
+	
+	//CONSTRUCTOR 3 (BD )
+	public Cannon(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience, sanctified);
+		
+	}
 	
 	//METODOS DE MILITARY UNIT
 	
@@ -87,5 +92,11 @@ public class Cannon extends AttackUnit{
 	public void resetArmor() {
 		setArmor(getInitialArmor());
 	}
+
+	public String toString() {
+		return "Cannon: " + super.toString();
+	}
+	
+	
 
 }
