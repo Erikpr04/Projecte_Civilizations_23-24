@@ -35,6 +35,22 @@ public class Battle {
 	private int[] actualNumberUnitsEnemy; //Arrays para contabilizar unidades
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public Battle(ArrayList<ArrayList> civilizationArmy, ArrayList<ArrayList> enemyArmy) {
+		super();
+		this.civilizationArmy = civilizationArmy;
+		this.enemyArmy = enemyArmy;
+	}
+	
+	
 	//GETTERS Y SETTERS
 	
 	public ArrayList<ArrayList> getCivilizationArmy() {

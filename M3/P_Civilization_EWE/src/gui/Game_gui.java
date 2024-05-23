@@ -651,7 +651,7 @@ public class Game_gui extends JPanel {
     
     
     
-	void showBattleWindow(String text) {
+	public void showBattleWindow(String text) {
 	    // Crear la ventana
 	    JPanel battleFrame = new JPanel();
 	    battleFrame.setSize(500, 600);
@@ -733,26 +733,36 @@ public class Game_gui extends JPanel {
     
 //metodo notificacion
     
-    public void showCustomPanel(JLayeredPane parentComponent) {
-        JPanel customPanel = new JPanel();
-    	ImageIcon originalIcon = new ImageIcon("./src/gui/battleicon.png"); // Reemplaza "ruta_de_la_imagen.jpg" con la ruta de tu imagen
-    	Image originalImage = originalIcon.getImage();
-    	Image resizedImage = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Ajusta el tamaño según sea necesario
-    	ImageIcon resizedIcon = new ImageIcon(resizedImage);
-        JLabel customLabel = new JLabel("ATTACK INCOMING");
-    	customLabel.setIcon(resizedIcon);
-        customLabel.setFont(new Font("Serif", Font.PLAIN, 30));
+public void showCustomPanel(JLayeredPane parentComponent, String s) {
+        JPanel customPanel = new BackgroundPanel();
+        ImageIcon originalIcon = new ImageIcon("./src/gui/battleicon.png");
+        Image originalImage = originalIcon.getImage();
+        Image resizedImage = originalImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(resizedImage);
 
-        customLabel.setSize(new Dimension(200, 200));
-        customPanel.add(customLabel);
+        // Create JTextArea for multiline text display
+        JTextArea customTextArea = new JTextArea(s);
+        customTextArea.setFont(new Font("Serif", Font.PLAIN, 20));
+        customTextArea.setForeground(Color.WHITE);
+        customTextArea.setLineWrap(true);
+        customTextArea.setWrapStyleWord(true);
+        customTextArea.setOpaque(false); 
+        customTextArea.setEditable(false); 
+
+        // Create a JLabel for the icon
+        JLabel iconLabel = new JLabel(resizedIcon);
+
+        customPanel.setLayout(new BorderLayout());
+        customPanel.add(iconLabel, BorderLayout.WEST);
+        customPanel.add(customTextArea, BorderLayout.CENTER);
         customPanel.setBackground(Color.red);
 
         int parentWidth = parentComponent.getWidth();
         int panelWidth = 500; // Ancho del panel personalizado
         int panelHeight = 200; // Alto del panel personalizado
-        int panelX =  panelWidth +200; // Posición X para centrar horizontalmente
-        int panelYStart = panelHeight-600; // Posición inicial Y para coloczar arriba del JLayeredPane
-        int panelYEnd = (25); // Posición final Y para centrar verticalmente
+        int panelX =  panelWidth +200; // Posición X para centrar 
+        int panelYStart = panelHeight - 600; // Posición inicial Y para coloczar arriba del JLayeredPane
+        int panelYEnd = 25; // Posición final Y para centrar verticalmente
 
         customPanel.setBounds(panelX, panelYStart, panelWidth, panelHeight);
 
@@ -800,13 +810,7 @@ public class Game_gui extends JPanel {
         parentComponent.revalidate(); // Actualizar la interfaz
 
         timer.start(); // Iniciar la animación
-    
-	
-
-    
-    
-}
-	
+    }	
 	
     private void getcv_data() {
     	
@@ -898,30 +902,42 @@ public class Game_gui extends JPanel {
     
     //este metodo actualiza el label que queramos con un numero
     
-    public void update_resources_quantity(int quantity,JLabel labeltoupdate, String resource) throws Exception {
+    public void update_resources_quantity(int quantity, String resource) throws Exception {
     	
     	
     	if (resource == "food") {
+    		
     		setFood(quantity);
+    		getFoodlabel().setText(Integer.toString(quantity));
+    		getFoodlabel().getParent().revalidate();
+    		getFoodlabel().getParent().repaint();
     		
     	}else if (resource == "wood") {
     		setWood(quantity);
+    		getWoodlabel().setText(Integer.toString(quantity));
+    		getWoodlabel().getParent().revalidate();
+    		getWoodlabel().getParent().repaint();
+
 
     	}else if (resource == "iron") {
     		setIron(quantity);
+    		getIronlabel().setText(Integer.toString(quantity));
+    		getIronlabel().getParent().revalidate();
+    		getIronlabel().getParent().repaint();
 
 
     	}else if (resource == "mana") {
     		setMana(quantity);
+    		getManalabel().setText(Integer.toString(quantity));
+    		getManalabel().getParent().revalidate();
+    		getManalabel().getParent().repaint();
+
 
     	}else {
     		
     		throw new Exception("Incorrect Label");
     	}
-    	int resource_update = quantity;
-    	labeltoupdate.setText(Integer.toString(resource_update));
-    	labeltoupdate.getParent().revalidate();
-    	labeltoupdate.getParent().repaint();
+
     	
     }
     
@@ -1196,10 +1212,10 @@ public class MiPanelito extends JPanel {
 		                                setMana(getMana() - manaCost);
 		                                
 		                                try {
-											update_resources_quantity(getWood(),woodlabel,"wood");
-		                                    update_resources_quantity(getIron(),ironlabel,"iron");
-		                                    update_resources_quantity(getMana(),manalabel,"mana");
-		                                    update_resources_quantity(getFood(),foodlabel,"food");
+											update_resources_quantity(getWood(),"wood");
+		                                    update_resources_quantity(getIron(),"iron");
+		                                    update_resources_quantity(getMana(),"mana");
+		                                    update_resources_quantity(getFood(),"food");
 		                                    
 		                                    switch (index) {
 		                                    case 0: // Farm
@@ -1633,10 +1649,10 @@ class CvUpgradeGui {
                     listener.create_troop(soldierIndex, units);
                     
                     try {
-						update_resources_quantity(getWood(),woodlabel,"wood");
-                        update_resources_quantity(getIron(),ironlabel,"iron");
-                        update_resources_quantity(getMana(),manalabel,"mana");
-                        update_resources_quantity(getFood(),foodlabel,"food");
+						update_resources_quantity(getWood(),"wood");
+                        update_resources_quantity(getIron(),"iron");
+                        update_resources_quantity(getMana(),"mana");
+                        update_resources_quantity(getFood(),"food");
                         //guardamos datos en base de datos
                         listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
                         getcv_data();

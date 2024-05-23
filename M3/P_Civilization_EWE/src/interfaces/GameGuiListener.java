@@ -4,6 +4,7 @@ import java.util.Timer;
 
 public interface GameGuiListener {
     void load_game_gui();
+    void load_db_data();
     
     //actualizar recursos en base de datos
     
@@ -34,7 +35,6 @@ public interface GameGuiListener {
     void create_carpentry();
     void create_smithy();
     void create_magic_tower();
-    boolean shownotification();
     boolean sanctifyunits();
     
 }
