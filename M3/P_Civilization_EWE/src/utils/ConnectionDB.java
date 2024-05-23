@@ -27,10 +27,10 @@ public class ConnectionDB {
 
 	//Mover a variables
 	
-	public ConnectionDB(String url, String user, String pass){
-		this.url = url;
-		this.user = user;
-		this.pass = pass;
+	public ConnectionDB(){
+		this.url = Variables.url;
+		this.user = Variables.user;
+		this.pass = Variables.pass;
 	}
 	
 	//Metodo para crear una conexion con la bd
