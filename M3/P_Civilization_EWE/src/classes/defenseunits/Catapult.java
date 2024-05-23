@@ -13,6 +13,13 @@ public class Catapult extends DefenseUnit {
 	}
 	
 	
+
+	//CONSTRUCTOR 2 (BD )
+	public Catapult(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience, sanctified);
+		
+	}
+	
 	//METODOS DE MILITARY UNIT
 	
 	public int attack() {
@@ -76,4 +83,15 @@ public class Catapult extends DefenseUnit {
 	public void resetArmor() {
 		setArmor(getInitialArmor());
 	}
+
+	public void setExperience(int n) {
+		setExperience(n);
+	}
+	
+
+	public String toString() {
+		return "Catapult" + super.toString();
+	}
+
+
 }
