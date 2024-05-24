@@ -47,6 +47,8 @@ public class Game_gui extends JPanel {
     private int wood;
     private int iron;
     private int mana;
+    private int defenseint = 1;
+    private int attackint = 1;
 
     private ImageIcon resources_img,woodicon,ironicon,manaicon,foodicon,panelbackgroundimage;
     private JPanel panelright_food,panelright_wood,panelright_iron,panelright_mana;
@@ -68,12 +70,14 @@ public class Game_gui extends JPanel {
 	private ImageIcon[] ppphotos = new ImageIcon[9];
     JLabel imageLabel;
     ImageIcon selectedpp;
+    private Font gameFont,gameFont_Big;
+
 
 
 	
 	
 
-
+    
 
 	
 
@@ -82,7 +86,23 @@ public class Game_gui extends JPanel {
 
     
 
-    public String getPpindex() {
+    public int getAttackint() {
+		return attackint;
+	}
+
+	public void setAttackint(int attackint) {
+		this.attackint = attackint;
+	}
+
+	public int getDefenseint() {
+		return defenseint;
+	}
+
+	public void setDefenseint(int defenseint) {
+		this.defenseint = defenseint;
+	}
+
+	public String getPpindex() {
 		return ppindex;
 	}
 
@@ -142,6 +162,10 @@ public class Game_gui extends JPanel {
 		
 		//cargamos partida
 		//updatePanels();
+		
+		gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
+		gameFont_Big = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(30f);
+
 
 		
         
@@ -419,6 +443,7 @@ public class Game_gui extends JPanel {
     // Ajustar la posición del texto dentro del botón
     upgrade_cvbutton.setHorizontalTextPosition(JButton.CENTER); // Centrar horizontalmente el texto
     upgrade_cvbutton.setVerticalTextPosition(JButton.CENTER);
+    upgrade_cvbutton.setFont(gameFont);
     
     
     // Establecer la imagen de fondo del botón
@@ -433,10 +458,13 @@ public class Game_gui extends JPanel {
     // Ajustar la posición del texto dentro del botón
     see_cvstats.setHorizontalTextPosition(JButton.CENTER); // Centrar horizontalmente el texto
     see_cvstats.setVerticalTextPosition(JButton.CENTER);
+    see_cvstats.setFont(gameFont);
+
 
     // Establecer la imagen de fondo del botón
     sanctify_button.setIcon(scaledBackground);
     sanctify_button.setText("Sanctify Units");
+    sanctify_button.setFont(gameFont);
 
     // Ajustar el diseño del botón para que las letras sean visibles
     sanctify_button.setForeground(Color.WHITE); // Establecer el color de las letras
@@ -617,13 +645,13 @@ public class Game_gui extends JPanel {
     imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
     usernameLabel = new JLabel("username");
-    usernameLabel.setFont(new Font("Arial", Font.PLAIN, 21));
+    usernameLabel.setFont(gameFont);
     usernameLabel.setForeground(Color.WHITE);
     usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(usernameLabel);
 
     JLabel timerLabel = new JLabel("0:00", JLabel.CENTER);
-    timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
+    timerLabel.setFont(gameFont);
     timerLabel.setForeground(Color.WHITE);
     timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(timerLabel);
@@ -660,13 +688,13 @@ public class Game_gui extends JPanel {
 
 	    // Crear y agregar el título
 	    JLabel titleLabel = new JLabel("The battle begins!", SwingConstants.CENTER);
-	    titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+	    titleLabel.setFont(gameFont);
 	    battleFrame.add(titleLabel, BorderLayout.NORTH);
 
 	    // Crear y agregar el área de texto
 	    JTextArea textArea = new JTextArea();
 	    textArea.setEditable(false);
-	    textArea.setFont(new Font("Arial", Font.PLAIN, 16));
+	    textArea.setFont(gameFont);
 	    textArea.setLineWrap(true);
 	    textArea.setWrapStyleWord(true);
 	    JScrollPane scrollPane = new JScrollPane(textArea);
@@ -743,7 +771,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
         // Create JTextArea for multiline text display
         JTextArea customTextArea = new JTextArea(s);
-        customTextArea.setFont(new Font("Serif", Font.PLAIN, 20));
+        customTextArea.setFont(gameFont);
         customTextArea.setForeground(Color.WHITE);
         customTextArea.setLineWrap(true);
         customTextArea.setWrapStyleWord(true);
@@ -840,8 +868,6 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setFood(int food) {
     	this.food = food;
-
-        listener.update_resources(food, getWood(), getIron(), getMana());
     }
 
     public int getWood() {
@@ -849,9 +875,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     }
 
     public void setWood(int wood) {
-    	this.wood = wood;
-        listener.update_resources(getFood(), wood, getIron(), getMana());
-    	
+    	this.wood = wood; 
     }
 
     public int getIron() {
@@ -860,7 +884,6 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setIron(int iron) {
     	this.iron = iron;
-        listener.update_resources(getFood(), getWood(), iron, getMana());
     }
 
     public int getMana() {
@@ -869,8 +892,6 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setMana(int mana) {
     	this.mana = mana;
-
-        listener.update_resources(getFood(), getWood(), getIron(), mana);
     }
     
     
@@ -903,41 +924,28 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     
     //este metodo actualiza el label que queramos con un numero
     
-    public void update_resources_quantity(int quantity, String resource) throws Exception {
+    public void update_resources_quantity() throws Exception {
     	
-    	
-    	if (resource == "food") {
     		
-    		setFood(quantity);
-    		getFoodlabel().setText(Integer.toString(quantity));
-    		getFoodlabel().getParent().revalidate();
-    		getFoodlabel().getParent().repaint();
+    		getFoodlabel().setText(Integer.toString(getFood()));
+
     		
-    	}else if (resource == "wood") {
-    		setWood(quantity);
-    		getWoodlabel().setText(Integer.toString(quantity));
-    		getWoodlabel().getParent().revalidate();
-    		getWoodlabel().getParent().repaint();
+    		getWoodlabel().setText(Integer.toString(getWood()));
 
 
-    	}else if (resource == "iron") {
-    		setIron(quantity);
-    		getIronlabel().setText(Integer.toString(quantity));
-    		getIronlabel().getParent().revalidate();
-    		getIronlabel().getParent().repaint();
+
+    		getIronlabel().setText(Integer.toString(getIron()));
 
 
-    	}else if (resource == "mana") {
-    		setMana(quantity);
-    		getManalabel().setText(Integer.toString(quantity));
-    		getManalabel().getParent().revalidate();
-    		getManalabel().getParent().repaint();
-
-
-    	}else {
+    		getManalabel().setText(Integer.toString(getMana()));
     		
-    		throw new Exception("Incorrect Label");
-    	}
+    		getFoodlabel().repaint();
+    		getWoodlabel().repaint();
+    		getIronlabel().repaint();
+    		getManalabel().repaint();
+
+
+
 
     	
     }
@@ -948,7 +956,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     private void agregarTexto(JPanel panel, String text) {
         JLabel textLabel = new JLabel(text);
         textLabel.setForeground(Color.WHITE);
-        textLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        textLabel.setFont(gameFont);
         panel.add(textLabel);
     }
 
@@ -973,7 +981,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
          // Agregar icono junto con el texto
             textLabel.setForeground(Color.WHITE); // Color del texto
-            textLabel.setFont(new Font("Arial", Font.BOLD, 16)); 
+            textLabel.setFont(gameFont);
             textLabel.setHorizontalAlignment(SwingConstants.LEFT); // Centrar el texto horizontalmente
             // Añadir margen al JLabel
             textLabel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0)); // Añadir un margen de 5 píxeles en los cuatro lados
@@ -1213,10 +1221,7 @@ public class MiPanelito extends JPanel {
 		                                setMana(getMana() - manaCost);
 		                                
 		                                try {
-											update_resources_quantity(getWood(),"wood");
-		                                    update_resources_quantity(getIron(),"iron");
-		                                    update_resources_quantity(getMana(),"mana");
-		                                    update_resources_quantity(getFood(),"food");
+											update_resources_quantity();
 		                                    
 		                                    switch (index) {
 		                                    case 0: // Farm
@@ -1241,7 +1246,7 @@ public class MiPanelito extends JPanel {
 		                                        break;
 		                                    }
 		                                    //guardamos datos en base de datos
-		                                    listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
+		                                    listener.update_resources_db();
 
 										} catch (Exception e1) {
 										
@@ -1414,114 +1419,193 @@ public void setMainpanel(JLayeredPane mainpanel) {
 
 class CvUpgradeGui {
     
-    public class TechnologyUpgradePanel extends BackgroundPanel {
-        public TechnologyUpgradePanel() {
-            setLayout(new BorderLayout());
+public class TechnologyUpgradePanel extends BackgroundPanel {
 
-            JPanel attackPanel = new JPanel(new BorderLayout());
-         // Panel para Upgrade Attack Technology
-            attackPanel.setOpaque(false);
-            attackPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 200, 100));
-            JLabel attackTitle = new JLabel("Upgrade Attack Technology");
-            attackTitle.setFont(new Font("Arial", Font.BOLD, 25));  // Aumenta el tamaño de la fuente
-            attackTitle.setHorizontalAlignment(JLabel.CENTER);
-            attackTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Margen superior
-            attackPanel.add(attackTitle, BorderLayout.NORTH);
+    public TechnologyUpgradePanel() {
+        setLayout(new BorderLayout());
 
-            // Agrega una imagen en el centro
-            JLabel attackImage = new JLabel();
-            attackImage.setIcon(new ImageIcon(resizeImage("./src/gui/sword.png", 300, 300)));
-            attackImage.setHorizontalAlignment(JLabel.CENTER);
-            attackPanel.add(attackImage, BorderLayout.CENTER);
+        // Panel para mejorar la tecnología de ataque
+        JPanel attackPanel = new JPanel(new BorderLayout());
+        attackPanel.setOpaque(false);
+        attackPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 200, 100));
 
-            // Panel para el spinner y el botón
-            JPanel attackBottomPanel = new JPanel(new BorderLayout());
+        // Título del panel de ataque
+        JLabel attackTitle = new JLabel("Upgrade Attack Technology");
+        attackTitle.setForeground(Color.white);
+        attackTitle.setFont(gameFont_Big);
+        attackTitle.setHorizontalAlignment(JLabel.CENTER);
+        attackTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Margen superior
+        attackPanel.add(attackTitle, BorderLayout.NORTH);
 
-            // Nivel de tecnología actual
-            JLabel currentLevelLabel = new JLabel("Nivel de Tecnología Actual: 1", JLabel.CENTER);
-            currentLevelLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
-            attackBottomPanel.add(currentLevelLabel, BorderLayout.NORTH);
+        // Imagen en el centro del panel de ataque
+        JLabel attackImage = new JLabel();
+        attackImage.setIcon(new ImageIcon(resizeImage("./src/gui/sword.png", 300, 300)));
+        attackImage.setHorizontalAlignment(JLabel.CENTER);
+        attackPanel.add(attackImage, BorderLayout.CENTER);
 
-            // Panel intermedio para el spinner y el botón con FlowLayout
-            JPanel spinnerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            
-            // Agrega un JSpinner y un botón Upgrade
-            JSpinner levelSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
-            levelSpinner.setFont(new Font("Arial", Font.PLAIN, 20));  // Aumenta el tamaño de la fuente
-            Dimension spinnerSize = new Dimension(80, 40);  // Aumenta el tamaño del spinner
-            levelSpinner.setPreferredSize(spinnerSize);
-            levelSpinner.addChangeListener(e -> {
-                int value = (int) levelSpinner.getValue();
-                currentLevelLabel.setText("Nivel de Tecnología Actual: " + value);
-            });
-            spinnerButtonPanel.add(levelSpinner);
+        // Panel inferior para el spinner y el botón en el panel de ataque
+        JPanel attackBottomPanel = new JPanel(new BorderLayout());
+        attackBottomPanel.setOpaque(false);
 
-            JButton upgradeButton = new JButton("Upgrade");
-            upgradeButton.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
-            Dimension buttonSize = new Dimension(150, 40);  // Aumenta el tamaño del botón
-            upgradeButton.setPreferredSize(buttonSize);
-            spinnerButtonPanel.add(upgradeButton);
+        // Panel intermedio para el spinner y el botón con FlowLayout
+        JPanel spinnerButtonPanelAttack = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        spinnerButtonPanelAttack.setOpaque(false);
 
-            attackBottomPanel.add(spinnerButtonPanel, BorderLayout.CENTER);
+        SpinnerNumberModel spinnerModelAttack = new SpinnerNumberModel(1, 1, 5, 1);
+        JSpinner levelSelectorAttack = new JSpinner(spinnerModelAttack);
+        levelSelectorAttack.setPreferredSize(new Dimension(50, 30));
 
-            attackPanel.add(attackBottomPanel, BorderLayout.SOUTH);
+        // Etiqueta de hierro
+        JLabel ironLabelAttack = new JLabel("Attack Technology level: " + getAttackint() + " || Iron: " + Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST, JLabel.CENTER);
+        ironLabelAttack.setFont(gameFont);
+        ironLabelAttack.setForeground(Color.white);
 
-            // Agrega el panel al upgradeTechnologyPanel
-            add(attackPanel, BorderLayout.WEST);            // ...
+        // Listener para el selector de nivel
+        levelSelectorAttack.addChangeListener(e -> {
+            int value = (int) levelSelectorAttack.getValue() * Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST;
+            ironLabelAttack.setText("Attack Technology level: " + getAttackint() + " || Iron: " + value);
+            if (getIron() < value) {
+                ironLabelAttack.setForeground(Color.RED); // Cambiar el color del texto a rojo si no hay suficientes recursos
+            } else {
+                ironLabelAttack.setForeground(Color.WHITE); // Cambiar el color del texto a blanco si hay suficientes recursos
+            }
+            ironLabelAttack.repaint();
+        });
 
-         // Panel para Upgrade Defense Technology
-            JPanel defensePanel = new JPanel(new BorderLayout());
-            defensePanel.setOpaque(false);
-            defensePanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 200, 100));
+        // Botón de mejora
+        JButton upgradeButtonAttack = new JButton("Upgrade");
+        upgradeButtonAttack.addActionListener(e -> {
+            int units = (int) levelSelectorAttack.getValue();
+            int ironCost = Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST * units;
 
-            JLabel defenseTitle = new JLabel("Upgrade Defense Technology");
-            defenseTitle.setFont(new Font("Arial", Font.BOLD, 25));  // Aumenta el tamaño de la fuente
-            defenseTitle.setHorizontalAlignment(JLabel.CENTER);
-            defenseTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Margen superior
-            defensePanel.add(defenseTitle, BorderLayout.NORTH);
+            // Verificar si hay suficientes recursos disponibles
+            if (getIron() >= ironCost) {
+                setIron(getIron() - ironCost);
+                listener.update_technologies();
 
-            // Agrega una imagen en el centro
-            JLabel defenseImage = new JLabel();
-            defenseImage.setIcon(new ImageIcon(resizeImage("./src/gui/shield.png", 300, 300)));
-            defenseImage.setHorizontalAlignment(JLabel.CENTER);
-            defensePanel.add(defenseImage, BorderLayout.CENTER);
+                try {
+                    update_resources_quantity();
+                    listener.update_resources_db();
+                    getcv_data();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
 
-            // Panel para el spinner y el botón
-            JPanel defenseBottomPanel = new JPanel(new BorderLayout());
+                JOptionPane.showMessageDialog(attackBottomPanel,
+                        "You've upgraded your attack level correctly",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                getcv_data();
+            } else {
+                JOptionPane.showMessageDialog(attackBottomPanel,
+                        "Not enough resources.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
-            // Nivel de tecnología actual
-            JLabel currentLevelLabelDefense = new JLabel("Nivel de Tecnología Actual: 1", JLabel.CENTER);
-            currentLevelLabelDefense.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
-            defenseBottomPanel.add(currentLevelLabelDefense, BorderLayout.NORTH);
+        // Panel inferior para el selector de nivel y el botón de creación
+        JPanel bottomPanelAttack = new JPanel(new FlowLayout());
+        bottomPanelAttack.add(levelSelectorAttack);
+        bottomPanelAttack.add(upgradeButtonAttack);
 
-            // Panel intermedio para el spinner y el botón con FlowLayout
-            JPanel spinnerButtonPanelDefense = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        attackBottomPanel.add(ironLabelAttack, BorderLayout.NORTH);
+        attackBottomPanel.add(bottomPanelAttack, BorderLayout.SOUTH);
+        attackPanel.add(attackBottomPanel, BorderLayout.SOUTH);
 
-            // Agrega un JSpinner y un botón Upgrade
-            JSpinner leveltSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
-            leveltSpinner.setFont(new Font("Arial", Font.PLAIN, 20));  // Aumenta el tamaño de la fuente
-            leveltSpinner.setPreferredSize(spinnerSize);  // Usa el tamaño aumentado del spinner
-            leveltSpinner.addChangeListener(e -> {
-                int value = (int) leveltSpinner.getValue();
-                currentLevelLabelDefense.setText("Nivel de Tecnología Actual: " + value);
-            });
-            spinnerButtonPanelDefense.add(leveltSpinner);
+        // Agrega el panel de ataque al panel principal
+        add(attackPanel, BorderLayout.WEST);
 
-            JButton upgradeButton1 = new JButton("Upgrade");
-            upgradeButton1.setFont(new Font("Arial", Font.BOLD, 20));  // Aumenta el tamaño de la fuente
-            upgradeButton1.setPreferredSize(buttonSize);  // Usa el tamaño aumentado del botón
-            spinnerButtonPanelDefense.add(upgradeButton1);
+        // Panel para mejorar la tecnología de defensa
+        JPanel defensePanel = new JPanel(new BorderLayout());
+        defensePanel.setOpaque(false);
+        defensePanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 200, 100));
 
-            defenseBottomPanel.add(spinnerButtonPanelDefense, BorderLayout.CENTER);
+        // Título del panel de defensa
+        JLabel defenseTitle = new JLabel("Upgrade Defense Technology");
+        defenseTitle.setForeground(Color.white);
+        defenseTitle.setFont(gameFont_Big);
+        defenseTitle.setHorizontalAlignment(JLabel.CENTER);
+        defenseTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0)); // Margen superior
+        defensePanel.add(defenseTitle, BorderLayout.NORTH);
 
-            defensePanel.add(defenseBottomPanel, BorderLayout.SOUTH);
+        // Imagen en el centro del panel de defensa
+        JLabel defenseImage = new JLabel();
+        defenseImage.setIcon(new ImageIcon(resizeImage("./src/gui/shield.png", 300, 300)));
+        defenseImage.setHorizontalAlignment(JLabel.CENTER);
+        defensePanel.add(defenseImage, BorderLayout.CENTER);
 
+        // Panel inferior para el spinner y el botón en el panel de defensa
+        JPanel defenseBottomPanel = new JPanel(new BorderLayout());
+        defenseBottomPanel.setOpaque(false);
 
-            add(attackPanel, BorderLayout.WEST);
-            add(defensePanel, BorderLayout.EAST);
-        }
+        // Panel intermedio para el spinner y el botón con FlowLayout
+        JPanel spinnerButtonPanelDefense = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        spinnerButtonPanelDefense.setOpaque(false);
+
+        SpinnerNumberModel spinnerModelDefense = new SpinnerNumberModel(1, 1, 5, 1);
+        JSpinner levelSelectorDefense = new JSpinner(spinnerModelDefense);
+        levelSelectorDefense.setPreferredSize(new Dimension(50, 30));
+
+        // Etiqueta de hierro
+        JLabel ironLabelDefense = new JLabel("Actual Defense Technology level: " + getDefenseint() + " || Iron: " + Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST, JLabel.CENTER);
+        ironLabelDefense.setFont(gameFont);
+        ironLabelDefense.setForeground(Color.white);
+
+        // Listener para el selector de nivel
+        levelSelectorDefense.addChangeListener(e -> {
+            int value = (int) levelSelectorDefense.getValue() * Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST;
+            ironLabelDefense.setText("Actual Defense Technology level: " + getDefenseint() + " || Iron: " + value);
+            if (getIron() < value) {
+                ironLabelDefense.setForeground(Color.RED); // Cambiar el color del texto a rojo si no hay suficientes recursos
+            } else {
+                ironLabelDefense.setForeground(Color.WHITE); // Cambiar el color del texto a blanco si hay suficientes recursos
+            }
+            ironLabelDefense.repaint();
+        });
+
+        // Botón de mejora
+        JButton upgradeButtonDefense = new JButton("Upgrade");
+        upgradeButtonDefense.addActionListener(e -> {
+            int units = (int) levelSelectorDefense.getValue();
+            int ironCost = Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST * units;
+
+            // Verificar si hay suficientes recursos disponibles
+            if (getIron() >= ironCost) {
+                setIron(getIron() - ironCost);
+                listener.update_technologies();
+
+                try {
+                    update_resources_quantity();
+
+                    listener.update_resources_db();
+                    getcv_data();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+
+                JOptionPane.showMessageDialog(defenseBottomPanel,
+                        "You've upgraded your defense level correctly",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                getcv_data();
+            } else {
+                JOptionPane.showMessageDialog(defenseBottomPanel,
+                        "Not enough resources.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // Panel inferior para el selector de nivel y el botón de creación
+        JPanel bottomPanelDefense = new JPanel(new FlowLayout());
+        bottomPanelDefense.add(levelSelectorDefense);
+        bottomPanelDefense.add(upgradeButtonDefense);
+
+        defenseBottomPanel.add(ironLabelDefense, BorderLayout.NORTH);
+        defenseBottomPanel.add(bottomPanelDefense, BorderLayout.SOUTH);
+        defensePanel.add(defenseBottomPanel, BorderLayout.SOUTH);
+
+        // Agrega el panel de defensa al panel principal
+        add(defensePanel, BorderLayout.EAST);
     }
-
+}
     
     // Método para redimensionar una imagen
     private static Image resizeImage(String imagePath, int width, int height) {
@@ -1538,9 +1622,12 @@ class CvUpgradeGui {
  // Método para verificar si hay suficientes recursos disponibles y cambiar el color del texto
     private void checkResourceAvailability(JLabel label, int cost, int available) {
         if (available < cost) {
-            label.setForeground(Color.RED); // Cambiar el color del texto a rojo si no hay suficientes recursos
+            label.setForeground(Color.RED);
+            label.repaint();// Cambiar el color del texto a rojo si no hay suficientes recursos
+        
         } else {
-            label.setForeground(Color.WHITE); // Cambiar el color del texto a blanco si hay suficientes recursos
+            label.setForeground(Color.WHITE); 
+            label.repaint();// Cambiar el color del texto a blanco si hay suficientes recursos
         }
     }
 
@@ -1568,12 +1655,11 @@ class CvUpgradeGui {
         costPanel.setLayout(new GridLayout(1, 4));
         costPanel.setOpaque(false);
 
-        Font fuente = new Font("Arial", Font.PLAIN, 20);
-
         JLabel foodLabel = new JLabel("Food: " + costs[0]);
         JLabel woodLabel = new JLabel("Wood: " + costs[1]);
         JLabel ironLabel = new JLabel("Iron: " + costs[2]);
         JLabel manaLabel = new JLabel("Mana: " + costs[3]);
+        
 
         // Establecer el color inicial del texto de los JLabels como blanco
         foodLabel.setForeground(Color.WHITE);
@@ -1581,10 +1667,10 @@ class CvUpgradeGui {
         ironLabel.setForeground(Color.WHITE);
         manaLabel.setForeground(Color.WHITE);
 
-        foodLabel.setFont(fuente);
-        woodLabel.setFont(fuente);
-        ironLabel.setFont(fuente);
-        manaLabel.setFont(fuente);
+        foodLabel.setFont(gameFont);
+        woodLabel.setFont(gameFont);
+        ironLabel.setFont(gameFont);
+        manaLabel.setFont(gameFont);
 
         costPanel.add(foodLabel);
         costPanel.add(woodLabel);
@@ -1597,9 +1683,8 @@ class CvUpgradeGui {
         bottomPanel.setLayout(new FlowLayout());
 
         JLabel nameLabel = new JLabel(soldierNames[soldierIndex] + " units to create");
+        nameLabel.setFont(gameFont);
         nameLabel.setForeground(Color.WHITE);
-
-        nameLabel.setFont(fuente);
 
         bottomPanel.setPreferredSize(new Dimension(500, 100));
         bottomPanel.add(nameLabel);
@@ -1643,37 +1728,49 @@ class CvUpgradeGui {
                     setWood(getWood() - woodCost);
                     setIron(getIron() - ironCost);
                     setMana(getMana() - manaCost);
-                    System.out.println("Soldierindex");
-                    
-                    System.out.println(soldierIndex);
-                    
-                    try {
-						listener.create_troop(soldierIndex, units);
-					} catch (MiSQLException e1) {
-						e1.printStackTrace();
-					}
-                    
-                    try {
-						update_resources_quantity(getWood(),"wood");
-                        update_resources_quantity(getIron(),"iron");
-                        update_resources_quantity(getMana(),"mana");
-                        update_resources_quantity(getFood(),"food");
-                        //guardamos datos en base de datos
-                        listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
-                        getcv_data();
+                    if (soldierIndex == 7 && listener.getcvmagic_tower() <1) {
+                        JOptionPane.showMessageDialog(panel,
+                                "Can't create Magician, No MagicTower Found",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    	
+                    }else if (soldierIndex == 8 && listener.getcvchurch() <1) {
+                        JOptionPane.showMessageDialog(panel,
+                                "Can't create Priest, No Church Found",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    	
+                    }else {
 
                         
+                        System.out.println(soldierIndex);
+                        
+                        try {
+    						listener.create_troop(soldierIndex, units);
+    					} catch (MiSQLException e1) {
+    						e1.printStackTrace();
+    					}
+                        
+                        try {
+    						update_resources_quantity();
 
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-                    
+                            //guardamos datos en base de datos y clase
+                            listener.update_resources_db();
+                            getcv_data();
 
-                    JOptionPane.showMessageDialog(panel,
-                            "You've created " + units + " units of " + soldierNames[soldierIndex],
-                            "Success", JOptionPane.INFORMATION_MESSAGE);
-                    getcv_data();
+                            
+
+    					} catch (Exception e1) {
+    						// TODO Auto-generated catch block
+    						e1.printStackTrace();
+    					}
+                        
+
+                        JOptionPane.showMessageDialog(panel,
+                                "You've created " + units + " units of " + soldierNames[soldierIndex],
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
+                        getcv_data();
+                    	
+                    }
+
                     } else {
                     JOptionPane.showMessageDialog(panel,
                             "Not enough resources.",

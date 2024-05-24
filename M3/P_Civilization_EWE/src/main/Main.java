@@ -47,23 +47,6 @@ public class Main {
 	
     
     //metodo para cargar datos de clase cv a gui
-	
-	public void load_data_class_gui() {
-
-
-		try {
-			dc_gui.getGui_obj().update_resources_quantity(classes.getCv().getIron(),"iron");
-			dc_gui.getGui_obj().update_resources_quantity(classes.getCv().getWood(),"wood");
-			dc_gui.getGui_obj().update_resources_quantity(classes.getCv().getFood(),"food");
-			dc_gui.getGui_obj().update_resources_quantity(classes.getCv().getMana(),"mana");
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-}
-    
     
     
     
@@ -200,12 +183,12 @@ public class Main {
 									
 				
 
-				System.out.println("carpentries " +m.classes.getCv().getCarpentry());
-				System.out.println("smithy " +m.classes.getCv().getSmithy());
+
 				m.classes.getCv().setWood(m.classes.getCv().getWood()+100000+ Variables.CIVILIZATION_WOOD_GENERATED+ (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
 				m.classes.getCv().setFood(m.classes.getCv().getFood() +100000+ Variables.CIVILIZATION_FOOD_GENERATED+(m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
 				m.classes.getCv().setIron(m.classes.getCv().getIron() +100000+ Variables.CIVILIZATION_IRON_GENERATED+(m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
 				m.classes.getCv().setMana(m.classes.getCv().getMana() +100000+ (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+				
 				
 				
 				
@@ -221,9 +204,28 @@ public class Main {
 
 	    		
 	    		
-	    		//CARGAMOS RECURSOS EN BBDD
+	    		//CARGAMOS RECURSOS EN GUI
 	    		
-	    		m.load_data_class_gui();
+	    		//m.load_data_class_gui();
+	    		m.dc_gui.getGui_obj().setWood(m.classes.getCv().getWood());
+	    		m.dc_gui.getGui_obj().setFood(m.classes.getCv().getFood());
+	    		System.out.println(m.classes.getCv().getFood());
+	    		System.out.println(m.classes.getCv().getWood());
+	    		m.dc_gui.getGui_obj().setIron(m.classes.getCv().getIron());
+	    		System.out.println(m.classes.getCv().getIron());
+	    		m.dc_gui.getGui_obj().setMana(m.classes.getCv().getMana());
+	    		System.out.println(m.classes.getCv().getMana());
+
+	    		m.dc_gui.getGui_obj().setAttackint(m.classes.getCv().getTechnologyAttack());
+	    		m.dc_gui.getGui_obj().setDefenseint(m.classes.getCv().getTechnologyDefense());
+	    		System.out.println("--------");
+	    		
+	    		System.out.println(m.dc_gui.getGui_obj().getWood());
+	    		m.dc_gui.getGui_obj().update_resources_quantity();	    		
+	    		System.out.println("recursos actualizados");
+	    		
+	    		//m.dc_gui.getGgl().update_resources_togui();
+	    		
 	    		
 	    		
 
@@ -370,35 +372,34 @@ public class Main {
 				
 			}
 
-			public void update_resources() {
+			public void update_resources_togui() {
 				
-							
+				try {
+					m.dc_gui.getGui_obj().update_resources_quantity();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-				m.dc_gui.setFood(m.classes.getCv().getFood());
-				m.dc_gui.setWood(m.classes.getCv().getWood());
-				m.dc_gui.setIron(m.classes.getCv().getIron());
-				m.dc_gui.setMana(m.classes.getCv().getMana());
+
+				
+				
 				
 
 			}
-			public void update_resources_db(int food,int wood, int iron, int mana) {
-				m.classes.getCv().setFood(food);
-				m.classes.getCv().setWood(wood);
-				m.classes.getCv().setIron(iron);
-				m.classes.getCv().setMana(mana);
+			public void update_resources_db() {
 
-				System.out.println(food);
-				System.out.println(wood);
-				System.out.println(iron);
-				System.out.println(mana);
-
+				m.classes.getCv().setFood(m.dc_gui.getGui_obj().getFood());
+				m.classes.getCv().setWood(m.dc_gui.getGui_obj().getWood());
+				m.classes.getCv().setIron(m.dc_gui.getGui_obj().getIron());
+				m.classes.getCv().setMana(m.dc_gui.getGui_obj().getIron());
+				m.classes.getCv().setTechnologyAttack(m.dc_gui.getGui_obj().getAttackint());
+				m.classes.getCv().setTechnologyDefense(m.dc_gui.getGui_obj().getDefenseint());
+				
+				
 				System.out.println("Resources updated");
 			}
 
-			@Override
-			public void update_resources(int food, int wood, int iron, int mana) {
-				
-			}
 
 			@Override
 			public void update_army_db() {
@@ -430,11 +431,6 @@ public class Main {
 				System.out.println("Estructura creada!");
 				}
 			
-
-			public void update_technologies_db() {
-				// TODO Auto-generated method stub
-				
-			}
 
 			public int[] getcv_army_values() {
 			    int[] cv_array = new int[11]; // Declaración y creación del array
@@ -592,8 +588,25 @@ public class Main {
 				//cargar datos de recursos de la bbdd en clases
 				
 				//ahora cargamos de clases a gui
-				m.load_data_class_gui();
+				m.dc_gui.getGgl().update_resources_togui();
 				
+			}
+
+			@Override
+			public void update_technologies() {
+				m.classes.getCv().setTechnologyAttack(m.dc_gui.getGui_obj().getAttackint());
+				m.classes.getCv().setTechnologyDefense(m.dc_gui.getGui_obj().getDefenseint());
+
+				
+			}
+
+			public int getcvchurch() {
+				// TODO Auto-generated method stub
+				return m.classes.getCv().getChurch();
+			}
+
+			public int getcvmagic_tower() {
+				return m.classes.getCv().getMagicTower();
 			}
 
 

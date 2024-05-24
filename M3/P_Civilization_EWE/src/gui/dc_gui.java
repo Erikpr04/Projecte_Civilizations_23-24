@@ -71,6 +71,7 @@ public class dc_gui  {
 
 			@Override
 			public void loadgame() {
+		        mainMenuFrame.dispose(); 
 		        invoke_game_gui();	
 				load_game();
 
@@ -155,18 +156,6 @@ public class dc_gui  {
     	ggl.load_game_gui();
     	ggl.load_db_data();
 
-    }
-    
-    
-    
-    //metodos actualizar recursos en db
-
-    public void updateresources_db(int food,int wood, int iron, int mana) {
-        this.food = food;
-        this.wood = wood;
-        this.iron = iron;
-        this.mana = mana;
-        this.ggl.update_resources(food,wood,iron,mana);
     }
     
     public void update_army_db(int tipo_tropa) {
