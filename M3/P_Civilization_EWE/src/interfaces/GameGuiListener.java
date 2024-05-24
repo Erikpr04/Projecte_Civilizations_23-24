@@ -38,6 +38,6 @@ public interface GameGuiListener {
     
     int getcvchurch();
     int getcvmagic_tower();
-	void clear_and_startdb() throws MiSQLException;
+	void clear_and_startdb(String username, int photoindex) throws MiSQLException;
     
 }

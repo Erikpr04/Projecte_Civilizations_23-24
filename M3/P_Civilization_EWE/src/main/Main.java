@@ -539,12 +539,15 @@ public class Main {
 			}
 
 			
-			public void clear_and_startdb() throws MiSQLException {
+			public void clear_and_startdb(String username, int photoindex) throws MiSQLException {
 				database.getConnectionDB().eliminarCivilizacion(m.classes.getCv().getId());
 				System.out.println("Base de datos borrada");
 				
-				database.getConnectionDB().crearDatosCivilization(null);
+				database.getConnectionDB().crearDatosCivilization(username);
 				System.out.println("Base de datos creada");
+				
+				//cargar paneles por defecto del juego
+				m.update_panels();
 			}
 
 

@@ -106,9 +106,9 @@ public class Game_gui extends JPanel {
 		return ppindex;
 	}
 
-	public void setPpindex(String ppindex) {
-		this.ppindex = ppindex;
-	    selectedpp = ppphotos[Integer.parseInt(ppindex)-1];
+	public void setPpindex(int profileindex) {
+		this.ppindex = profileindex;
+	    selectedpp = ppphotos[Integer.parseInt(profileindex)-1];
 	    Image originalImage = selectedpp.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
 	    ImageIcon scaledIcon = new ImageIcon(resizedImage);

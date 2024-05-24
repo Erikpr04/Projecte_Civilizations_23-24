@@ -32,7 +32,7 @@ public class dc_gui  {
 
 	private Game_gui gui_obj;
 	private String username = "username";
-	private String profileindex = "3";
+	private int profileindex;
 
 	
     public Game_gui getGui_obj() {
@@ -74,7 +74,7 @@ public class dc_gui  {
 
 			}
 
-			public void startnewgame(String username1,String photoindex) throws MiSQLException {
+			public void startnewgame(String username1,int photoindex) throws MiSQLException {
 				
 				
 				username = username1;
@@ -83,7 +83,7 @@ public class dc_gui  {
 				//borrar datos de la bd si hay
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();
-		        ggl.clear_and_startdb();
+		        ggl.clear_and_startdb(username, profileindex);
 		        ggl.load_game_gui();
 		        
 				

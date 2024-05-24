@@ -558,7 +558,7 @@ private void openCreditsWindow() {
                     int photoIndex = Integer.parseInt(photoGroup.getSelection().getActionCommand());
                     try {
                     	//listener para empezar nueva partida                    	
-    					listener.startnewgame(username,String.valueOf(photoIndex));
+    					listener.startnewgame(username,photoIndex);
     					creategameframe.dispose();
     					} catch (Exception ex) {
                         ex.printStackTrace();
