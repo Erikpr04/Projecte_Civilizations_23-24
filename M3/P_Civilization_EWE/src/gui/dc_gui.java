@@ -64,10 +64,6 @@ public class dc_gui  {
     	mmi = new MainMenuListener() {
 			
 
-			public void onMainMenuClosed() {
-		        mainMenuFrame.dispose(); // Dispose of the main menu frame
-		        invoke_game_gui();				
-			}
 
 
 			@Override
@@ -87,6 +83,7 @@ public class dc_gui  {
 				//borrar datos de la bd si hay
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();
+		        ggl.clear_and_startdb();
 		        ggl.load_game_gui();
 		        
 				

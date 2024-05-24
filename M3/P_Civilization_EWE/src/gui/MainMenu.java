@@ -361,9 +361,6 @@ public class MainMenu extends JPanel {
     private void startGame(){
         dispose_main_menu();
 
-        // Notificar al listener que la ventana del menú principal se ha cerrado
-          this.listener.onMainMenuClosed();
-
 
 
     }

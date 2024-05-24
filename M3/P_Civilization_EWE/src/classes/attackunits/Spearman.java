@@ -27,38 +27,37 @@ public class Spearman extends AttackUnit {
 	//METODOS DE MILITARY UNIT
 	
 		public int attack() {
-			int damage = 0;
+			int damage = getBaseDamage() + (getExperience() * Variables.PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
 			
 			if (isSanctified()) {
-				damage = getBaseDamage() + ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
+				damage += ((getBaseDamage()  * Variables.PLUS_ATTACK_UNIT_SANCTIFIED) /100);
 				
-			} else {
-				damage = getBaseDamage();
 			}
 			
 			return damage;
 		}
 
-	public void takeDamage(int receivedDamage) {
-		setArmor(getArmor() - receivedDamage);
-        if (getArmor() < 0) {
-            setArmor(0);
-        }
-	}
-
-	public int getActualArmor() {
-		int armadura = 0;
-		
-		if (isSanctified()) {
-			armadura = getArmor() + ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
-		
-		} else {
-			armadura = getArmor();
+		public void takeDamage(int receivedDamage) {
+			//Se resta el daño a la armadura
+			setArmor(getActualArmor() - receivedDamage);
+			
+			//Si al restar, la armadura es negativa, se cambia a 0
+	        if (getArmor() < 0) {
+	            setArmor(0);
+	        }
 		}
-		
-		
-		return armadura;
-	}
+
+		public int getActualArmor() {
+			int armadura = getArmor() + (getExperience() * Variables.PLUS_ARMOR_UNIT_PER_EXPERIENCE_POINT);
+			
+			if (isSanctified()) {
+				armadura += ((getArmor() * Variables.PLUS_ARMOR_UNIT_SANCTIFIED) /100);
+			
+			}
+			
+			
+			return armadura;
+		}
 
 	public int getFoodCost() {
 		return FOOD_COST_SPEARMAN;

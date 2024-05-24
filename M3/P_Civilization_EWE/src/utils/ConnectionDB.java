@@ -388,12 +388,16 @@ public class ConnectionDB {
 	            for (MilitaryUnit unit : units) {
 	                // Obtener el ID de la unidad según su tipo
 	                int unitId;
+	                int unitExp;
 	                if (unit instanceof AttackUnit) {
 	                    unitId = ((AttackUnit) unit).getUnitId();
+	                    unitExp = ((AttackUnit) unit).getExperience(); 
 	                } else if (unit instanceof DefenseUnit) {
 	                    unitId = ((DefenseUnit) unit).getUnitId();
+	                    unitExp = ((DefenseUnit) unit).getExperience();
 	                } else if (unit instanceof SpecialUnit) {
 	                    unitId = ((SpecialUnit) unit).getUnitId();
+	                    unitExp = ((SpecialUnit) unit).getExperience();
 	                } else {
 	                    throw new MiSQLException("Tipo de unidad no válido: " + unit.getClass().getName());
 	                }
@@ -410,7 +414,7 @@ public class ConnectionDB {
 	                	                
 	                try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
 	                    ps.setInt(1, unit.getActualArmor());
-	                    ps.setInt(2, unit.getExperience());
+	                    ps.setInt(2, unitExp);
 	                    
 	                    //otro if para detectar si es special unit o no
 	                    if (!(unit instanceof SpecialUnit)) {
