@@ -144,30 +144,21 @@ public class Civilization {
 		int total_armor = Variables.ARMOR_SWORDSMAN+((getTechnologyDefense()*Variables.PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY)*Variables.ARMOR_SWORDSMAN/100);
 		int total_attack = Variables.BASE_DAMAGE_SWORDSMAN+((getTechnologyAttack()*Variables.PLUS_ATTACK_SWORDSMAN_BY_TECHNOLOGY)*Variables.BASE_DAMAGE_SWORDSMAN/100);
 		int iterator_army;
+
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
-			//Comprobamos que tenga los recursos
-			if (getFood() >= Variables.FOOD_COST_SWORDSMAN && getWood() >= Variables.WOOD_COST_SWORDSMAN && getIron() >= Variables.IRON_COST_SWORDSMAN) {
-				//Si los tiene, lo añadimos al ArrayList
-				Swordsman newUnit = new Swordsman(total_armor,total_attack);
-				army.get(0).add(newUnit);
-				
-				ConnectionDB cdb = new ConnectionDB();
-				cdb.crearUnit(newUnit);
-				
-				
-				setWood(wood-Variables.WOOD_COST_SWORDSMAN);
-				setFood(food-Variables.FOOD_COST_SWORDSMAN);
-				setIron(iron-Variables.IRON_COST_SWORDSMAN);
-
-			}
-			else {
-				//Si no los tiene, creamos excepcion de Resources
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Swordsman");
-			}
+			//Si los tiene, lo añadimos al ArrayList
+			Swordsman newUnit = new Swordsman(total_armor,total_attack);
+			army.get(0).add(newUnit);
 			
-			//Y asi con las demás unidades
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
+			
+			
+			setWood(wood-Variables.WOOD_COST_SWORDSMAN);
+			setFood(food-Variables.FOOD_COST_SWORDSMAN);
+			setIron(iron-Variables.IRON_COST_SWORDSMAN);	
 		}
 	}
 	
@@ -179,28 +170,17 @@ public class Civilization {
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
+			Spearman newUnit = new Spearman(total_armor, total_attack);
+			army.get(1).add(newUnit);
 			
-			if (getFood() >= Variables.FOOD_COST_SPEARMAN &&getWood() >= Variables.WOOD_COST_SPEARMAN && getIron() >= Variables.IRON_COST_SPEARMAN) {
-				
-				Spearman newUnit = new Spearman(total_armor, total_attack);
-	            army.get(1).add(newUnit);
-	            
-	            ConnectionDB cdb = new ConnectionDB();
-	            cdb.crearUnit(newUnit);
-	            
-				setWood(wood-Variables.WOOD_COST_SPEARMAN);
-				setFood(food-Variables.FOOD_COST_SPEARMAN);
-				setIron(iron-Variables.IRON_COST_SPEARMAN);
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
+			
+			setWood(wood-Variables.WOOD_COST_SPEARMAN);
+			setFood(food-Variables.FOOD_COST_SPEARMAN);
+			setIron(iron-Variables.IRON_COST_SPEARMAN);
 
-			}
-			else {
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Spearman");
-			}
-			
-			
-		}
-		
-		
+		}		
 	}
 	
 	
@@ -210,26 +190,16 @@ public class Civilization {
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
+		
+			CrossBow newUnit = new CrossBow(total_armor, total_attack);
+			army.get(2).add(newUnit);
 			
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
 			
-			if (getFood() >= Variables.FOOD_COST_CROSSBOW &&getWood() >= Variables.WOOD_COST_CROSSBOW && getIron() >= Variables.IRON_COST_CROSSBOW) {
-				
-				CrossBow newUnit = new CrossBow(total_armor, total_attack);
-	            army.get(2).add(newUnit);
-	            
-	            ConnectionDB cdb = new ConnectionDB();
-	            cdb.crearUnit(newUnit);
-	            
-				setWood(wood-Variables.WOOD_COST_CROSSBOW);
-				setFood(food-Variables.FOOD_COST_CROSSBOW);
-				setIron(iron-Variables.IRON_COST_CROSSBOW);
-
-			}
-			else {
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Crossbow");
-			}
-			
-			
+			setWood(wood-Variables.WOOD_COST_CROSSBOW);
+			setFood(food-Variables.FOOD_COST_CROSSBOW);
+			setIron(iron-Variables.IRON_COST_CROSSBOW);	
 		}
 	}
 	
@@ -241,26 +211,18 @@ public class Civilization {
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
+			Cannon newUnit = new Cannon(total_armor, total_attack);
+			army.get(3).add(newUnit);
 			
-			if (getFood() >= Variables.FOOD_COST_CANNON &&getWood() >= Variables.WOOD_COST_CANNON && getIron() >= Variables.IRON_COST_CANNON) {
-				
-				Cannon newUnit = new Cannon(total_armor, total_attack);
-	            army.get(3).add(newUnit);
-	            
-	            ConnectionDB cdb = new ConnectionDB();
-	            cdb.crearUnit(newUnit);
-				
-				setWood(wood-Variables.WOOD_COST_CANNON);
-				setFood(food-Variables.FOOD_COST_CANNON);
-				setIron(iron-Variables.IRON_COST_CANNON);
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
+			
+			setWood(wood-Variables.WOOD_COST_CANNON);
+			setFood(food-Variables.FOOD_COST_CANNON);
+			setIron(iron-Variables.IRON_COST_CANNON);
 
-			}
-			else {
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Cannon");
-			}
-			
-			
 		}
+
 	}
 	
 	public void new_ArrowTower(int i) throws ResourceException, MiSQLException {
@@ -269,26 +231,17 @@ public class Civilization {
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
-			
-			
-			if (getFood() >= Variables.FOOD_COST_ARROWTOWER &&getWood() >= Variables.WOOD_COST_ARROWTOWER && getIron() >= Variables.IRON_COST_ARROWTOWER) {
 				
-				ArrowTower newUnit = new ArrowTower(total_armor, total_attack);
-	            army.get(4).add(newUnit);
-	            
-	            ConnectionDB cdb = new ConnectionDB();
-	            cdb.crearUnit(newUnit);
-	            
-				setWood(wood-Variables.WOOD_COST_ARROWTOWER);
-				setFood(food-Variables.FOOD_COST_ARROWTOWER);
-				setIron(iron-Variables.IRON_COST_ARROWTOWER);
+			ArrowTower newUnit = new ArrowTower(total_armor, total_attack);
+			army.get(4).add(newUnit);
+			
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
+			
+			setWood(wood-Variables.WOOD_COST_ARROWTOWER);
+			setFood(food-Variables.FOOD_COST_ARROWTOWER);
+			setIron(iron-Variables.IRON_COST_ARROWTOWER);
 
-			}
-			else {
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Arrow Tower");
-			}
-			
-			
 		}
 	}
 	
@@ -299,26 +252,16 @@ public class Civilization {
 		int iterator_army;
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
+	
+			Catapult newUnit = new Catapult(total_armor, total_attack);
+			army.get(5).add(newUnit);
 			
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
 			
-			if (getFood() >= Variables.FOOD_COST_CATAPULT && getWood() >= Variables.WOOD_COST_CATAPULT && getIron() >= Variables.IRON_COST_CATAPULT) {
-				
-				Catapult newUnit = new Catapult(total_armor, total_attack);
-	            army.get(5).add(newUnit);
-	            
-	            ConnectionDB cdb = new ConnectionDB();
-	            cdb.crearUnit(newUnit);
-	            
-				setWood(wood-Variables.WOOD_COST_CATAPULT);
-				setFood(food-Variables.FOOD_COST_CATAPULT);
-				setIron(iron-Variables.IRON_COST_CATAPULT);
-
-			}
-			else {
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Catapult");
-			}
-			
-			
+			setWood(wood-Variables.WOOD_COST_CATAPULT);
+			setFood(food-Variables.FOOD_COST_CATAPULT);
+			setIron(iron-Variables.IRON_COST_CATAPULT);
 		}
 	}
 	
@@ -330,25 +273,15 @@ public class Civilization {
 		
 		for (iterator_army = 0 ;iterator_army < i;iterator_army++) {
 			
+			RocketLauncherTower newUnit = new RocketLauncherTower(total_armor, total_attack);
+			army.get(6).add(newUnit);
 			
-			if (getFood() >= Variables.FOOD_COST_ROCKETLAUNCHERTOWER && getWood() >= Variables.WOOD_COST_ROCKETLAUNCHERTOWER && getIron() >= Variables.IRON_COST_ROCKETLAUNCHERTOWER) {
-				
-				RocketLauncherTower newUnit = new RocketLauncherTower(total_armor, total_attack);
-	            army.get(6).add(newUnit);
-	            
-	            ConnectionDB cdb = new ConnectionDB();
-	            cdb.crearUnit(newUnit);
-	            
-				setWood(wood-Variables.WOOD_COST_ROCKETLAUNCHERTOWER);
-				setFood(food-Variables.FOOD_COST_ROCKETLAUNCHERTOWER);
-				setIron(iron-Variables.IRON_COST_ROCKETLAUNCHERTOWER);
-
-			}
-			else {
-				throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Rocket Launcher");
-			}
+			ConnectionDB cdb = new ConnectionDB();
+			cdb.crearUnit(newUnit);
 			
-			
+			setWood(wood-Variables.WOOD_COST_ROCKETLAUNCHERTOWER);
+			setFood(food-Variables.FOOD_COST_ROCKETLAUNCHERTOWER);
+			setIron(iron-Variables.IRON_COST_ROCKETLAUNCHERTOWER);
 		}
 	}
 	
@@ -363,8 +296,6 @@ public class Civilization {
 			
 			//Y hay que comprobar que tengas almenos 1 Magic Tower 
 			if (getMagicTower() >= 1) {
-				if (getFood() >= Variables.FOOD_COST_MAGICIAN && getWood() >= Variables.WOOD_COST_MAGICIAN && getIron() >= Variables.IRON_COST_MAGICIAN && getMana() >= Variables.MANA_COST_MAGICIAN) {
-					
 					Magician newUnit = new Magician(total_armor, total_attack);
 	                army.get(7).add(newUnit);
 	                
@@ -374,11 +305,6 @@ public class Civilization {
 					setWood(wood-Variables.WOOD_COST_MAGICIAN);
 					setFood(food-Variables.FOOD_COST_MAGICIAN);
 					setIron(iron-Variables.IRON_COST_MAGICIAN);
-	
-				}
-				else {
-					throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Magician");
-				}
 			} 
 			else {
 				//Si no la tienes, se genera excepcion de Building
@@ -399,7 +325,6 @@ public class Civilization {
 			
 			//Y hay que comprobar que tengas almenos 1 iglesia
 			if (getChurch() >= 1) {
-				if (getFood() >= Variables.FOOD_COST_PRIEST && getWood() >= Variables.WOOD_COST_PRIEST && getIron() >= Variables.IRON_COST_PRIEST && getMana() >= Variables.MANA_COST_PRIEST) {
 					
 					Priest newUnit = new Priest(total_armor, total_attack);
 	                army.get(8).add(newUnit);
@@ -409,131 +334,56 @@ public class Civilization {
 					
 					setWood(wood-Variables.WOOD_COST_PRIEST);
 					setFood(food-Variables.FOOD_COST_PRIEST);
-					setIron(iron-Variables.IRON_COST_PRIEST);
-	
-				}
-				else {
-					throw new ResourceException("Not enough resources to create unit, created " +iterator_army+ " Priest");
-				}
+					setIron(iron-Variables.IRON_COST_PRIEST);		
 			}
 			else {
 				//Y si no la tienes, se genera excepcion de Building
 				throw new BuildingException("Not enough Churchs to create unit");
 			}
-			
 		}
 	}
-	
 	
 	//METODOS PARA CREAR EDIFICIOS
-	
-	
 	public void new_Church() throws ResourceException {
-		//Se comprueba que tengas los recursos para crear el building
-		if (getFood() >= Variables.FOOD_COST_CHURCH && getWood() >= Variables.WOOD_COST_CHURCH && getIron() >= Variables.IRON_COST_CHURCH && getMana() >= Variables.MANA_COST_CHURCH) {
-			//Si puedes crearla, se añade 1 al contador de iglesias
-			church += 1;
-			
-			setWood(wood-Variables.WOOD_COST_CHURCH);
-			setFood(food-Variables.FOOD_COST_CHURCH);
-			setIron(iron-Variables.IRON_COST_CHURCH);
-			setMana(mana-Variables.MANA_COST_CHURCH);
-		}
-		else {
-			//Si no tienes los recursos, se genera excepcion de Resource
-			throw new ResourceException("Not enough resources to create building");
-		}
-	} //Y igual para las demás
-	
+		church += 1;
+
+	} 
 	
 	public void new_MagicTower() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_MAGICTOWER && getWood() >= Variables.WOOD_COST_MAGICTOWER && getIron() >= Variables.IRON_COST_MAGICTOWER) {
-			magicTower += 1;
-			
-			setWood(wood-Variables.WOOD_COST_MAGICTOWER);
-			setFood(food-Variables.FOOD_COST_MAGICTOWER);
-			setIron(iron-Variables.IRON_COST_MAGICTOWER);
-		}
-		else {
-			throw new ResourceException("Not enough resources to create building");
-		}
+		magicTower += 1;
+
 	}
 	
-	
 	public void new_Farm() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_FARM && getWood() >= Variables.WOOD_COST_FARM && getIron() >= Variables.IRON_COST_FARM) {
-			farm += 1;
-			
-			setWood(wood-Variables.WOOD_COST_FARM);
-			setFood(food-Variables.FOOD_COST_FARM);
-			setIron(iron-Variables.IRON_COST_FARM);
-		}
-		else {
-			throw new ResourceException("Not enough resources to create building");
-		}
+		farm += 1;
 	}
 	
 	public void new_Carpentry() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_CARPENTRY && getWood() >= Variables.WOOD_COST_CARPENTRY && getIron() >= Variables.IRON_COST_CARPENTRY) {
-			carpentry += 1;
-			
-			setWood(wood-Variables.WOOD_COST_CARPENTRY);
-			setFood(food-Variables.FOOD_COST_CARPENTRY);
-			setIron(iron-Variables.IRON_COST_CARPENTRY);
-		}
-		else {
-			throw new ResourceException("Not enough resources to create building");
-		}
+		carpentry += 1;
 	}
 	
 	
 	public void new_Smithy() throws ResourceException {
-		if (getFood() >= Variables.FOOD_COST_SMITHY && getWood() >= Variables.WOOD_COST_SMITHY && getIron() >= Variables.IRON_COST_SMITHY) {
-			smithy += 1;
-			
-			setWood(wood-Variables.WOOD_COST_SMITHY);
-			setFood(food-Variables.FOOD_COST_SMITHY);
-			setIron(iron-Variables.IRON_COST_SMITHY);
-		}
-		else {
-			throw new ResourceException("Not enough resources to create building");
-		}
+		smithy += 1;
+
 	}
 	
 	//METODOS PARA MEJORAR TECNOLOGIA
 	
-	public void upgradeTechnologyDefense() throws ResourceException {
-		//Se comprueba que tengas los recursos para mejorar la tecnologia
-		if (getWood() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_WOOD_COST * technologyDefense)  && getIron() >= Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST * technologyDefense)) {
-			//Si tienes los recursos, se añade 1 al nivel de defensa
-			technologyDefense += 1;
-			
-			setWood(wood-Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_WOOD_COST);
-			setIron(iron-Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST);
-		}
-		else {
-			//Si no tienes los recursos, se genera excepcion de Resource
-			throw new ResourceException("Not enough resources to upgrade defense technology");
-		}
-	} //Y igual para la tecnologia de ataque
+	public void upgradeTechnologyDefense(int numUpgrade) throws ResourceException {
+		technologyDefense += numUpgrade;
+
+	} 
 	
 	
-	public void upgradeTechnologyAttack() throws ResourceException {
-		if (getWood() >= Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_WOOD_COST + (Variables.UPGRADE_PLUS_ATTACK_TECHNOLOGY_WOOD_COST * technologyAttack)  && getIron() >= Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST + (Variables.UPGRADE_PLUS_ATTACK_TECHNOLOGY_IRON_COST * technologyAttack)) {
-			technologyAttack += 1;
-			
-			setWood(wood-Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_WOOD_COST);
-			setIron(iron-Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST);
-		}
-		else {
-			throw new ResourceException("Not enough resources to upgrade attack technology");
-		}
+	public void upgradeTechnologyAttack(int numUpgrade) throws ResourceException {
+		technologyAttack += numUpgrade;
+
 	}
 	
 	
 	
 	//METODO PARA SANTIFICAR UNIDADES
-	
 	
 	public void sanctifyUnits() {
 		for (int i = 0; i < getArmy().size(); i++) {

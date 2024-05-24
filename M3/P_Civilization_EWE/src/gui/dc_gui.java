@@ -7,11 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
+import classes.Civilization;
 import gui.Game_gui.MiPanelito;
 import interfaces.GameGuiListener;
 import interfaces.MainMenuListener;
@@ -26,17 +30,34 @@ public class dc_gui  {
     private GameGuiListener ggl;
 
 	private Game_gui gui_obj;
+	private String username = "username";
+	private String profileindex = "3";
+
 	
+    public Game_gui getGui_obj() {
+		return gui_obj;
+	}
+
+
+	public void setGui_obj(Game_gui gui_obj) {
+		this.gui_obj = gui_obj;
+	}
+
+	private Civilization civilization;
+
 	
-	
+
+
 	
 	
 
     
 
 
-	public dc_gui() {
+	public dc_gui(Civilization civilization) {
         super();
+        this.civilization = civilization;
+
 
 
     	mmi = new MainMenuListener() {
@@ -46,6 +67,31 @@ public class dc_gui  {
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();				
 			}
+
+
+			@Override
+			public void loadgame() {
+		        invoke_game_gui();	
+				load_game();
+
+		        
+
+				
+			}
+
+			public void startnewgame(String username1,String photoindex) {
+				
+				username = username1;
+				profileindex = photoindex;
+				
+				//borrar datos de la bd si hay
+		        mainMenuFrame.dispose(); // Dispose of the main menu frame
+		        invoke_game_gui();
+		        ggl.load_game_gui();
+		        
+				
+			}
+
 		};
 		
 
@@ -67,8 +113,9 @@ public class dc_gui  {
 
     // Método para invocar la GUI del juego
     public void invoke_game_gui() {
+    	
+    	Timer timer = new Timer();
 
-    
 
         JFrame frame = new JFrame("Game GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,8 +134,12 @@ public class dc_gui  {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        
-        gui_obj.updatePanels();
+                
+        gui_obj.setUsername(username);
+        gui_obj.setPpindex(profileindex);
+
+
+
         
     }
 
@@ -96,27 +147,14 @@ public class dc_gui  {
     //metodo para actualizar recursos en game gui
     
     
-    public void update_resources_gui() {
-    	try {
-			gui_obj.update_resources_quantity(wood,gui_obj.getWoodlabel(),"wood");
-			gui_obj.update_resources_quantity(food,gui_obj.getFoodlabel(),"food");
-			gui_obj.update_resources_quantity(iron,gui_obj.getIronlabel(),"iron");
-			gui_obj.update_resources_quantity(mana,gui_obj.getManalabel(),"mana");
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-    }
-    
     
     
     //metodo cargar partida
     
     public void load_game() {
-    	update_resources_gui();
-    	update_panels();
+    	ggl.load_game_gui();
+    	ggl.load_db_data();
+
     }
     
     
@@ -147,86 +185,6 @@ public class dc_gui  {
     
     //metodo para actualizar casillas en base de datos
     
-    public void update_panels() {
-    	
-    	
-    	//MOVER ESTE CODIGO A DC_DATABASE
-    	
-    	//aqui accederemos a la base de datos, iteraremos sobre todos los paneles y accederemos
-    	// a gamegui para actualizarlos
-    	
-        MiPanelito[][] subPanels = gui_obj.getSubPanels(); // Obtener la matriz de subpaneles
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-        String user = "root";
-        String pass = "P@ssw0rd";
-        String[] structureList = new String[]{"farm", "smithy", "church", "magic_tower", "carpentry"};
-
-        try {
-            // Conexión a la base de datos
-            connection = DriverManager.getConnection(url, user, pass);
-
-            // Consulta SQL para seleccionar todos los paneles con is_occupied = true
-            String query = "SELECT structure_type, is_occupied, x_position, y_position FROM panels WHERE is_occupied = true";
-            statement = connection.prepareStatement(query);
-            resultSet = statement.executeQuery();
-
-            // Iterar sobre los resultados
-            while (resultSet.next()) {
-            	//obtenemos datos de la base de datos
-                // Obtener el nombre de la estructura de la fila actual
-                String structureType = resultSet.getString("structure_type");
-                
-                System.out.println("Hola");
-                
-                // Obtener el valor de is_occupied (un booleano)
-                int isOccupiedInt = resultSet.getInt("is_occupied");
-                boolean isOccupied = (isOccupiedInt == 1); // Convertir el entero a booleano
-                
-                System.out.println("Hola");
-
-                
-                // Obtener las posiciones x e y
-                int xPosition = resultSet.getInt("x_position");
-                int yPosition = resultSet.getInt("y_position");
-                //comprobamos si el panel esta ocupado
-                
-                int position = -1; // Inicializamos en -1 para indicar que no se encontró el elemento
-
-                // Iterar sobre el array y buscar el elemento
-                for (int i = 0; i < structureList.length; i++) {
-                    if (structureList[i].equals(structureType)) {
-                        position = i; // Almacenar la posición del elemento encontrado
-                        break; // Salir del bucle una vez que se ha encontrado el elemento
-                    }
-                }
-                
-                
-                if (isOccupied) {
-                	subPanels[yPosition][xPosition].setCurrentImage(subPanels[yPosition][xPosition].getBuildingImages()[position]);
-                	subPanels[yPosition][xPosition].repaint();
-                }else {
-                	System.out.println("Structure isnt occupied");
-                }
-
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Cerrar la conexión y los recursos
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        }
     
     
     
@@ -274,6 +232,7 @@ public class dc_gui  {
 	public void setMana(int mana) {
 		this.mana = mana;
 	}
+
 
 
 

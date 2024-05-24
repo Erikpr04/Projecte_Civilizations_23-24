@@ -3,14 +3,19 @@ package utils;
 import java.util.ArrayList;
 import java.util.Random;
 
+import classes.dc_classes;
 import classes.attackunits.AttackUnit;
 import classes.defenseunits.DefenseUnit;
 import classes.specialunits.SpecialUnit;
 import exceptions.MiSQLException;
+import exceptions.NoUnitsException;
+import interfaces.BattleListener;
 import interfaces.MilitaryUnit;
 import interfaces.Variables;
 
 public class Battle {
+	private  BattleListener battlelistener;
+
 	private ArrayList<ArrayList> civilizationArmy;
 	private ArrayList<ArrayList> enemyArmy;
 	
@@ -36,6 +41,31 @@ public class Battle {
 	private int[][] initialArmies; //Array de 2 filas y 9 columnas
 	private int[] actualNumberUnitsCivilization;
 	private int[] actualNumberUnitsEnemy; //Arrays para contabilizar unidades
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public BattleListener getBattlelistener() {
+		return battlelistener;
+	}
+
+
+	public void setBattlelistener(BattleListener battlelistener) {
+		this.battlelistener = battlelistener;
+	}
+
+
+	public Battle() {
+		super();
+
+	}
 	
 	
 	//GETTERS Y SETTERS
@@ -241,25 +271,26 @@ public class Battle {
 	}
 
 	
-	public void initInitialArmies() {
+	public void initInitialArmies() throws NoUnitsException {
 		//Inicializar el Array initialArmies y asi poder calcular reportes
 		// Bucle para realizar el recuento de las tropas tanto de civilización como enemigas
 				initialArmies = new int[2][9];
-				
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0 ; j < 9; j++) {
-						if (i == 0) {
-							initialArmies[i][j] = getCivilizationArmy().get(j).size();
+					for (int i = 0; i < 2; i++) {
+						for (int j = 0 ; j < 9; j++) {
+							if (i == 0) {
+								initialArmies[i][j] = getCivilizationArmy().get(j).size();
+							}
+							else if (i == 1) { 
+								if(j < 4) { //Rellena arraylist hasta 4 (las unidades disponibles de los enemigos)
+									initialArmies[i][j] = getEnemyArmy().get(j).size();
+								}						
+							}					
 						}
-						else if (i == 1) { 
-							if(j < 4) { //Rellena arraylist hasta 4 (las unidades disponibles de los enemigos)
-								initialArmies[i][j] = getEnemyArmy().get(j).size();
-							}						
-						}					
-					}
-				}			
-				//igualamos a la initialArmies de la clase principal
-				setInitialArmies(initialArmies);
+					}			
+					//igualamos a la initialArmies de la clase principal
+					setInitialArmies(initialArmies);
+				
+
 	}
 	
 	//recuento de las tropas de cada bando (usamos initialArmies para calcular el recuento total de tropas)
@@ -300,6 +331,8 @@ public class Battle {
 	    int defenseGroup = 0;
 	    Random selectEnemyUnit = new Random();
 	    int[] army;
+	    
+	    
 	    
 	    // Calcula la suma total de todas las unidades en el grupo
 	    for(int i = 0; i < armyDefend.size(); i++) {
@@ -451,13 +484,21 @@ public class Battle {
 	
 	
 //METODO DONDE TRANSCURRE LA BATALLA:
-	public void mainBattle(ArrayList<ArrayList> myArmy, ArrayList<ArrayList> enemyArmy) throws MiSQLException {
-		
-		
-		//Generacion de los ejercitos de la batalla: 
+	public void mainBattle(ArrayList<ArrayList> myArmy, ArrayList<ArrayList> enemyArmy) throws MiSQLException, NoUnitsException {
 		setCivilizationArmy(myArmy);
 		setEnemyArmy(enemyArmy);
+		
+		
 		initInitialArmies();
+
+		//Generacion de los ejercitos de la batalla: 
+		if (getInitialNumberUnitsCivilization() == 0) {
+			setBattleDevelopment(getBattleDevelopment() + " \n\n\nCANT START BATTLE, CIVILIZATION HAS NO UNITS");
+			System.out.println("---------"+getBattleDevelopment());
+			throw new NoUnitsException("CANT START BATTLE, CIVILIZATION HAS NO UNITS");
+			
+		}
+
 		
 //Registramos los costes iniciales del ejercito
 		initialCostFleet = getInitialCostFleet();
@@ -779,14 +820,15 @@ public class Battle {
 		
 		//Actualizar Civilization local
 		
-		 	//sumar recursos
-		 	//sumar battle
+			
+		
+		 	battlelistener.updatecv_after_battle(wasteWoodIron);
 		
 		//Actualziar EXPERIENCIA local unidades
 		
 		
 		//Actualizar civilizacion en bd
-		 cdb.actualizarDatosCivilization(null);
+		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
 		 
 		 
 		 //eliminamos unidades muertas:

@@ -32,7 +32,7 @@ public class ConnectionDB {
 		this.user = Variables.user;
 		this.pass = Variables.pass;
 	}
-	
+
 	//Metodo para crear una conexion con la bd
 	public Connection openConnectionDB() throws MiSQLException{
 		
@@ -114,7 +114,12 @@ public class ConnectionDB {
             
             //Actualizamos la army en la bd usando la info local
             ArrayList<ArrayList> CivilizationArmy = civilization.getArmy();
-            //actualizarUnitsBD(CivilizationArmy);
+            actualizarUnitsBD(CivilizationArmy);
+            
+            //actualizar datos paneles
+            
+            
+            
             
 //          conn.commit();
             conn.close();
@@ -880,9 +885,6 @@ public class ConnectionDB {
 		} catch (MiSQLException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
 
