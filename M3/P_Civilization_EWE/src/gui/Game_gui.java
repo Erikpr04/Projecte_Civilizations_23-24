@@ -66,7 +66,7 @@ public class Game_gui extends JPanel {
 	private Timer maintimer;
 	private String username;
 	private JLabel usernameLabel;
-	private String ppindex = "0";
+	private int ppindex = 0;
 	private ImageIcon[] ppphotos = new ImageIcon[9];
     JLabel imageLabel;
     ImageIcon selectedpp;
@@ -102,13 +102,13 @@ public class Game_gui extends JPanel {
 		this.defenseint = defenseint;
 	}
 
-	public String getPpindex() {
+	public int getPpindex() {
 		return ppindex;
 	}
 
-	public void setPpindex(int profileindex) {
-		this.ppindex = profileindex;
-	    selectedpp = ppphotos[Integer.parseInt(profileindex)-1];
+	public void setPpindex(int ppindex) {
+		this.ppindex = ppindex;
+	    selectedpp = ppphotos[ppindex-1];
 	    Image originalImage = selectedpp.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
 	    ImageIcon scaledIcon = new ImageIcon(resizedImage);
@@ -635,7 +635,7 @@ public class Game_gui extends JPanel {
 	ppphotos[8] = new ImageIcon("./src/gui/ppphotos/pp9.png");
 
 
-    selectedpp = ppphotos[Integer.parseInt(ppindex)];
+    selectedpp = ppphotos[ppindex];
     Image originalImage = selectedpp.getImage();
     Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
     ImageIcon scaledIcon = new ImageIcon(resizedImage);
