@@ -839,7 +839,7 @@ public class Battle {
 		 cdb.actualizarUnitsBD(myArmy);		 
 		 
 		 //insertar battleStats y battleLog  (REVISAR EN CLASE) -------------------------------------
-		 cdb.insertarBattleStats(numBattle,civilization_Id ,getBattleReport(0));
+		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(0));
 		 cdb.insertarBattleLog(civilization_Id, numBattle, getBattleDevelopment());
 		 
 		

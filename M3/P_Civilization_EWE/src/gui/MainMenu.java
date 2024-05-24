@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import exceptions.MiSQLException;
 import interfaces.MainMenuListener;
 
 import java.awt.*;
@@ -162,14 +163,19 @@ public class MainMenu extends JPanel {
     	
     	loadGameButton.addMouseListener(new MouseListener() {
 			
-			@Override
+
 			public void mouseReleased(MouseEvent e) {
 				
 			}
 			
-			@Override
+
 			public void mousePressed(MouseEvent e) {
-				listener.loadgame();	
+				try {
+					listener.loadgame();
+				} catch (MiSQLException e1) {
+
+					e1.printStackTrace();
+				}	
 
 			}
 			

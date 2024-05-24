@@ -868,6 +868,8 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setFood(int food) {
     	this.food = food;
+
+        listener.update_resources();
     }
 
     public int getWood() {
@@ -875,7 +877,9 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     }
 
     public void setWood(int wood) {
-    	this.wood = wood; 
+    	this.wood = wood;
+        listener.update_resources();
+    	
     }
 
     public int getIron() {
@@ -884,6 +888,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setIron(int iron) {
     	this.iron = iron;
+        listener.update_resources();
     }
 
     public int getMana() {
@@ -892,6 +897,8 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setMana(int mana) {
     	this.mana = mana;
+
+        listener.update_resources();
     }
     
     
@@ -910,17 +917,6 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
 	}
 
-	//metodos
-
-	
-	
-
-	
-	
-    
-
-	
-	
     
     //este metodo actualiza el label que queramos con un numero
     
@@ -1728,17 +1724,24 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
                     setWood(getWood() - woodCost);
                     setIron(getIron() - ironCost);
                     setMana(getMana() - manaCost);
-                    if (soldierIndex == 7 && listener.getcvmagic_tower() <1) {
-                        JOptionPane.showMessageDialog(panel,
-                                "Can't create Magician, No MagicTower Found",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    	
-                    }else if (soldierIndex == 8 && listener.getcvchurch() <1) {
-                        JOptionPane.showMessageDialog(panel,
-                                "Can't create Priest, No Church Found",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    	
-                    }else {
+                    System.out.println("Soldierindex");
+                    
+                    System.out.println(soldierIndex);
+                    
+                    try {
+						listener.create_troop(soldierIndex, units);
+					} catch (MiSQLException e1) {
+						e1.printStackTrace();
+					}
+                    
+                    try {
+						update_resources_quantity(getWood(),"wood");
+                        update_resources_quantity(getIron(),"iron");
+                        update_resources_quantity(getMana(),"mana");
+                        update_resources_quantity(getFood(),"food");
+                        //guardamos datos en base de datos
+                        listener.update_resources_db();
+                        getcv_data();
 
                         
                         System.out.println(soldierIndex);

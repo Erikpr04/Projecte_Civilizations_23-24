@@ -6,25 +6,22 @@ import exceptions.MiSQLException;
 
 public interface GameGuiListener {
     void load_game_gui();
-    void load_db_data();
+    void load_db_data() throws MiSQLException;
     
     //actualizar recursos en base de datos
     
-       
     
-
-    
+    void update_resources_db()throws MiSQLException;
     
     //actualizar recursos gui
-    void update_resources_db();
-    
-    void update_resources_togui();
+    void update_resources();
     
     
     
-    void update_army_db();
+    void update_army_db( )throws MiSQLException;
     
-    void update_structures_db(String structuretype,int number_structures);
+    void update_structures_db(String structuretype,int number_structures) throws MiSQLException;
+
 
     void update_technologies();
     
