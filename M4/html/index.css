@@ -1,0 +1,42 @@
+/* Estilos para el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f8f8;
+    text-align: center;
+  }
+  
+  /* Estilos para el título */
+  h1 {
+    text-align: center;
+  }
+  
+  /* Estilos para los grupos de unidades y edificios */
+  p {
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  /* Estilos para la lista ordenada */
+  ol {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  /* Estilos para los elementos de la lista */
+  li {
+    margin-bottom: 5px;
+  }
+  
+  /* Estilos para los enlaces */
+  a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: #007bff; /* Cambia el color al pasar el cursor sobre el enlace */
+  }
+  
