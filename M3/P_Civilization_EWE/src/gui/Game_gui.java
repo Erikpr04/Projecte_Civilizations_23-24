@@ -841,7 +841,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     public void setFood(int food) {
     	this.food = food;
 
-        listener.update_resources(food, getWood(), getIron(), getMana());
+        listener.update_resources();
     }
 
     public int getWood() {
@@ -850,7 +850,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setWood(int wood) {
     	this.wood = wood;
-        listener.update_resources(getFood(), wood, getIron(), getMana());
+        listener.update_resources();
     	
     }
 
@@ -860,7 +860,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     public void setIron(int iron) {
     	this.iron = iron;
-        listener.update_resources(getFood(), getWood(), iron, getMana());
+        listener.update_resources();
     }
 
     public int getMana() {
@@ -870,7 +870,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     public void setMana(int mana) {
     	this.mana = mana;
 
-        listener.update_resources(getFood(), getWood(), getIron(), mana);
+        listener.update_resources();
     }
     
     
@@ -1241,7 +1241,7 @@ public class MiPanelito extends JPanel {
 		                                        break;
 		                                    }
 		                                    //guardamos datos en base de datos
-		                                    listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
+		                                    listener.update_resources_db();
 
 										} catch (Exception e1) {
 										
@@ -1659,7 +1659,7 @@ class CvUpgradeGui {
                         update_resources_quantity(getMana(),"mana");
                         update_resources_quantity(getFood(),"food");
                         //guardamos datos en base de datos
-                        listener.update_resources_db(getFood(), getWood(), getIron(), getMana());
+                        listener.update_resources_db();
                         getcv_data();
 
                         

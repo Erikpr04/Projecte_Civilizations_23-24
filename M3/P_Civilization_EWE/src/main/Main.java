@@ -12,26 +12,18 @@ import java.util.TimerTask;
 
 import classes.Civilization;
 import classes.dc_classes;
-import classes.attackunits.AttackUnit;
 import classes.attackunits.Cannon;
 import classes.attackunits.CrossBow;
 import classes.attackunits.Spearman;
 import classes.attackunits.Swordsman;
-import classes.defenseunits.ArrowTower;
-import classes.defenseunits.Catapult;
-import classes.defenseunits.RocketLauncherTower;
-import classes.specialunits.Magician;
-import classes.specialunits.Priest;
 import exceptions.BuildingException;
 import exceptions.MiSQLException;
 import exceptions.NoUnitsException;
 import exceptions.ResourceException;
 import interfaces.BattleListener;
 import interfaces.GameGuiListener;
-import interfaces.MilitaryUnit;
 import interfaces.Variables;
 import utils.Battle;
-import utils.ConnectionDB;
 import utils.dc_database;
 
 public class Main {
@@ -42,7 +34,7 @@ public class Main {
     private ArrayList<ArrayList> enemy_army;
     private Battle b;
     private int countFleet = classes.getCv().getBattles();
-    private ConnectionDB  cbd = new ConnectionDB();
+
 
 	
     
@@ -58,15 +50,10 @@ public class Main {
 			dc_gui.getGui_obj().update_resources_quantity(classes.getCv().getMana(),"mana");
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 }
-    
-    
-    
-    
     
 	//METODO PARA CREAR ARMY ENEMIGAS
 	public ArrayList<ArrayList> createEnemyArmy() throws MiSQLException {
@@ -77,8 +64,6 @@ public class Main {
 		enemyWood = Variables.WOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.WOOD_BASE_ENEMY_ARMY/100);
 		enemyFood = Variables.FOOD_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.FOOD_BASE_ENEMY_ARMY/100);
 		enemyIron = Variables.IRON_BASE_ENEMY_ARMY + ((countFleet * Variables.ENEMY_FLEET_INCREASE)*Variables.IRON_BASE_ENEMY_ARMY/100);
-		
-		
 		
 		ArrayList<ArrayList> enemy = new ArrayList<>();
 		for (int i = 0; i < 4; i++) {
@@ -155,23 +140,6 @@ public class Main {
 
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-	
-	
 
 
 	public static void main(String[] args) {		
@@ -199,7 +167,6 @@ public class Main {
 				try {
 									
 				
-
 				System.out.println("carpentries " +m.classes.getCv().getCarpentry());
 				System.out.println("smithy " +m.classes.getCv().getSmithy());
 				m.classes.getCv().setWood(m.classes.getCv().getWood()+100000+ Variables.CIVILIZATION_WOOD_GENERATED+ (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
@@ -225,12 +192,6 @@ public class Main {
 	    		
 	    		m.load_data_class_gui();
 	    		
-	    		
-
-
-
-
-				
 				
 
 				}catch (Exception e){
@@ -246,7 +207,7 @@ public class Main {
 
 		m.b.setBattlelistener(new BattleListener() {
 			
-			@Override
+		
 			public Civilization getCV_Battle() {
 				return m.classes.getCv();
 			}
@@ -259,11 +220,6 @@ public class Main {
 				
 			}
 		});
-        
-        
-        
-        
-        
         
 		
 		TimerTask shownotificationtask = new TimerTask() {
@@ -292,7 +248,6 @@ public class Main {
 		
 	
 		
-		
 		TimerTask startbattle = new TimerTask() {
 
 			public void run() {
@@ -312,12 +267,7 @@ public class Main {
 					
 					m.dc_gui.getGui_obj().showBattleWindow(m.b.getBattleDevelopment());
 					
-					m.cbd.actualizarDatosCivilization(m.classes.getCv());
-					
-					
-
-				
-				
+					database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 
 				}catch (Exception e){
 					e.printStackTrace();
@@ -329,35 +279,11 @@ public class Main {
 		};
 		
 		
-		
-		
-		
-		//METODOS 
-		
-
-		
-
-
-		
-		
-		
-
-		
+		//METODOS
 		Timer maintimer = new Timer();
 		
-
-        
-
-        
-		//Battle b = new Battle();
-		
-		
-		
-        
         //instanciar controladores de dominio
         
-        
-
         m.dc_gui.setGgl(new GameGuiListener() {
 			
 			//metodo para cargar juego
@@ -366,47 +292,34 @@ public class Main {
 				maintimer.schedule(resourcestask, 10000, 10000);
 				maintimer.schedule(shownotificationtask, 20000, 1200000);
 				maintimer.schedule(startbattle, 25000, 1200000);
-				
-				
+								
 			}
 
-			public void update_resources() {
-				
-							
+			public void update_resources() {		
 
 				m.dc_gui.setFood(m.classes.getCv().getFood());
 				m.dc_gui.setWood(m.classes.getCv().getWood());
 				m.dc_gui.setIron(m.classes.getCv().getIron());
 				m.dc_gui.setMana(m.classes.getCv().getMana());
 				
-
 			}
-			public void update_resources_db(int food,int wood, int iron, int mana) {
-				m.classes.getCv().setFood(food);
-				m.classes.getCv().setWood(wood);
-				m.classes.getCv().setIron(iron);
-				m.classes.getCv().setMana(mana);
+			
 
-				System.out.println(food);
-				System.out.println(wood);
-				System.out.println(iron);
-				System.out.println(mana);
+			public void update_resources_db() throws MiSQLException {
+				
+				database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 
-				System.out.println("Resources updated");
+				System.out.println("Resources updated db");
 			}
 
-			@Override
-			public void update_resources(int food, int wood, int iron, int mana) {
+
+		
+			public void update_army_db() throws MiSQLException {
+				database.getConnectionDB().actualizarUnitsBD(m.classes.getCv().getArmy());
 				
 			}
 
-			@Override
-			public void update_army_db() {
-				
-				
-			}
-
-			@Override
+			
 			public void update_structures_db(String structuretype,int number_structures) {
 				
 				if (structuretype == "Church") {
@@ -423,18 +336,13 @@ public class Main {
 					m.classes.getCv().setFarm(m.classes.getCv().getFarm()+1);
 				}
 				try {
-					m.cbd.actualizarDatosCivilization(m.classes.getCv());
+					database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 				} catch (MiSQLException e) {
 					e.printStackTrace();
 				}
 				System.out.println("Estructura creada!");
 				}
-			
 
-			public void update_technologies_db() {
-				// TODO Auto-generated method stub
-				
-			}
 
 			public int[] getcv_army_values() {
 			    int[] cv_array = new int[11]; // Declaración y creación del array
@@ -511,7 +419,6 @@ public class Main {
 			    }
 
 
-			@Override
 			public void create_farm() {
 				try {
 					m.classes.getCv().new_Farm();
@@ -520,7 +427,7 @@ public class Main {
 				}
 			}
 
-			@Override
+		
 			public void create_church() {
 				try {
 					m.classes.getCv().new_Church();
@@ -531,7 +438,7 @@ public class Main {
 				
 			}
 
-			@Override
+	
 			public void create_carpentry() {
 				try {
 					m.classes.getCv().new_Carpentry();
@@ -542,7 +449,7 @@ public class Main {
 				
 			}
 
-			@Override
+		
 			public void create_smithy() {
 				try {
 					m.classes.getCv().new_Smithy();
@@ -554,7 +461,7 @@ public class Main {
 				
 			}
 
-			@Override
+	
 			public void create_magic_tower() {
 				try {
 					m.classes.getCv().new_MagicTower();
@@ -565,7 +472,7 @@ public class Main {
 				
 			}
 
-			@Override
+	
 			public boolean sanctifyunits() {
 			    int totalUnits = 0;
 			    ArrayList<ArrayList> armies = m.classes.getCv().getArmy();
@@ -586,87 +493,21 @@ public class Main {
 				
 			}
 
-			@Override
-			public void load_db_data() {
+
+			public void load_db_data() throws MiSQLException {
 				m.update_panels();
+				
 				//cargar datos de recursos de la bbdd en clases
+				database.getConnectionDB().obtenerDatosCivilization(m.classes.getCv());
+				m.classes.getCv().setArmy(database.getConnectionDB().cargarUnitsBD());
 				
 				//ahora cargamos de clases a gui
 				m.load_data_class_gui();
 				
 			}
-
-
-});
+        });
         
-        
-        
-        
-        
-        
-		
-//		//TIMER TASK:
-//
-		//ConnectionDB cbd = new ConnectionDB(url, user, pass);
-		
-//		
-//		try {
-//			cbd.sacarBattleLog(1,2);
-//			
-//		} catch (MiSQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-		
-		
-//		try {
-//			cv.new_Carpentry();
-////			cv.new_Farm();
-////			cv.new_Smithy();
-//		} catch (ResourceException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-//		
-//		TimerTask task = new TimerTask() {
-//
-//			public void run() {
-//				cv.setWood(cv.getWood() + Variables.CIVILIZATION_WOOD_GENERATED);
-//				cv.setFood(cv.getFood() + Variables.CIVILIZATION_FOOD_GENERATED);
-//				cv.setIron(cv.getIron() + Variables.CIVILIZATION_IRON_GENERATED);
-//				
-//				cv.setWood(cv.getWood() + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-//				cv.setFood(cv.getFood() + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-//				cv.setIron(cv.getIron() + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-//				cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
-//				
-//				System.out.println("Madera: " + cv.getWood());
-//				System.out.println("Comida: " + cv.getFood());
-//				System.out.println("Hierro: " + cv.getIron());
-//				System.out.println("Mana: " + cv.getMana());
-//				System.out.println("*********************");
-//				
-//			}
-//			
-//		};
-//		
-//		Timer timer = new Timer();
-//		timer.schedule(task, 1, 10000);
-//		
-//		
-
-//		System.out.println("\n\n" + b.getBattleDevelopment());
-		
-		
-		
-		
-		
-	
-		
-		
-
+ 
 	}
 	
 	

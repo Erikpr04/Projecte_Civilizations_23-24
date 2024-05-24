@@ -4,7 +4,7 @@ public interface Variables {
 	//CONEXION CON LA DB
 	
 	//public final String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	public final String url = "jdbc:oracle:thin:@192.168.56.100:1521/orcl?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	public final String url = "jdbc:oracle:thin:@localhost:1521/XE?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	public final String user = "AdminCivilization";
 	public final String pass = "ewe";
 	

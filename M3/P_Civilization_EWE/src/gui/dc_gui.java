@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
 import classes.Civilization;
+import exceptions.MiSQLException;
 import gui.Game_gui.MiPanelito;
 import interfaces.GameGuiListener;
 import interfaces.MainMenuListener;
@@ -62,24 +63,21 @@ public class dc_gui  {
 
     	mmi = new MainMenuListener() {
 			
-			@Override
+
 			public void onMainMenuClosed() {
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();				
 			}
 
 
-			@Override
-			public void loadgame() {
+			public void loadgame() throws MiSQLException {
 		        invoke_game_gui();	
 				load_game();
 
-		        
-
-				
 			}
 
 			public void startnewgame(String username1,String photoindex) {
+				
 				
 				username = username1;
 				profileindex = photoindex;
@@ -151,7 +149,7 @@ public class dc_gui  {
     
     //metodo cargar partida
     
-    public void load_game() {
+    public void load_game() throws MiSQLException {
     	ggl.load_game_gui();
     	ggl.load_db_data();
 
@@ -166,7 +164,7 @@ public class dc_gui  {
         this.wood = wood;
         this.iron = iron;
         this.mana = mana;
-        this.ggl.update_resources(food,wood,iron,mana);
+        this.ggl.update_resources();
     }
     
     public void update_army_db(int tipo_tropa) {

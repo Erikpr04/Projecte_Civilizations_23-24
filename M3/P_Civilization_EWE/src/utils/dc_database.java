@@ -11,7 +11,7 @@ import interfaces.Variables;
 
 public class dc_database {
     private int food, wood, iron, mana;
-
+    private ConnectionDB  cbd = new ConnectionDB();
 
         public ResultSet getOccupiedPanels() {
             Connection connection = null;
@@ -86,10 +86,8 @@ public class dc_database {
 		this.mana = mana;
 	}
 
-
-	public void updateResource(String resourcename, int newFoodValue) {
-		
-		
+	public ConnectionDB getConnectionDB() {
+		return cbd;
 	}
 
 }
