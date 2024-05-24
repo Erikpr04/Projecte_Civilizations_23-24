@@ -71,7 +71,7 @@ public class dc_gui  {
 
 
 			@Override
-			public void loadgame() {
+			public void loadgame() throws MiSQLException {
 		        mainMenuFrame.dispose(); 
 		        invoke_game_gui();	
 				load_game();

@@ -515,7 +515,7 @@ public class Main {
 				m.classes.getCv().setArmy(database.getConnectionDB().cargarUnitsBD());
 				
 				//ahora cargamos de clases a gui
-				m.dc_gui.getGgl().update_resources_togui();
+
 				
 			}
 
@@ -533,6 +533,12 @@ public class Main {
 
 			public int getcvmagic_tower() {
 				return m.classes.getCv().getMagicTower();
+			}
+
+			@Override
+			public void update_resources() {
+				// TODO Auto-generated method stub
+				
 			}
 
 
