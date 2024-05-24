@@ -199,7 +199,6 @@ public class Main {
 	    		m.dc_gui.getGui_obj().update_resources_quantity();	    		
 	    		System.out.println("recursos actualizados");
 	    		
-	    		//m.dc_gui.getGgl().update_resources_togui();
 	    		
 	    		
 				
@@ -310,7 +309,6 @@ public class Main {
 				try {
 					m.dc_gui.getGui_obj().update_resources_quantity();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -517,8 +515,6 @@ public class Main {
 				m.classes.getCv().setArmy(database.getConnectionDB().cargarUnitsBD());
 				
 				//ahora cargamos de clases a gui
-				m.dc_gui.getGgl().update_resources_togui();
-				
 			}
 
 			@Override
@@ -535,6 +531,17 @@ public class Main {
 
 			public int getcvmagic_tower() {
 				return m.classes.getCv().getMagicTower();
+			}
+
+			@Override
+			public void update_resources() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
+			public void clear_and_startdb() {
+				
 			}
 
 
