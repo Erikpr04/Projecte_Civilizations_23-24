@@ -62,6 +62,8 @@ public class MainMenu extends JPanel {
 	
 	
     public MainMenu() {
+    	
+    	
         try {
 			gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
 		} catch (FontFormatException e) {
@@ -558,7 +560,7 @@ private void openCreditsWindow() {
                     int photoIndex = Integer.parseInt(photoGroup.getSelection().getActionCommand());
                     try {
                     	//listener para empezar nueva partida                    	
-    					listener.startnewgame(username,String.valueOf(photoIndex));
+    					listener.startnewgame(username,photoIndex);
     					creategameframe.dispose();
     					} catch (Exception ex) {
                         ex.printStackTrace();
@@ -639,26 +641,6 @@ class LabelButton extends JButton {
         this.setBorderPainted(false);
         setForeground(Color.BLACK); // Color de texto predeterminado
 
-//        addMouseListener(new MouseAdapter() {
-//            public void mouseEntered(MouseEvent e) {
-//                // Cambiar el color del texto y agregar un borde al entrar el mouse
-//                setForeground(Color.WHITE);
-//                setBorder(BorderFactory.createLineBorder(Color.WHITE));
-//            }
-//
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                // Acción al hacer clic en el JLabel
-//                // Puedes agregar el comportamiento deseado aquí
-//            }
-//
-//            @Override
-//            public void mouseExited(MouseEvent e) {
-//                // Restaurar el color del texto y eliminar el borde al salir el mouse
-//                setForeground(Color.BLACK);
-//                setBorder(BorderFactory.createEmptyBorder());
-//            }
-//        });
     }
 }
 

@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 import classes.Civilization;
 import exceptions.MiSQLException;
@@ -33,6 +34,7 @@ public class dc_gui  {
 	private Game_gui gui_obj;
 	private String username = "username";
 	private String profileindex = "3";
+	private JFrame GameFrame;
 
 	
     public Game_gui getGui_obj() {
@@ -68,26 +70,33 @@ public class dc_gui  {
 
 			@Override
 			public void loadgame() throws MiSQLException {
-		        mainMenuFrame.dispose(); 
 		        invoke_game_gui();	
-				load_game();
+				if (!load_game()) {
+				    JOptionPane.showMessageDialog(null, "Error: no game loaded in database", "Error", JOptionPane.ERROR_MESSAGE);
+					
+				}else {
+			        mainMenuFrame.dispose(); 
+			        GameFrame.setVisible(true);
+
+				}
+
+
 
 			}
 
-			public void startnewgame(String username1,String photoindex) {
+			public void startnewgame(String username,int photoindex) {
 				
 				
-				username = username1;
-				profileindex = photoindex;
 				
 				//borrar datos de la bd si hay
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
 		        invoke_game_gui();
-		        ggl.clear_and_startdb();
+		        ggl.clear_and_startdb(username,photoindex);
 		        ggl.load_game_gui();
 		        
 				
 			}
+
 
 		};
 		
@@ -111,11 +120,8 @@ public class dc_gui  {
     // Método para invocar la GUI del juego
     public void invoke_game_gui() {
     	
-    	Timer timer = new Timer();
-
-
-        JFrame frame = new JFrame("Game GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GameFrame = new JFrame("Game GUI");
+        GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         try {
 			gui_obj = new Game_gui(10, 10);
@@ -126,11 +132,11 @@ public class dc_gui  {
         
         gui_obj.setListener(this.ggl);
         
-        frame.add(gui_obj, BorderLayout.CENTER);
+        GameFrame.add(gui_obj, BorderLayout.CENTER);
 
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        GameFrame.pack();
+        GameFrame.setLocationRelativeTo(null);
+
                 
         gui_obj.setUsername(username);
         gui_obj.setPpindex(profileindex);
@@ -148,9 +154,14 @@ public class dc_gui  {
     
     //metodo cargar partida
     
-    public void load_game() throws MiSQLException {
-    	ggl.load_game_gui();
-    	ggl.load_db_data();
+    public boolean load_game()  {
+    	try {
+	    	ggl.load_game_gui();
+			ggl.load_db_data();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 
     }
     

@@ -547,6 +547,13 @@ public class Main {
 			
 			public void clear_and_startdb() {
 				
+
+				
+				
+			}
+
+			public void clear_and_startdb(String username, int photoindex) {
+				
 				//aqui borraremos la bbdd
 				
 				
@@ -554,7 +561,7 @@ public class Main {
 				//aqui cargamos los paneles por defecto del juego (decoracion)
 				
 				m.update_panels();
-				
+
 			}
 
 
@@ -566,9 +573,9 @@ public class Main {
 	
 
     public void update_panels() {
+        ResultSet resultSet = database.getOccupiedPanels();
         MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
         dc_database database = new dc_database();
-        ResultSet resultSet = database.getOccupiedPanels();
         String[] structureList = new String[]{"farm", "smithy", "church", "magic_tower", "carpentry"};
 
         if (resultSet != null) {
