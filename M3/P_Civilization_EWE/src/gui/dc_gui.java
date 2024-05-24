@@ -33,7 +33,7 @@ public class dc_gui  {
 
 	private Game_gui gui_obj;
 	private String username = "username";
-	private String profileindex = "3";
+	private int profileindex = 1;
 	private JFrame GameFrame;
 
 	
@@ -84,15 +84,19 @@ public class dc_gui  {
 
 			}
 
-			public void startnewgame(String username,int photoindex) {
+			public void startnewgame(String username1,int photoindex1) {
 				
 				
 				
 				//borrar datos de la bd si hay
 		        mainMenuFrame.dispose(); // Dispose of the main menu frame
+		        username = username1;
+		        profileindex = photoindex1;
 		        invoke_game_gui();
-		        ggl.clear_and_startdb(username,photoindex);
+		        ggl.clear_and_startdb(username,photoindex1);
+		        
 		        ggl.load_game_gui();
+		        GameFrame.setVisible(true);
 		        
 				
 			}
