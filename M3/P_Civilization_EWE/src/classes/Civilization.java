@@ -153,7 +153,7 @@ public class Civilization {
 				Swordsman newUnit = new Swordsman(total_armor,total_attack);
 				army.get(0).add(newUnit);
 				
-				ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+				ConnectionDB cdb = new ConnectionDB();
 				cdb.crearUnit(newUnit);
 				
 				
@@ -185,7 +185,7 @@ public class Civilization {
 				Spearman newUnit = new Spearman(total_armor, total_attack);
 	            army.get(1).add(newUnit);
 	            
-	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            ConnectionDB cdb = new ConnectionDB();
 	            cdb.crearUnit(newUnit);
 	            
 				setWood(wood-Variables.WOOD_COST_SPEARMAN);
@@ -217,7 +217,7 @@ public class Civilization {
 				CrossBow newUnit = new CrossBow(total_armor, total_attack);
 	            army.get(2).add(newUnit);
 	            
-	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            ConnectionDB cdb = new ConnectionDB();
 	            cdb.crearUnit(newUnit);
 	            
 				setWood(wood-Variables.WOOD_COST_CROSSBOW);
@@ -247,7 +247,7 @@ public class Civilization {
 				Cannon newUnit = new Cannon(total_armor, total_attack);
 	            army.get(3).add(newUnit);
 	            
-	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            ConnectionDB cdb = new ConnectionDB();
 	            cdb.crearUnit(newUnit);
 				
 				setWood(wood-Variables.WOOD_COST_CANNON);
@@ -276,7 +276,7 @@ public class Civilization {
 				ArrowTower newUnit = new ArrowTower(total_armor, total_attack);
 	            army.get(4).add(newUnit);
 	            
-	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            ConnectionDB cdb = new ConnectionDB();
 	            cdb.crearUnit(newUnit);
 	            
 				setWood(wood-Variables.WOOD_COST_ARROWTOWER);
@@ -306,7 +306,7 @@ public class Civilization {
 				Catapult newUnit = new Catapult(total_armor, total_attack);
 	            army.get(5).add(newUnit);
 	            
-	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            ConnectionDB cdb = new ConnectionDB();
 	            cdb.crearUnit(newUnit);
 	            
 				setWood(wood-Variables.WOOD_COST_CATAPULT);
@@ -336,7 +336,7 @@ public class Civilization {
 				RocketLauncherTower newUnit = new RocketLauncherTower(total_armor, total_attack);
 	            army.get(6).add(newUnit);
 	            
-	            ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	            ConnectionDB cdb = new ConnectionDB();
 	            cdb.crearUnit(newUnit);
 	            
 				setWood(wood-Variables.WOOD_COST_ROCKETLAUNCHERTOWER);
@@ -368,7 +368,7 @@ public class Civilization {
 					Magician newUnit = new Magician(total_armor, total_attack);
 	                army.get(7).add(newUnit);
 	                
-	                ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	                ConnectionDB cdb = new ConnectionDB();
 	                cdb.crearUnit(newUnit);
 	                
 					setWood(wood-Variables.WOOD_COST_MAGICIAN);
@@ -404,7 +404,7 @@ public class Civilization {
 					Priest newUnit = new Priest(total_armor, total_attack);
 	                army.get(8).add(newUnit);
 	                
-	                ConnectionDB cdb = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+	                ConnectionDB cdb = new ConnectionDB();
 	                cdb.crearUnit(newUnit);
 					
 					setWood(wood-Variables.WOOD_COST_PRIEST);
