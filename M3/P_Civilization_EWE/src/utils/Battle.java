@@ -42,6 +42,8 @@ public class Battle {
 	private int[] actualNumberUnitsCivilization;
 	private int[] actualNumberUnitsEnemy; //Arrays para contabilizar unidades
 	
+	private dc_classes classes = new dc_classes(); //Atributo de dc_classes para actualizar la civilization
+	
 	
 	
 	
@@ -614,6 +616,8 @@ public class Battle {
 					//unidad atacante golpea a defensor y baja armadura
 					int dmg = unitAttacking.attack();
 					int armor = unitDefending.getActualArmor();
+					dmg += Variables.PLUS_ATTACK_TECHNOLOGY[attackGroup];
+					
 					int armorResult = armor - dmg;
 					unitDefending.takeDamage(dmg);
 					enemyArmy.get(defenseGroup).set(randomUnit,unitDefending);
@@ -722,6 +726,9 @@ public class Battle {
 					//unidad atacante golpea a defensor y baja armadura (armadura = dano - armaduraActual)
 					int dmg = unitAttacking.attack();
 					int armor = unitDefending.getActualArmor();
+					armor += Variables.PLUS_ARMOR_TECHNOLOGY[defenseGroup];
+					
+					
 					int armorResult = armor - dmg;
 					unitDefending.takeDamage(dmg);
 					
@@ -800,6 +807,9 @@ public class Battle {
 			setBattleDevelopment(getBattleDevelopment()+ "\nCivilization WIN !!!");
 			
 			//Anadir recursos a la civilizacion
+			classes.getCv().setWood(classes.getCv().getWood() + getWasteWoodIron()[0]);
+			classes.getCv().setIron(classes.getCv().getIron() + getWasteWoodIron()[1]);
+			
 			
 		} else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
 			setBattleDevelopment(getBattleDevelopment()+ "\nEnemy WIN !!!");
@@ -814,25 +824,43 @@ public class Battle {
 		//intanciamos una clase conexion para poder realizar todos los cambios
 		ConnectionDB cdb = new ConnectionDB();
 		
-		int numBattle = 0; //aqui hay que recuperar el count de batallas de la clase civilization o SELECT del ultimo num_batalla
+		classes.getCv().setBattles(classes.getCv().getBattles() + 1);
+		
+		int numBattle = classes.getCv().getBattles(); //aqui hay que recuperar el count de batallas de la clase civilization o SELECT del ultimo num_batalla
 		int civilization_Id = 1; //en un principio solo hay una civilizacion "1"
 
 		
-		//Actualizar Civilization local
+		//eliminamos unidades muertas:
+		 cdb.eliminarUnits(deathAttackUnitIds, deathDefenseUnitIds, deathSpecialUnitsIds);
 		
 			
 		
 		 	battlelistener.updatecv_after_battle(wasteWoodIron);
 		
 		//Actualziar EXPERIENCIA local unidades
+		for (int i = 0; i < civilizationArmy.size(); i++) {
+			for (int j = 0; j < civilizationArmy.get(i).size(); i++) {
+				if (i <= 3) {
+					((AttackUnit) civilizationArmy.get(i).get(j)).setExperience();
+				
+				} else if (i <= 6) {
+					((DefenseUnit) civilizationArmy.get(i).get(j)).setExperience();
+				
+				} else {
+					((SpecialUnit) civilizationArmy.get(i).get(j)).setExperience();
+				}
+			}
+		}
+		
+		
+		//Actualizar Civilization
+		
+		classes.getCv().setArmy(civilizationArmy);
 		
 		
 		//Actualizar civilizacion en bd
 		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
 		 
-		 
-		 //eliminamos unidades muertas:
-		 cdb.eliminarUnits(deathAttackUnitIds, deathDefenseUnitIds, deathSpecialUnitsIds);
 		 
 		 //update de las unidades restantes
 		 

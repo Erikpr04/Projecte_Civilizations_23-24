@@ -45,6 +45,8 @@ public class Main {
     
 	//METODO PARA CREAR ARMY ENEMIGAS
 	public ArrayList<ArrayList> createEnemyArmy() throws MiSQLException {
+		countFleet = classes.getCv().getBattles();
+		
 		int enemyWood;
 		int enemyFood;
 		int enemyIron;
