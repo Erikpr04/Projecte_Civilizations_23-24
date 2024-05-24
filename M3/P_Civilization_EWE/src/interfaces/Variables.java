@@ -3,7 +3,8 @@ package interfaces;
 public interface Variables {
 	//CONEXION CON LA DB
 	
-	public final String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	//public final String url = "jdbc:mysql://localhost/civilizationewe?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	public final String url = "jdbc:oracle:thin:@192.168.56.100:1521/orcl?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	public final String user = "AdminCivilization";
 	public final String pass = "ewe";
 	
@@ -21,7 +22,7 @@ public interface Variables {
 	public final int CIVILIZATION_IRON_GENERATED_PER_SMITHY = (int) (0.5*CIVILIZATION_IRON_GENERATED);
 	public final int CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY = (int) (0.5*CIVILIZATION_WOOD_GENERATED);
 	public final int CIVILIZATION_FOOD_GENERATED_PER_FARM = (int) (0.5*CIVILIZATION_FOOD_GENERATED);
-	public final int CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER = 10;
+	public final int CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER = 20;
 	// TECHNOLOGY COST
 	public final int UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST = 2000;
 	public final int UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST = 2000;

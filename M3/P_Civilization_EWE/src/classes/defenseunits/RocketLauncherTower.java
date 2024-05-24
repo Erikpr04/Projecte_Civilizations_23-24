@@ -12,6 +12,12 @@ public class RocketLauncherTower extends DefenseUnit {
 		super(armor, baseDamage);
 	}
 	
+	//CONSTRUCTOR 2 (BD )
+	public RocketLauncherTower(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super(unitId, armor, baseDamage, experience, sanctified);
+		
+	}
+		
 		
 	//METODOS DE MILITARY UNIT
 	
@@ -75,4 +81,9 @@ public class RocketLauncherTower extends DefenseUnit {
 	public void resetArmor() {
 		setArmor(getInitialArmor());
 	}
+	
+	public String toString() {
+		return "RocketLauncherTower" + super.toString();
+	}
+
 }

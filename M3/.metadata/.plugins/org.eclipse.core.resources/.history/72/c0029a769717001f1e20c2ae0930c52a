@@ -1,0 +1,8 @@
+package interfaces;
+
+public interface MainMenuListener {
+    void onMainMenuClosed();
+    void getUserData();
+    boolean check_games_saved();
+    
+}

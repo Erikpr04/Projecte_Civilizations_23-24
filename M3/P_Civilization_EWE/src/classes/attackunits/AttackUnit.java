@@ -35,6 +35,16 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
 		this.unitId = lastIdAttackUnit();
 	}
 	
+	// CONSTRUCTOR 2 (RECUPERAR BD)
+	public AttackUnit(int unitId, int armor, int baseDamage, int experience, boolean sanctified) throws MiSQLException {
+		super();
+		this.armor = armor;
+		this.initialArmor = armor;
+		this.baseDamage = baseDamage;
+		this.experience = experience;
+		this.sanctified = sanctified;
+		this.unitId = unitId;
+	}
 
 
 	//GETTERS Y SETTERS
@@ -108,7 +118,7 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
 		
 		int last_id = 0;
 		try {
-			ConnectionDB cbd = new ConnectionDB(Variables.url, Variables.user, Variables.pass);
+			ConnectionDB cbd = new ConnectionDB();
 			Connection conn = cbd.openConnectionDB();
 			
 			String query = "SELECT MAX(unit_id) AS last_id FROM attackunits";
@@ -134,4 +144,11 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
 		return last_id +1;
 		
 	}
+
+
+	public String toString() {
+		return " AttackUnit armor=" + armor + ", initialArmor=" + initialArmor + ", baseDamage=" + baseDamage
+				+ ", experience=" + experience + ", sanctified=" + sanctified + ", unitId=" + unitId;
+	}
+
 }
