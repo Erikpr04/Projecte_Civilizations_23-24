@@ -321,9 +321,13 @@ public class Main {
 
 			public void update_resources_db() throws MiSQLException {
 				
+				//METODO PRINCIPAL PARA GUARDAR TODO EN BBDD
+				
 				database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 
 				System.out.println("Resources updated db");
+				//NOTICAMOS DE TODO EN LA BBDD
+				m.dc_gui.getGui_obj().loadingPanel();
 			}
 
 
@@ -508,6 +512,8 @@ public class Main {
 
 
 			public void load_db_data() throws MiSQLException {
+				
+				//cargamos paneles de la bbdd
 				m.update_panels();
 				
 				//cargar datos de recursos de la bbdd en clases
@@ -535,7 +541,6 @@ public class Main {
 
 			public void update_resources() {
 				
-				
 			}
 
 			
@@ -559,9 +564,9 @@ public class Main {
 	
 
     public void update_panels() {
+        ResultSet resultSet = database.getOccupiedPanels();
         MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
         dc_database database = new dc_database();
-        ResultSet resultSet = database.getOccupiedPanels();
         String[] structureList = new String[]{"farm", "smithy", "church", "magic_tower", "carpentry"};
 
         if (resultSet != null) {

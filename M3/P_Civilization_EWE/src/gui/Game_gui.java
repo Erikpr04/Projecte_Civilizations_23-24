@@ -298,8 +298,8 @@ public class Game_gui extends JPanel {
         });
         openButton.setPreferredSize(new Dimension(70,50));
         panelup.add(openButton,BorderLayout.EAST);
-
-
+        
+        //loadingPanel();
      
          //panel de batalla     
         //showBattleWindow("This is the first line.\nThis is the second line.\nThis is the third line.\nThis is the fourth line.\nThis is the fifth line.");
@@ -905,12 +905,66 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 		this.subPanels = subPanels;
 	}
 
-	public Game_gui() {
-
-
-	}
 
 	//metodos
+	
+    public void loadingPanel() {
+        JPanel customPanel = new JPanel();
+        customPanel.setLayout(new BorderLayout());
+        customPanel.setOpaque(false);
+
+        // JLabel para mostrar "Cargando..."
+        JLabel loadingLabel = new JLabel("Saving Game...");
+        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        loadingLabel.setFont(gameFont);
+        loadingLabel.setForeground(Color.WHITE);
+        customPanel.add(loadingLabel, BorderLayout.CENTER);
+
+        // JLabel para mostrar el GIF (reemplaza con tu ruta real del GIF)
+        ImageIcon gifIcon = new ImageIcon("./src/gui/loading.gif");
+        JLabel gifLabel = new JLabel(gifIcon);
+        // Establecer el tamaño del JLabel con el GIF
+        Dimension gifSize = new Dimension(100, 100); // Cambia las dimensiones según sea necesario
+        gifLabel.setPreferredSize(gifSize);
+        gifLabel.setSize(gifSize);
+
+        customPanel.add(gifLabel, BorderLayout.EAST);
+
+        customPanel.add(gifLabel, BorderLayout.EAST);
+
+        // Posición y tamaño del panel personalizado
+        int panelWidth = 300;
+        int panelHeight = 100;
+        int panelX = 20; // Posición X en la esquina izquierda
+        int panelY = 950; // Posición Y en la parte inferior
+
+        customPanel.setBounds(panelX, panelY, panelWidth, panelHeight);
+
+        // Agregar el panel al mainpanel
+        mainpanel.add(customPanel, JLayeredPane.PALETTE_LAYER);
+        mainpanel.revalidate();
+        
+        // Hacer visible el panel
+        customPanel.setVisible(true);
+        
+        // Temporizador para ocultar el panel después de 3 segundos
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	customPanel.setVisible(false);
+                mainpanel.remove(customPanel);
+                mainpanel.revalidate();
+            }
+        });
+
+        timer.setRepeats(false); // Ejecutar solo una vez
+        timer.start(); // Iniciar el temporizador
+
+    }
+	
+	
+	
+	
 
 	
 	
@@ -1114,6 +1168,8 @@ public class MiPanelito extends JPanel {
     private boolean isoccupied;
     private String panelcontent;
 	String future_structure;
+	
+	
 
 
 	
@@ -1122,7 +1178,15 @@ public class MiPanelito extends JPanel {
     
     
 
-    public boolean isIsoccupied() {
+    public String getFuture_structure() {
+		return future_structure;
+	}
+
+	public void setFuture_structure(String future_structure) {
+		this.future_structure = future_structure;
+	}
+
+	public boolean isIsoccupied() {
 		return isoccupied;
 	}
 
