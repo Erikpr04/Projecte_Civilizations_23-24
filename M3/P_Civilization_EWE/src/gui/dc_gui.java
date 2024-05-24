@@ -74,7 +74,7 @@ public class dc_gui  {
 
 			}
 
-			public void startnewgame(String username1,String photoindex) {
+			public void startnewgame(String username1,String photoindex) throws MiSQLException {
 				
 				
 				username = username1;

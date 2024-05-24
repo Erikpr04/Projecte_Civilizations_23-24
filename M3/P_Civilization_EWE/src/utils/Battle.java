@@ -202,8 +202,7 @@ public class Battle {
 	
 	
 	
-	//METODOS
-	
+	//METODOS EXTRA
 	public String getBattleReport(int battles) {
 		String report = "";
 		String[] nameUnits = {"Swordsman", "Spearman", "Crossbow", "Cannon", 
@@ -211,7 +210,7 @@ public class Battle {
 		                      "Magician", "Priest"};
 
 		// Encabezado de las estadísticas de batalla
-		report += " BATTLE STATISTICS\n\n";
+		report += " BATTLE STATISTICS: " + battles +"\n\n";
 
 		// Encabezado de la sección de batalla
 		report += String.format(" %-25s%4s%8s   %-16s%5s%10s\n\n", 
@@ -298,7 +297,7 @@ public class Battle {
 	//recuento de las tropas de cada bando (usamos initialArmies para calcular el recuento total de tropas)
 	private boolean remainderPercentageFleet() {
 		
-		boolean stop = true;
+		boolean stop = false;
 		
 		
 		int initialCivilizationUnits = getInitialNumberUnitsCivilization();
@@ -321,7 +320,7 @@ public class Battle {
 		
 		//COMPROBAR SI SE CUMPLE que el recuento total sea inferior a 20%
 		if (counterUnitsCivilization <= percentageCivilization || counterUnitsEnemy <= percentageEnemy) {
-			stop = false;
+			stop = true;
 		}		
 		
 		return stop;
@@ -534,7 +533,7 @@ public class Battle {
 		//Seleccionamos el orden de ataque
 		
 		boolean myTurn = false;
-		boolean endBattle = true;
+		boolean endBattle = false;
 		boolean extraTurn = false;
 	
 		
@@ -553,9 +552,9 @@ public class Battle {
 		Random  grupoAleatorio = new Random();
 		Random  chanceAttack = new Random();
 		
-		while (endBattle) {
+		while (!endBattle) {
 			//Turno de Civilizacion
-			if (myTurn && endBattle) {
+			if (myTurn && !endBattle) {
 				
 				if (!extraTurn) {
 					attackGroup = getCivilizationGroupAttacker();
@@ -646,7 +645,7 @@ public class Battle {
 					//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
 					endBattle = remainderPercentageFleet();
 					
-					if (endBattle) {
+					if (!endBattle) {
 					
 						//probabilidad de turno extra para atacar:
 						Random attackAgain = new Random();
@@ -666,7 +665,7 @@ public class Battle {
 			}	
 			
 			//Turno de Enemigos //enemyTurn
-			else if (!myTurn && endBattle) {
+			else if (!myTurn && !endBattle) {
 				
 				if (!extraTurn) {
 					attackGroup = getEnemyGroupAttacker();
@@ -769,7 +768,7 @@ public class Battle {
 					
 					//metodo para calcular 20% unidades totales y, en caso afirmativo, sale del bucle 
 					endBattle = remainderPercentageFleet();
-					if (endBattle) {
+					if (!endBattle) {
 						//probabilidad de turno extra para atacar:
 						Random attackAgain = new Random();
 						int chanceAttackAgain = attackAgain.nextInt(101);
@@ -817,25 +816,24 @@ public class Battle {
 		} else {
 			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
 		}
-			
 		
+	//CONTADOR DE BATALLAS SUBE
+		classes.getCv().setBattles(classes.getCv().getBattles() + 1);
+				
 	//GUARDAR DATOS EN LA BASE DE DATOS:
 		
 		//intanciamos una clase conexion para poder realizar todos los cambios
 		ConnectionDB cdb = new ConnectionDB();
 		
-		classes.getCv().setBattles(classes.getCv().getBattles() + 1);
 		
 		int numBattle = classes.getCv().getBattles(); //aqui hay que recuperar el count de batallas de la clase civilization o SELECT del ultimo num_batalla
-		int civilization_Id = 1; //en un principio solo hay una civilizacion "1"
+		int civilization_Id = classes.getCv().getId(); //en un principio solo hay una civilizacion "1"
 
 		
-		//eliminamos unidades muertas:
+		//eliminamos unidades muertas en BD usando su id:
 		 cdb.eliminarUnits(deathAttackUnitIds, deathDefenseUnitIds, deathSpecialUnitsIds);
 		
-			
-		
-		 	battlelistener.updatecv_after_battle(wasteWoodIron);
+		 battlelistener.updatecv_after_battle(wasteWoodIron);
 		
 		//Actualziar EXPERIENCIA local unidades
 		for (int i = 0; i < civilizationArmy.size(); i++) {
@@ -850,28 +848,23 @@ public class Battle {
 					((SpecialUnit) civilizationArmy.get(i).get(j)).setExperience();
 				}
 			}
-		}
-		
+		}	
 		
 		//Actualizar Civilization
-		
 		classes.getCv().setArmy(civilizationArmy);
-		
 		
 		//Actualizar civilizacion en bd
 		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
-		 
-		 
+		  
 		 //update de las unidades restantes
-		 
 		 cdb.actualizarUnitsBD(myArmy);		 
 		 
 		 //insertar battleStats y battleLog  (REVISAR EN CLASE) -------------------------------------
-		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(0));
+		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(numBattle));
 		 cdb.insertarBattleLog(civilization_Id, numBattle, getBattleDevelopment());
 		 
 		
-		 //INSERT apra las tablas de informacion extra de la batalla:
+    //INSERT apra las tablas de informacion extra de la batalla:
 		
 		 //CivilizationUnits
 		 for (int i = 0; i < initialArmies[0].length; i++) {

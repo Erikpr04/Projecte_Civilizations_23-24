@@ -533,15 +533,18 @@ public class Main {
 				return m.classes.getCv().getMagicTower();
 			}
 
-			@Override
 			public void update_resources() {
-				// TODO Auto-generated method stub
+				
 				
 			}
 
 			
-			public void clear_and_startdb() {
+			public void clear_and_startdb() throws MiSQLException {
+				database.getConnectionDB().eliminarCivilizacion(m.classes.getCv().getId());
+				System.out.println("Base de datos borrada");
 				
+				database.getConnectionDB().crearDatosCivilization(null);
+				System.out.println("Base de datos creada");
 			}
 
 
