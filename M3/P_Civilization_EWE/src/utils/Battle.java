@@ -202,7 +202,9 @@ public class Battle {
 	
 	
 	
+	
 	//METODOS EXTRA
+	
 	public String getBattleReport(int battles) {
 		String report = "";
 		String[] nameUnits = {"Swordsman", "Spearman", "Crossbow", "Cannon", 
@@ -213,26 +215,22 @@ public class Battle {
 		report += " BATTLE STATISTICS: " + battles +"\n\n";
 
 		// Encabezado de la sección de batalla
-		report += String.format(" %-25s%4s%8s   %-16s%5s%10s\n\n", 
+		report += String.format(" %-25s%4s%8s                      %-16s%5s%10s\n\n", 
 								"Civilization Army", 
 								"Units", 
 								"Drops", 
 								"Enemy Army", 
 								"Units", 
-								"Drops\n\n");
+								"Drops");
 
 
 		// Agregar información de cada tipo de unidad
 		for (int i = 0; i < getCivilizationArmy().size(); i++) {
 		    if (i < 4) {
 		        // Unidades cuerpo a cuerpo y a distancia
-		        report += String.format(" %-25s%5d%8d   %-16s%5d%8d\n\n",
-		                                nameUnits[i],
-		                                getInitialArmies()[0][i],
-		                                getCivilizationDeaths()[i],
-		                                nameUnits[i],
-		                                getInitialArmies()[1][i],
-		                                getEnemyDeaths()[i]);
+		        report += " " + nameUnits[i] + " ".repeat(32 - nameUnits[i].length() - String.valueOf(getInitialArmies()[0][i]).length()) + getInitialArmies()[0][i] + " ".repeat(12 - String.valueOf(getCivilizationDeaths()[i]).length()) + 
+		        		getCivilizationDeaths()[i] + " ".repeat(22) + nameUnits[i] + " ".repeat(30 - nameUnits[i].length() - String.valueOf(getInitialArmies()[1][i]).length()) + 
+		                                getInitialArmies()[1][i] + " ".repeat(16 - String.valueOf(getEnemyDeaths()[i]).length()) + getEnemyDeaths()[i] + "\n\n";
 		    } else {
 		        // Otras unidades
 		        report += String.format(" %-25s%5d%8d\n\n",

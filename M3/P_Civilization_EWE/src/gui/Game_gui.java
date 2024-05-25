@@ -1190,6 +1190,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
     
 
     void battlelog_frame() {
+    	listener.refresh_battle_logs_reports();
         JFrame popupFrame = new JFrame("Battle Log");
         popupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

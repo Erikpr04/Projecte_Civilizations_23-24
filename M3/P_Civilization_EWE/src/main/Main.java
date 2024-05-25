@@ -362,8 +362,8 @@ public class Main {
 			public void load_game_gui() {
 				
 				maintimer.schedule(resourcestask, 10000, 10000);
-				maintimer.schedule(shownotificationtask, 20000, 1200000);
-				maintimer.schedule(startbattle, 25000, 1200000);
+				maintimer.schedule(shownotificationtask, 20000, 120000);
+				maintimer.schedule(startbattle, 25000, 120000);
 								
 			}
 
