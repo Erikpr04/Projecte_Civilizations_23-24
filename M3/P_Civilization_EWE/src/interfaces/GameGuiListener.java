@@ -3,6 +3,8 @@ package interfaces;
 import java.util.Timer;
 
 import exceptions.MiSQLException;
+import exceptions.ResourceException;
+import gui.Game_gui.MiPanelito;
 
 public interface GameGuiListener {
     void load_game_gui();
@@ -19,9 +21,7 @@ public interface GameGuiListener {
     
     
     void update_army_db( )throws MiSQLException;
-    
-    void update_structures_db(String structuretype,int number_structures) throws MiSQLException;
-
+ 
 
     void update_technologies();
     
@@ -29,15 +29,16 @@ public interface GameGuiListener {
     void create_troop(int TroopNumber,int Unitstocreate) throws MiSQLException;
     
     
-    void create_farm();
-    void create_church();
-    void create_carpentry();
+    void create_farm( );
+    void create_church( );
+    void create_carpentry( );
     void create_smithy();
     void create_magic_tower();
     boolean sanctifyunits();
     
     int getcvchurch();
     int getcvmagic_tower();
-	void clear_and_startdb( String username, int photoindex);
+	void clear_and_startdb() throws MiSQLException, ResourceException;
+	void refresh_battle_logs_reports();
     
 }

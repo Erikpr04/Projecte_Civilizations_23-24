@@ -165,6 +165,7 @@ public class ConnectionDB {
                 System.out.println("Datos recuperados correctamente.");
             } else {
             	System.out.println("No se encontraron registros");
+            	throw new MiSQLException("No se encontraron registros");
             }
             
 //          conn.commit();

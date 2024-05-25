@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,6 +20,7 @@ import javax.swing.JOptionPane;
 
 import classes.Civilization;
 import exceptions.MiSQLException;
+import exceptions.ResourceException;
 import gui.Game_gui.MiPanelito;
 import interfaces.GameGuiListener;
 import interfaces.MainMenuListener;
@@ -49,12 +52,32 @@ public class dc_gui  {
 	private Civilization civilization;
 
 	
-
+	
 
 	
 	
 
     
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+	public int getProfileindex() {
+		return profileindex;
+	}
+
+
+	public void setProfileindex(int profileindex) {
+		this.profileindex = profileindex;
+	}
 
 
 	public dc_gui(Civilization civilization) {
@@ -72,7 +95,7 @@ public class dc_gui  {
 			public void loadgame() throws MiSQLException {
 		        invoke_game_gui();	
 				if (!load_game()) {
-				    JOptionPane.showMessageDialog(null, "Error: no game loaded in database", "Error", JOptionPane.ERROR_MESSAGE);
+				    JOptionPane.showMessageDialog(null, "Error loading Database Data", "Error", JOptionPane.ERROR_MESSAGE);
 					
 				}else {
 			        mainMenuFrame.dispose(); 
@@ -84,7 +107,7 @@ public class dc_gui  {
 
 			}
 
-			public void startnewgame(String username1,int photoindex1) {
+			public void startnewgame(String username1,int photoindex1) throws MiSQLException, ResourceException {
 				
 				
 				
@@ -93,9 +116,9 @@ public class dc_gui  {
 		        username = username1;
 		        profileindex = photoindex1;
 		        invoke_game_gui();
-		        ggl.clear_and_startdb(username,photoindex1);
-		        
+		        ggl.clear_and_startdb();
 		        ggl.load_game_gui();
+		        gui_obj.setPpindex(photoindex1);
 		        GameFrame.setVisible(true);
 		        
 				
@@ -121,34 +144,84 @@ public class dc_gui  {
         mainMenuFrame.setVisible(true);
     }
 
-    // Método para invocar la GUI del juego
+ // Método para invocar la GUI del juego
     public void invoke_game_gui() {
     	
-        GameFrame = new JFrame("Game GUI");
-        GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	
+    	Object[] options = {"Probar ventana normal", "Probar pantalla completa"};
 
-        try {
-			gui_obj = new Game_gui(10, 10);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        gui_obj.setListener(this.ggl);
-        
-        GameFrame.add(gui_obj, BorderLayout.CENTER);
+        int choice = JOptionPane.showOptionDialog(null,
+                "Elige una opción (Pruebas, Decidme como os va):", "Opción",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]);
 
-        GameFrame.pack();
-        GameFrame.setLocationRelativeTo(null);
+        if (choice == JOptionPane.YES_OPTION) {
+            System.out.println("Probar ventana normal seleccionada");
+            GameFrame = new JFrame("Game GUI");
+            GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                
-        gui_obj.setUsername(username);
-        gui_obj.setPpindex(profileindex);
+            try {
+    			gui_obj = new Game_gui(10, 10);
+    		} catch (Exception e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+            
+            gui_obj.setListener(this.ggl);
+            
+            GameFrame.add(gui_obj, BorderLayout.CENTER);
+
+            GameFrame.pack();
+            GameFrame.setLocationRelativeTo(null);
+
+                    
+            gui_obj.setUsername(username);
+            gui_obj.setPpindex(profileindex);
 
 
 
-        
+            
+        }else if (choice == JOptionPane.NO_OPTION) {
+            System.out.println("Probar pantalla completa seleccionada");
+            GameFrame = new JFrame("Game GUI");
+            GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            try {
+                gui_obj = new Game_gui(10, 10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            gui_obj.setListener(this.ggl);
+            GameFrame.add(gui_obj, BorderLayout.CENTER);
+
+            // Obtener el dispositivo gráfico (monitor)
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
+            if (gd.isFullScreenSupported()) {
+                // Configurar el JFrame en modo pantalla completa antes de hacerlo visible
+                GameFrame.setUndecorated(true);
+                gd.setFullScreenWindow(GameFrame);
+            } else {
+                System.err.println("Pantalla completa no soportada");
+                GameFrame.setSize(800, 600); // Tamaño por defecto si no es soportado
+            }
+
+            GameFrame.setVisible(true); // Hacer visible el JFrame después de todas las configuraciones
+
+            gui_obj.setUsername(username);
+            gui_obj.setPpindex(profileindex);        } else {
+            System.out.println("Diálogo cerrado");
+            // Acción si se cierra el diálogo sin seleccionar ninguna opción
+        }
+    	
+    	
+
     }
+
 
 
     //metodo para actualizar recursos en game gui
@@ -163,6 +236,7 @@ public class dc_gui  {
 	    	ggl.load_game_gui();
 			ggl.load_db_data();
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return false;
 		}
 		return true;

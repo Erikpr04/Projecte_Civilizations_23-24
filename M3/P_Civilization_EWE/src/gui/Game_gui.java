@@ -2,6 +2,7 @@ package gui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -71,9 +72,12 @@ public class Game_gui extends JPanel {
     JLabel imageLabel;
     ImageIcon selectedpp;
     private Font gameFont,gameFont_Big;
+    String[] battleLogs = new String[]{"Battle Log 1", "Battle Log 2", "Battle Log 3", "Battle Log 4", "Battle Log 5"};
+    String[] battleReports = new String[]{"Battle Report 1", "Battle Report 2", "Battle Report 3", "Battle Report 4", "Battle Report 5"};
 
 
 
+    
 	
 	
 
@@ -86,7 +90,23 @@ public class Game_gui extends JPanel {
 
     
 
-    public int getAttackint() {
+    public String[] getBattleLogs() {
+		return battleLogs;
+	}
+
+	public void setBattleLogs(String[] battleLogs) {
+		this.battleLogs = battleLogs;
+	}
+
+	public String[] getBattleReports() {
+		return battleReports;
+	}
+
+	public void setBattleReports(String[] battleReports) {
+		this.battleReports = battleReports;
+	}
+
+	public int getAttackint() {
 		return attackint;
 	}
 
@@ -107,6 +127,7 @@ public class Game_gui extends JPanel {
 	}
 
 	public void setPpindex(int ppindex) {
+		System.out.println("Current "+ ppindex);
 		this.ppindex = ppindex;
 	    selectedpp = ppphotos[ppindex-1];
 	    Image originalImage = selectedpp.getImage();
@@ -161,7 +182,6 @@ public class Game_gui extends JPanel {
 	public Game_gui(int rows, int cols) throws Exception {
 		
 		//cargamos partida
-		//updatePanels();
 		
 		gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
 		gameFont_Big = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(30f);
@@ -279,6 +299,32 @@ public class Game_gui extends JPanel {
         panelright1.setPreferredSize(new Dimension(300, 400));
         panelright2.setPreferredSize(new Dimension(425, 675));
         panelup.setPreferredSize(new Dimension(1400, 20));
+        
+        
+        
+        //Añadimos JMenuBar
+        JMenuBar menuBar = new JMenuBar();
+
+	     // Agregar elementos de menú
+	     JMenu cheatsMenu = new JMenu("Cheats");
+	     JMenu helpMenu = new JMenu("Help");
+	
+	     // Agregar elementos de menú al menú "Cheats"
+	     JMenuItem cheat1 = new JMenuItem("Cheat 1");
+	     JMenuItem cheat2 = new JMenuItem("Cheat 2");
+	     cheatsMenu.add(cheat1);
+	     cheatsMenu.add(cheat2);
+	
+	     // Agregar elementos de menú al menú "Help"
+	     JMenuItem helpItem = new JMenuItem("Help");
+	     helpMenu.add(helpItem);
+	
+	     // Agregar los menús al menú principal
+	     menuBar.add(cheatsMenu);
+	     menuBar.add(helpMenu);
+	
+	     // Agregar el menú a un panel
+	     panelup.add(menuBar);
 
         
         
@@ -291,15 +337,13 @@ public class Game_gui extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
             	battlelog_frame();
-        		//updatePanels();
 
                 
             }
         });
-        openButton.setPreferredSize(new Dimension(70,50));
+        openButton.setPreferredSize(new Dimension(100,50));
         panelup.add(openButton,BorderLayout.EAST);
         
-        //loadingPanel();
      
          //panel de batalla     
         //showBattleWindow("This is the first line.\nThis is the second line.\nThis is the third line.\nThis is the fourth line.\nThis is the fifth line.");
@@ -680,18 +724,21 @@ public class Game_gui extends JPanel {
     
     
     
-	public void showBattleWindow(String text) {
-	    // Crear la ventana
-	    JPanel battleFrame = new JPanel();
-	    battleFrame.setSize(500, 600);
+ public void showBattleWindow(String text) {
+        // Crear el panel borroso como fondo
+        BlurryPanel backgroundPanel = new BlurryPanel();
+        backgroundPanel.setBounds(0, 0, 1920, 1080);
+
+        // Crear el panel de batalla
+        JPanel battleFrame = new JPanel();
+	    battleFrame.setPreferredSize(new Dimension(500,600));
 	    battleFrame.setLayout(new BorderLayout());
 
 	    // Crear y agregar el título
 	    JLabel titleLabel = new JLabel("The battle begins!", SwingConstants.CENTER);
+	    titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0));
 	    titleLabel.setFont(gameFont);
-	    battleFrame.add(titleLabel, BorderLayout.NORTH);
 
-	    // Crear y agregar el área de texto
 	    JTextArea textArea = new JTextArea();
 	    textArea.setEditable(false);
 	    textArea.setFont(gameFont);
@@ -711,8 +758,8 @@ public class Game_gui extends JPanel {
 	            deleteButton.addActionListener(new ActionListener() {
 	                @Override
 	                public void actionPerformed(ActionEvent e) {
-	                    battleFrame.setVisible(false); // Ocultar el panel
-	                    battleFrame.getParent().remove(battleFrame); // Eliminar el panel del contenedor principal
+	                	backgroundPanel.setVisible(false); // Ocultar el panel
+	                    battleFrame.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
 	                }
 	            });
 	            battleFrame.add(deleteButton, BorderLayout.SOUTH); // Agregar el botón para eliminar el panel
@@ -724,7 +771,37 @@ public class Game_gui extends JPanel {
 	    String[] lines = text.split("\n");
 	    int[] currentLineIndex = {0}; // Usar un array para permitir acceso en la clase anónima
 
-	    // Agregar el KeyListener para la tecla Enter
+	 // Crear el botón "Delete Panel" como un botón cuadrado con una imagen
+	    JButton deleteButton = new JButton();
+	    deleteButton.setPreferredSize(new Dimension(50, 50)); // Tamaño cuadrado
+	    deleteButton.setIcon(new ImageIcon("./src/gui/cross.png"));
+	    deleteButton.setContentAreaFilled(false); // Hacer el área de contenido transparente
+	    deleteButton.setBorderPainted(false); // Quitar el borde del botón
+
+	    // Agregar el ActionListener para ocultar el panel al hacer clic en el botón
+	    deleteButton.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            backgroundPanel.setVisible(false); // Ocultar el panel
+	            battleFrame.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
+	        }
+	    });
+
+	    // Establecer la posición del botón en la esquina superior derecha
+	 // Crear el panel de botones con BorderLayout
+	    JPanel buttonPanel = new JPanel(new BorderLayout());
+
+	    // Agregar el JLabel al centro del panel de botones
+	    buttonPanel.add(titleLabel, BorderLayout.CENTER);
+
+	    // Agregar el botón "Delete Panel" al lado derecho del panel de botones
+	    buttonPanel.add(deleteButton, BorderLayout.EAST);
+
+	    // Agregar el panel de botones al panel de batalla
+	    battleFrame.add(buttonPanel, BorderLayout.NORTH);
+
+
+	    // KeyListener para la tecla Enter
 	    textArea.addKeyListener(new KeyAdapter() {
 	        @Override
 	        public void keyPressed(KeyEvent e) {
@@ -733,32 +810,29 @@ public class Game_gui extends JPanel {
 	                    textArea.append(lines[currentLineIndex[0]] + "\n");
 	                    currentLineIndex[0]++;
 	                    if (currentLineIndex[0] >= lines.length) {
-	                        showAllButton.setEnabled(false); // Si ya se han mostrado todas las líneas, deshabilitar el botón
-	                        JButton deleteButton = new JButton("Delete Panel");
-	                        deleteButton.addActionListener(new ActionListener() {
-	                            @Override
-	                            public void actionPerformed(ActionEvent e) {
-	                                battleFrame.setVisible(false); // Ocultar el panel
-	                                battleFrame.getParent().remove(battleFrame); // Eliminar el panel del contenedor principal
-	                            }
-	                        });
-	                        battleFrame.add(deleteButton, BorderLayout.NORTH); // Agregar el botón para eliminar el panel
+	                        showAllButton.setEnabled(false); // Deshabilitar el botón "Show All" después de mostrar todas las líneas
+	                        deleteButton.setEnabled(true); // Habilitar el botón "Delete Panel"
 	                    }
 	                }
 	            }
 	        }
 	    });
+        
+        backgroundPanel.add(battleFrame);
+        
 
-	    mainpanel.add(battleFrame, JLayeredPane.PALETTE_LAYER);
-	    battleFrame.setLocation(650, 280);
+        // Aplicar el borde vacío al battleFrame
+        backgroundPanel.setBorder(BorderFactory.createEmptyBorder(250, 0, 0, 0));
 
-	    // Hacer visible la ventana
-	    battleFrame.setVisible(true);
-	    // Solicitar el foco para el textArea para que reciba eventos de teclado
-	    textArea.requestFocusInWindow();
-	}
+        // Agregar el panel borroso al JLayeredPane con la capa adecuada
+        mainpanel.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
 
+        // Hacer visible el panel de batalla
+        battleFrame.setVisible(true);
 
+        // Solicitar el foco para el textArea para que reciba eventos de teclado
+        textArea.requestFocusInWindow();
+    }
     
 //metodo notificacion
     
@@ -771,6 +845,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
         // Create JTextArea for multiline text display
         JTextArea customTextArea = new JTextArea(s);
+        customTextArea.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0)); // Añadir un margen de 5 píxeles en los cuatro lados
         customTextArea.setFont(gameFont);
         customTextArea.setForeground(Color.WHITE);
         customTextArea.setLineWrap(true);
@@ -784,7 +859,6 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         customPanel.setLayout(new BorderLayout());
         customPanel.add(iconLabel, BorderLayout.WEST);
         customPanel.add(customTextArea, BorderLayout.CENTER);
-        customPanel.setBackground(Color.red);
 
         int parentWidth = parentComponent.getWidth();
         int panelWidth = 500; // Ancho del panel personalizado
@@ -841,7 +915,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         timer.start(); // Iniciar la animación
     }	
 	
-    private void getcv_data() {
+    public void getcv_data() {
     	
 	    int[] cv_array = new int[11]; // Declaración y creación del array
 
@@ -993,6 +1067,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     		getManalabel().setText(Integer.toString(getMana()));
     		
+    		
     		getFoodlabel().repaint();
     		getWoodlabel().repaint();
     		getIronlabel().repaint();
@@ -1121,13 +1196,27 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         // Crear un JTabbedPane
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        // Crear 5 pestañas, cada una con un JTextArea
-        for (int i = 1; i <= 5; i++) {
-            JTextArea textArea = new JTextArea(10, 30);
-            textArea.setText("Battle " + i);
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            tabbedPane.addTab("Tab " + i, scrollPane);
+        // Agregar las pestañas para Battle Reports y Battle Logs
+        for (int i = 0; i < battleReports.length; i++) {
+            // Crear JTextArea para Battle Log
+            JTextArea logTextArea = new JTextArea(10, 30);
+            logTextArea.setText(battleLogs[i]);
+            JScrollPane logScrollPane = new JScrollPane(logTextArea);
+            logScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+            // Crear JTextArea para Battle Report
+            JTextArea reportTextArea = new JTextArea(10, 30);
+            reportTextArea.setText(battleReports[i]);
+            JScrollPane reportScrollPane = new JScrollPane(reportTextArea);
+            reportScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+            // Crear un JTabbedPane para Battle Log y Battle Report
+            JTabbedPane innerTabbedPane = new JTabbedPane();
+            innerTabbedPane.addTab("Battle Log", logScrollPane);
+            innerTabbedPane.addTab("Battle Report", reportScrollPane);
+
+            // Agregar el JTabbedPane interno a la pestaña actual
+            tabbedPane.addTab("Tab " + (i + 1), innerTabbedPane);
         }
 
         // Cargar la imagen battleicon.png
@@ -1151,6 +1240,14 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         popupFrame.setLocationRelativeTo(null);
         popupFrame.setVisible(true);
     }
+
+
+
+
+
+
+
+
 
     
     
@@ -1309,21 +1406,29 @@ public class MiPanelito extends JPanel {
 		                                    default:
 		                                        break;
 		                                    }
-		                                    //guardamos datos en base de datos
-		                                    listener.update_resources_db();
+		
 
 										} catch (Exception e1) {
 										
 											e1.printStackTrace();
 										}
-
-
-
+		                                
+		                                
+		                                
 		                                // Cambiar la imagen del panel al edificio correspondiente
 		                                setCurrentImage(buildingImages[index]);
 		                                repaint();
 		                                isoccupied = true;
 		                                panelcontent = future_structure;
+
+                                        //guardamos datos en base de datos
+	                                    try {
+											listener.update_resources_db();
+										} catch (MiSQLException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+
 		                                
 		                            } else {
 		               
@@ -1901,7 +2006,44 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
         }
     }
 }
-    
+
+
+
+class BlurryPanel extends JPanel {
+    public BlurryPanel() {
+        setOpaque(false); // Hace que el panel sea transparente
+        setFocusable(true); // Hace que el panel pueda recibir el foco
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                e.consume(); // Consume el evento del mouse para evitar que se propague a los componentes subyacentes
+            }
+        });
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                e.consume(); // Consume el evento del teclado para evitar que se propague a los componentes subyacentes
+            }
+        });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        float alpha = 0.5f; // Establecer la transparencia
+        g2d.setComposite(AlphaComposite.SrcOver.derive(alpha)); // Aplicar transparencia
+        g2d.setColor(getBackground()); // Establecer el color de fondo
+        g2d.fillRect(0, 0, getWidth(), getHeight()); // Rellenar el área con el color de fondo
+        g2d.dispose();
+    }
+
+    @Override
+    protected void paintChildren(Graphics g) {
+        // Permitir que los componentes hijos se pinten sobre el panel
+        super.paintChildren(g);
+    }
+}
     
     
 

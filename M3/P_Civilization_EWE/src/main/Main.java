@@ -3,6 +3,7 @@ package main;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import gui.Game_gui.MiPanelito;
 import gui.dc_gui;
@@ -39,6 +40,71 @@ public class Main {
 	
     
     //metodo para cargar datos de clase cv a gui
+    
+    
+    public void load_all_data() {
+    	
+    	try {
+			update_panels();
+		} catch (ResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	dc_gui.getGui_obj().setFood(classes.getCv().getFood());
+    	dc_gui.getGui_obj().setIron(classes.getCv().getIron());
+    	dc_gui.getGui_obj().setMana(classes.getCv().getMana());
+    	dc_gui.getGui_obj().setWood(classes.getCv().getWood());
+    	
+    	dc_gui.getGui_obj().setAttackint(classes.getCv().getTechnologyAttack());
+    	dc_gui.getGui_obj().setDefenseint(classes.getCv().getTechnologyDefense());
+    	
+    	//ahora cargamos tropas
+    	
+    	dc_gui.getGui_obj().getcv_data();
+    	
+    	
+    	
+    	//cambiamos valores de los label de comida, que se actualizaran en tiempo real
+
+    	
+    	
+		try {
+			dc_gui.getGui_obj().update_resources_quantity();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		
+		
+		//sacamos battle report
+		
+		try {
+			dc_gui.getGui_obj().setBattleLogs(database.getConnectionDB().sacar5BattleLog());
+			dc_gui.getGui_obj().setBattleReports(database.getConnectionDB().sacar5BattleReports());
+
+		} catch (MiSQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//sacamos battle report
+		
+
+		
+		
+		
+		//actualizamos valores de nombre de usuario y foto
+		
+		
+		//COMPLETAR FUNCION DE AQUI ABAJO CON 
+		
+		//dc_gui.getGui_obj().getUsernameLabel().setText( AQUI USUARIO DE LA BBDD);;
+		
+				
+		
+
+    }
     
     
     
@@ -326,8 +392,15 @@ public class Main {
 				database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 
 				System.out.println("Resources updated db");
+				System.out.println("ppindex" + m.dc_gui.getGui_obj().getPpindex());
+				database.uploadPanels(m.dc_gui.getGui_obj().getSubPanels(),m.dc_gui.getGui_obj().getPpindex());
+				
+				System.out.println("Panels updated db");
+
 				//NOTICAMOS DE TODO EN LA BBDD
 				m.dc_gui.getGui_obj().loadingPanel();
+				
+				
 			}
 
 
@@ -467,7 +540,7 @@ public class Main {
 			}
 
 		
-			public void create_smithy() {
+			public void create_smithy( ) {
 				try {
 					m.classes.getCv().new_Smithy();
 				} catch (ResourceException e) {
@@ -513,14 +586,27 @@ public class Main {
 
 			public void load_db_data() throws MiSQLException {
 				
-				//cargamos paneles de la bbdd
-				m.update_panels();
+
 				
 				//cargar datos de recursos de la bbdd en clases
 				database.getConnectionDB().obtenerDatosCivilization(m.classes.getCv());
 				m.classes.getCv().setArmy(database.getConnectionDB().cargarUnitsBD());
 				
-				//ahora cargamos de clases a gui
+				System.out.println("Wood despues de cargar partida (Civilization)" + m.classes.getCv().getWood());
+				System.out.println("Iron despues de cargar partida (Civilization)" + m.classes.getCv().getIron());
+
+				//ahora cargamos todo de clases y paneles a gui
+				
+				m.load_all_data();
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 
 			@Override
@@ -544,15 +630,30 @@ public class Main {
 			}
 
 			
-			public void clear_and_startdb(String username, int photoindex) throws MiSQLException {
+			public void clear_and_startdb() throws MiSQLException, ResourceException {
 				database.getConnectionDB().eliminarCivilizacion(m.classes.getCv().getId());
 				System.out.println("Base de datos borrada");
 				
-				database.getConnectionDB().crearDatosCivilization(username);
+				database.getConnectionDB().crearDatosCivilization(m.dc_gui.getUsername());
 				System.out.println("Base de datos creada");
+				
+		        m.dc_gui.getGui_obj().setPpindex(m.dc_gui.getProfileindex());
+
 				
 				//cargar paneles por defecto del juego
 				m.update_panels();
+			}
+
+			@Override
+			public void refresh_battle_logs_reports() {
+				try {
+					m.dc_gui.getGui_obj().setBattleLogs(database.getConnectionDB().sacar5BattleLog());
+					m.dc_gui.getGui_obj().setBattleReports(database.getConnectionDB().sacar5BattleReports());
+
+				} catch (MiSQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
 			}
 
 
@@ -563,69 +664,79 @@ public class Main {
 
 	
 
-    public void update_panels() {
-        ResultSet resultSet = database.getOccupiedPanels();
-        MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
-        dc_database database = new dc_database();
-        String[] structureList = new String[]{"farm", "smithy", "church", "magic_tower", "carpentry"};
+	public void update_panels() throws ResourceException {
+	    dc_database database = new dc_database();
+	    ResultSet resultSet = database.getOccupiedPanels();
+	    MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
+	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic_Tower", "Carpentry"};
+	    boolean isOccupied;
+	    int ppindex = 1;
+	
+	    if (resultSet != null) {
+	        try {
+	            while (resultSet.next()) {
+	                String structureType = resultSet.getString("structure_type");
+	                int isOccupiednumber = resultSet.getInt("is_occupied");
+	                if (isOccupiednumber == 0) {
+	                	isOccupied = false;
+	                }else {
+	                	isOccupied = true;
+	                }
+	                int xPosition = resultSet.getInt("x_position");
+	                int yPosition = resultSet.getInt("y_position");
+	                ppindex = resultSet.getInt("ppindex");
+	                int position = -1;
 
-        if (resultSet != null) {
-            try {
-                // Iterar sobre los resultados
-                while (resultSet.next()) {
-                    // Obtener datos de la base de datos
-                    String structureType = resultSet.getString("structure_type");
-                    boolean isOccupied = resultSet.getInt("is_occupied") == 1; // Convertir el entero a booleano
-                    int xPosition = resultSet.getInt("x_position");
-                    int yPosition = resultSet.getInt("y_position");
+	                for (int i = 0; i < structureList.length; i++) {
+	                    if (structureList[i].equals(structureType)) {
+	                        position = i;
+	                        break;
+	                    }
+	                }
+	                
 
-                    // Buscar la posición en structureList
-                    int position = -1; // Inicializamos en -1 para indicar que no se encontró el elemento
-                    for (int i = 0; i < structureList.length; i++) {
-                        if (structureList[i].equals(structureType)) {
-                            position = i;
-                            break;
-                        }
-                    }
+	                if (position != -1 && isOccupied) {
+	                    MiPanelito panel = subPanels[yPosition][xPosition];
+	                    panel.setCurrentImage(panel.getBuildingImages()[position]);
+	                    panel.setIsoccupied(isOccupied);
+	                    panel.revalidate();
+	                    panel.repaint();
 
-                    if (position != -1 && isOccupied) {
-                        subPanels[yPosition][xPosition].setCurrentImage(subPanels[yPosition][xPosition].getBuildingImages()[position]);
-                        subPanels[yPosition][xPosition].setIsoccupied(isOccupied);
+	                    switch (position) {
+	                        case 0:
+	                            classes.getCv().new_Farm();
+	                            break;
+	                        case 1:
+	                            classes.getCv().new_Smithy();
+	                            break;
+	                        case 2:
+	                            classes.getCv().new_Church();
+	                            break;
+	                        case 3:
+	                            classes.getCv().new_MagicTower();
+	                            break;
+	                        case 4:
+	                            classes.getCv().new_Carpentry();
+	                            break;
+	                        default:
+	                            break;
+	                    }
+	                } else {
+	                    System.out.println("Structure isn't occupied");
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+			        dc_gui.getGui_obj().setPpindex(ppindex);
+	                if (resultSet != null) resultSet.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 
-                        switch (position) {
-                            case 0:
-                                dc_gui.getGui_obj().getListener().create_farm();
-                                break;
-                            case 1:
-                                dc_gui.getGui_obj().getListener().create_smithy();
-                                break;
-                            case 2:
-                                dc_gui.getGui_obj().getListener().create_church();
-                                break;
-                            case 3:
-                                dc_gui.getGui_obj().getListener().create_magic_tower();
-                                break;
-                            case 4:
-                                dc_gui.getGui_obj().getListener().create_carpentry();
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        System.out.println("Structure isn't occupied");
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                // Cerrar el ResultSet y liberar recursos
-                try {
-                    if (resultSet != null) resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+	}
 	
 }
