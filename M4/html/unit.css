@@ -1,7 +1,14 @@
+@font-face {
+  font-family: 'Minecraft';
+  src: url('font/game_font.ttf') format('truetype');
+}
+
+
+
 body {
   background-color: #77db049f;
   position:relative;  
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Minecraft', sans-serif;
   color: #000000;
   margin: 0;
   padding: 20px;
@@ -37,7 +44,7 @@ img {
 img.unit {
   position: absolute;
   top: 100;
-  left: 800px; 
+  right: 250px; 
   height: 300px;
   width: 300px;
 }
@@ -45,7 +52,7 @@ img.unit {
 img.building {
   position: absolute;
   top: 100;
-  left: 750px; 
+  right: 250px; 
   height: 250px;
   width: 250px; 
   border: 2px solid black; 
