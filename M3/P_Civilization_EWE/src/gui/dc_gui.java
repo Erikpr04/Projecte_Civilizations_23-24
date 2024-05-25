@@ -84,7 +84,7 @@ public class dc_gui  {
 
 			}
 
-			public void startnewgame(String username1,int photoindex1) {
+			public void startnewgame(String username1,int photoindex1) throws MiSQLException {
 				
 				
 				

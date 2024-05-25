@@ -99,15 +99,15 @@ public class ConnectionDB {
             ps.setInt(2, civilization.getIron());
             ps.setInt(3, civilization.getFood());
             ps.setInt(4, civilization.getMana());
-            ps.setInt(5, civilization.getMagicTower());
-            ps.setInt(6, civilization.getFarm());
-            ps.setInt(7, civilization.getChurch());
-            ps.setInt(8, civilization.getSmithy());
-            ps.setInt(9, civilization.getCarpentry());
-            ps.setInt(10, civilization.getBattles());
-            ps.setInt(11, civilization.getTechnologyAttack());
-            ps.setInt(12, civilization.getTechnologyDefense());
-            ps.setInt(13, 1);
+            ps.setInt(5, civilization.getFarm());
+            ps.setInt(6, civilization.getSmithy());
+            ps.setInt(7, civilization.getCarpentry());
+            ps.setInt(8, civilization.getChurch());
+            ps.setInt(9, civilization.getMagicTower());     
+            ps.setInt(10, civilization.getTechnologyAttack());
+            ps.setInt(11, civilization.getTechnologyDefense());
+            ps.setInt(12, civilization.getBattles());
+            ps.setInt(13, civilization.getId());
             
             int resultado = ps.executeUpdate();
             System.out.println(resultado + " filas actualizadas correctamente. (Civilization)");
@@ -118,14 +118,9 @@ public class ConnectionDB {
             
             //actualizar datos paneles
             
-            
-            
-            
 //          conn.commit();
             conn.close();
-
-   
-            
+  
 		} catch (SQLException e) {
 			throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
 		}

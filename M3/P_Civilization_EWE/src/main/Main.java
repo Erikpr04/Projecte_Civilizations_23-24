@@ -242,9 +242,6 @@ public class Main {
 					
 					m.dc_gui.getGui_obj().showCustomPanel(m.dc_gui.getGui_obj().getMainpanel(),m.viewThread(m.enemy_army));
 
-			        
-
-				
 
 				}catch (Exception e){
 					e.printStackTrace();
@@ -312,10 +309,7 @@ public class Main {
 					e.printStackTrace();
 				}
 
-
-				
-				
-				
+			
 			}
 			
 
