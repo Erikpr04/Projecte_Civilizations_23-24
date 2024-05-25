@@ -163,7 +163,7 @@ public class ConnectionDB {
             }
             
 //          conn.commit();
-            conn.close();
+            conn.close(); 
  
 		} catch (SQLException e) {
 			throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
