@@ -1,9 +1,11 @@
 package gui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import exceptions.MiSQLException;
 import interfaces.MainMenuListener;
 
 import java.awt.*;
@@ -26,8 +28,10 @@ public class MainMenu extends JPanel {
 	private ImageIcon play_button  = new ImageIcon("./src/gui/mm_assets/play_button.png");
 	private ImageIcon settings_button  = new ImageIcon("./src/gui/mm_assets/settings_button.png");
     private MainMenuListener listener;
-    String[] userData;
-    JFrame creategameframe;
+    private String[] userData;
+    private JFrame creategameframe;
+    private Font gameFont;
+
 
 
 
@@ -60,6 +64,17 @@ public class MainMenu extends JPanel {
     public MainMenu() {
     	
     	
+        try {
+			gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    	
     	
     	
     	
@@ -80,7 +95,7 @@ public class MainMenu extends JPanel {
     	
     	titleLabel.setForeground(Color.WHITE);
     	
-    	titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    	titleLabel.setFont(gameFont);
     	titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
     	// Crear los botones del menú
@@ -150,14 +165,19 @@ public class MainMenu extends JPanel {
     	
     	loadGameButton.addMouseListener(new MouseListener() {
 			
-			@Override
+
 			public void mouseReleased(MouseEvent e) {
 				
 			}
 			
-			@Override
+
 			public void mousePressed(MouseEvent e) {
-				listener.loadgame();	
+				try {
+					listener.loadgame();
+				} catch (MiSQLException e1) {
+
+					e1.printStackTrace();
+				}	
 
 			}
 			
@@ -193,7 +213,7 @@ public class MainMenu extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-                openOptionsWindow();
+                openCreditsWindow();
 
 				
 			}
@@ -343,25 +363,89 @@ public class MainMenu extends JPanel {
     private void startGame(){
         dispose_main_menu();
 
-        // Notificar al listener que la ventana del menú principal se ha cerrado
-          this.listener.onMainMenuClosed();
-
 
 
     }
 
     
-    private void openOptionsWindow() {
-        // Crear una nueva ventana de opciones
-        JFrame optionsFrame = new JFrame("Options");
-        optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        optionsFrame.setSize(400, 300);
-        optionsFrame.setLocationRelativeTo(null);
+private void openCreditsWindow() {
+    // Crear una nueva ventana de opciones
+    JFrame optionsFrame = new JFrame("About Us");
+    optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    optionsFrame.setSize(600, 400);
+    optionsFrame.setLocationRelativeTo(null);
 
-        // Agregar componentes, configurar paneles, etc.
+    // Crear un panel principal con BorderLayout
+    ImageBackgroundPanel mainPanel = new ImageBackgroundPanel(new BorderLayout(), "./src/gui/panel_background_img.jpg");
+    optionsFrame.add(mainPanel);
 
-        optionsFrame.setVisible(true);
-    }
+
+ // Crear y agregar el título centrado en la parte superior con un borde superior de 30 píxeles
+    JLabel titleLabel = new JLabel("About Us:", SwingConstants.CENTER);
+    titleLabel.setFont(gameFont);
+    titleLabel.setOpaque(false);
+    titleLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0)); // 30 píxeles de borde superior
+    mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+
+    // Crear un panel para los nombres
+    JPanel namesPanel = new JPanel();
+    namesPanel.setLayout(new BoxLayout(namesPanel, BoxLayout.Y_AXIS));
+    namesPanel.add(Box.createRigidArea(new Dimension(0, 30))); // 30 píxeles de espacio en blanco
+
+    namesPanel.setOpaque(false);
+
+    // Agregar espacio en blanco al principio del panel para aumentar el margen superior
+    // Agregar el panel de nombres al panel principal
+    mainPanel.add(namesPanel, BorderLayout.CENTER);
+
+    // Crear y agregar el texto "Made by NEWELL" en la parte superior de namesPanel
+    JLabel madeByLabel = new JLabel("Made by NEWELL: ", SwingConstants.CENTER);
+    madeByLabel.setFont(gameFont);
+    madeByLabel.setBorder(BorderFactory.createEmptyBorder(0, 220, 0, 20)); // Agregar margen a la izquierda y derecha
+
+    namesPanel.add(madeByLabel);
+
+    // Nombres de los integrantes
+    String[] names = {"William Molina", "Erik Rojas", "Erik Pinto"};
+
+ // Añadir animación de fade in para los nombres
+ for (String name : names) {
+     JLabel nameLabel = new JLabel(name); // Centra el texto horizontalmente
+     nameLabel.setLayout(new BoxLayout(nameLabel, BoxLayout.Y_AXIS));
+
+     nameLabel.setFont(gameFont);
+     nameLabel.setBorder(BorderFactory.createEmptyBorder(20, 240, 0, 20)); // Agregar margen a la izquierda y derecha
+     nameLabel.setForeground(Color.white);
+     nameLabel.setForeground(new Color(0, 0, 0, 0)); // Inicialmente transparente
+     namesPanel.add(nameLabel);
+
+     Timer timer = new Timer(0, new ActionListener() {
+         private int alpha = 0;
+
+         @Override
+         public void actionPerformed(ActionEvent e) {
+             alpha += 10;
+             if (alpha > 255) {
+                 alpha = 255;
+                 ((Timer) e.getSource()).stop();
+             }
+             nameLabel.setForeground(new Color(0, 0, 0, alpha));
+         }
+     });
+     timer.setInitialDelay(0); // Esperar antes de empezar el fade in
+     timer.start();
+
+     try {
+         Thread.sleep(0); // Esperar antes de empezar con el siguiente nombre
+     } catch (InterruptedException e) {
+         e.printStackTrace();
+     }
+ }
+
+
+    optionsFrame.setVisible(true);
+}
     
     private void dispose_main_menu() {
             // Obtener la referencia a la ventana del menú principal
@@ -371,11 +455,7 @@ public class MainMenu extends JPanel {
             mainMenuFrame.dispose();
         }
 
-    public static void main(String[] args) {
-        	
 
-
-    }
     
     
     
@@ -398,7 +478,7 @@ public class MainMenu extends JPanel {
         JPanel usernamePanel = new JPanel();
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
         JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        usernameLabel.setFont(gameFont);
         JTextField usernameField = new JTextField();
         usernamePanel.add(usernameLabel);
         usernamePanel.add(Box.createVerticalStrut(5)); // Espacio entre etiqueta y campo de texto
@@ -410,7 +490,7 @@ public class MainMenu extends JPanel {
         JPanel profilePhotoPanel = new JPanel(new BorderLayout(10, 10));
         JPanel photoLabelPanel = new JPanel(new BorderLayout());
         JLabel pickPhotoLabel = new JLabel("Pick one profile photo:");
-        pickPhotoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        pickPhotoLabel.setFont(gameFont);
         photoLabelPanel.add(pickPhotoLabel, BorderLayout.WEST);
         photoLabelPanel.add(Box.createHorizontalGlue(), BorderLayout.CENTER); // Añadir espacio para ocupar el ancho
 
@@ -480,7 +560,7 @@ public class MainMenu extends JPanel {
                     int photoIndex = Integer.parseInt(photoGroup.getSelection().getActionCommand());
                     try {
                     	//listener para empezar nueva partida                    	
-    					listener.startnewgame(username,String.valueOf(photoIndex));
+    					listener.startnewgame(username,photoIndex);
     					creategameframe.dispose();
     					} catch (Exception ex) {
                         ex.printStackTrace();
@@ -528,7 +608,16 @@ class ImageBackgroundPanel extends JPanel {
         }
     }
 
-    @Override
+    public ImageBackgroundPanel(BorderLayout borderLayout,String imagePath) {
+    	super(borderLayout);
+        try {
+            backgroundImage = ImageIO.read(new File(imagePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+
+	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (backgroundImage != null) {
@@ -552,26 +641,6 @@ class LabelButton extends JButton {
         this.setBorderPainted(false);
         setForeground(Color.BLACK); // Color de texto predeterminado
 
-//        addMouseListener(new MouseAdapter() {
-//            public void mouseEntered(MouseEvent e) {
-//                // Cambiar el color del texto y agregar un borde al entrar el mouse
-//                setForeground(Color.WHITE);
-//                setBorder(BorderFactory.createLineBorder(Color.WHITE));
-//            }
-//
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                // Acción al hacer clic en el JLabel
-//                // Puedes agregar el comportamiento deseado aquí
-//            }
-//
-//            @Override
-//            public void mouseExited(MouseEvent e) {
-//                // Restaurar el color del texto y eliminar el borde al salir el mouse
-//                setForeground(Color.BLACK);
-//                setBorder(BorderFactory.createEmptyBorder());
-//            }
-//        });
     }
 }
 

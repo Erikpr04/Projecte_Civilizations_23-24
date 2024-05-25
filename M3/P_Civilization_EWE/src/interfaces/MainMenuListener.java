@@ -1,8 +1,10 @@
 package interfaces;
 
+import exceptions.MiSQLException;
+import exceptions.ResourceException;
+
 public interface MainMenuListener {
-    void onMainMenuClosed();
-    void startnewgame(String username, String photoIndex);
-    void loadgame();
+    void startnewgame(String username, int photoIndex) throws MiSQLException, ResourceException;
+    void loadgame() throws MiSQLException;
     
 }

@@ -27,11 +27,10 @@ public class ConnectionDB {
 
 	//Mover a variables
 	
-	public ConnectionDB() {
+	public ConnectionDB(){
 		this.url = Variables.url;
 		this.user = Variables.user;
 		this.pass = Variables.pass;
-
 	}
 
 	//Metodo para crear una conexion con la bd
@@ -49,123 +48,6 @@ public class ConnectionDB {
 			throw new MiSQLException("Error inesperado: " + e.getMessage());
 		}
 	}
-	
-	//Metodo para insertar el registro de una batalla en la BD (reporte)
-	public void insertarBattleStats(int battle_id, int civilizationId, String battleReport) throws MiSQLException {
-		
-		try {
-	        Connection conn = openConnectionDB();
-	        String query = "INSERT INTO battle_stats (num_battle,civilization_id, report) VALUES (?, ?, ?)";
-	        
-	        PreparedStatement ps = conn.prepareStatement(query);
-	        ps.setInt(1, battle_id);
-	        ps.setInt(2, civilizationId);
-	        ps.setString(3, battleReport);
-	        
-	        int rowsAffected = ps.executeUpdate();
-	        
-	        if (rowsAffected > 0) {
-	            System.out.println("Se ha insertado el registro en la tabla battle_log.");
-	        } else {
-	            System.out.println("No se ha insertado el registro en la tabla battle_log.");
-	        }
-	        
-	        conn.close();
-	    } catch (SQLException e) {
-	        throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
-	    }
-		
-	}
-	
-	//Metodo para recuperar el registro de una batalla en la BD (reporte)
-	public String sacarBattleStats(int civilizationId, int battleId) throws MiSQLException {
-		
-		String stats ="";	
-		try {
-	        Connection conn = openConnectionDB();
-	        String query = "SELECT report FROM battle_stats WHERE civilization_id = ? AND num_battle = ?";
-	        
-	        
-	        PreparedStatement ps = conn.prepareStatement(query);
-	        ps.setInt(1, civilizationId);
-	        ps.setInt(2, battleId);
-	        
-	        
-	        ResultSet rs = ps.executeQuery();
-	        
-	        if (rs.next()) {
-	            stats = rs.getString("report");
-	            //System.out.println(stats);
-	            
-	        } else {
-	            System.out.println("No se encontraron registros para civilization_id = " + civilizationId +
-	                               " y num_battle = " + battleId);
-	        }
-	        
-	        conn.close();
-	    } catch (SQLException e) {
-	        throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
-	    }
-		return stats;
-		
-	}
-
-	//Metodo para insertar el desarrollo de una batalla en la BD (log)
-	public void insertarBattleLog(int civilizationId, int battleId, String logEntry) throws MiSQLException {
-	    try {
-	        Connection conn = openConnectionDB();
-	        String query = "INSERT INTO Battle_log (civilization_id, num_battle, log_entry) VALUES (?, ?, ?)";
-	        
-	        PreparedStatement ps = conn.prepareStatement(query);
-	        ps.setInt(1, civilizationId);
-	        ps.setInt(2, battleId);
-	        ps.setString(3, logEntry);
-	        
-	        int rowsAffected = ps.executeUpdate();
-	        
-	        if (rowsAffected > 0) {
-	            System.out.println("Se ha insertado el registro en la tabla battle_log.");
-	        } else {
-	            System.out.println("No se ha insertado el registro en la tabla battle_log.");
-	        }
-	        
-	        conn.close();
-	    } catch (SQLException e) {
-	        throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
-	    }
-	}
-	
-	
-	//Metodo para recuperar el desarrollo de una batalla en la BD (log)
-	public String sacarBattleLog(int civilizationId, int battleId) throws MiSQLException {
-	    
-		String logEntry = "";
-		try {
-	        Connection conn = openConnectionDB();
-	        String query = "SELECT log_entry FROM Battle_log WHERE civilization_id = ? AND num_battle = ?";
-	        
-	        PreparedStatement ps = conn.prepareStatement(query);
-	        ps.setInt(1, civilizationId);
-	        ps.setInt(2, battleId);
-	        
-	        ResultSet rs = ps.executeQuery();
-	        
-	        if (rs.next()) {
-	            logEntry = rs.getString("log_entry");
-	            //System.out.println(logEntry);
-	        } else {
-	            System.out.println("No se encontraron registros para civilization_id = " + civilizationId +
-	                               " y num_battle = " + battleId);
-	        }
-	        
-	        conn.close();
-	    } catch (SQLException e) {
-	        throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
-	    }
-		
-		return logEntry;
-	}
-	
 	
 	//Metodo para crear una civilization nueva
 	public void crearDatosCivilization(String name) throws MiSQLException {
@@ -217,15 +99,15 @@ public class ConnectionDB {
             ps.setInt(2, civilization.getIron());
             ps.setInt(3, civilization.getFood());
             ps.setInt(4, civilization.getMana());
-            ps.setInt(5, civilization.getMagicTower());
-            ps.setInt(6, civilization.getFarm());
-            ps.setInt(7, civilization.getChurch());
-            ps.setInt(8, civilization.getSmithy());
-            ps.setInt(9, civilization.getCarpentry());
-            ps.setInt(10, civilization.getBattles());
-            ps.setInt(11, civilization.getTechnologyAttack());
-            ps.setInt(12, civilization.getTechnologyDefense());
-            ps.setInt(13, 1);
+            ps.setInt(5, civilization.getFarm());
+            ps.setInt(6, civilization.getSmithy());
+            ps.setInt(7, civilization.getCarpentry());
+            ps.setInt(8, civilization.getChurch());
+            ps.setInt(9, civilization.getMagicTower());     
+            ps.setInt(10, civilization.getTechnologyAttack());
+            ps.setInt(11, civilization.getTechnologyDefense());
+            ps.setInt(12, civilization.getBattles());
+            ps.setInt(13, civilization.getId());
             
             int resultado = ps.executeUpdate();
             System.out.println(resultado + " filas actualizadas correctamente. (Civilization)");
@@ -236,14 +118,9 @@ public class ConnectionDB {
             
             //actualizar datos paneles
             
-            
-            
-            
 //          conn.commit();
             conn.close();
-
-   
-            
+  
 		} catch (SQLException e) {
 			throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
 		}
@@ -283,10 +160,11 @@ public class ConnectionDB {
                 System.out.println("Datos recuperados correctamente.");
             } else {
             	System.out.println("No se encontraron registros");
+            	throw new MiSQLException("No se encontraron registros");
             }
             
 //          conn.commit();
-            conn.close();
+            conn.close(); 
  
 		} catch (SQLException e) {
 			throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
@@ -644,7 +522,7 @@ public class ConnectionDB {
             case 4:
                 return new Cannon(unitId, armor, baseDamage, experience, sanctified);
             default:
-                throw new MiSQLException("Tipo de unidad de ataque no válido: " + unitType);
+                throw new MiSQLException("Tipo de unidad de ataque no valido: " + unitType);
         }
     }
 
@@ -657,7 +535,7 @@ public class ConnectionDB {
             case 7:
                 return new RocketLauncherTower(unitId, armor, baseDamage, experience, sanctified);
             default:
-                throw new MiSQLException("Tipo de unidad de defensa no válido: " + unitType);
+                throw new MiSQLException("Tipo de unidad de defensa no valido: " + unitType);
         }
     }
 
@@ -668,7 +546,7 @@ public class ConnectionDB {
             case 9:
                 return new Priest(unitId, armor, baseDamage, experience);
             default:
-                throw new MiSQLException("Tipo de unidad especial no válido: " + unitType);
+                throw new MiSQLException("Tipo de unidad especial no valido: " + unitType);
         }
     }
 
@@ -698,7 +576,8 @@ public class ConnectionDB {
         }
         myArmy.get(index).add(unit);
     }
-//Metodos para guardar la info de las unidades de la batalla:
+
+    //Metodos para guardar la info de las unidades de la batalla:
 	
 	public void insertBattleAttackUnitStats(int civilizationId, int numBattle, int unitType, int initial, int death) throws MiSQLException {
         try {
@@ -768,7 +647,296 @@ public class ConnectionDB {
         } catch (SQLException e) {
             throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
         }
-    }	
+    }
+	
+	
+	//Metodo para insertar el registro de una batalla en la BD (reporte)
+		public void insertarBattleStats(int civilizationId, String battleReport) throws MiSQLException {
+			
+			try {
+		        Connection conn = openConnectionDB();
+		        String query = "INSERT INTO battle_stats (civilization_id, report) VALUES (?, ?)";
+		       
+		        PreparedStatement ps = conn.prepareStatement(query);
+		        ps.setInt(1, civilizationId);
+		        ps.setString(2, battleReport);
+		        
+		        int rowsAffected = ps.executeUpdate();
+		        
+		        if (rowsAffected > 0) {
+		            System.out.println("Se ha insertado el registro en la tabla battle_stats.");
+		        } else {
+		            System.out.println("No se ha insertado el registro en la tabla battle_stats.");
+		        }
+		        
+		        conn.close();
+		    } catch (SQLException e) {
+		        throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
+		    }
+			
+		}
+		
+		//Metodo para recuperar el registro de una batalla en la BD (reporte)
+		public String sacarBattleStats(int civilizationId, int battleId) throws MiSQLException {
+			
+			String stats ="";	
+			try {
+		        Connection conn = openConnectionDB();
+		        String query = "SELECT report FROM battle_stats WHERE civilization_id = ? AND num_battle = ?";
+		        
+		        
+		        PreparedStatement ps = conn.prepareStatement(query);
+		        ps.setInt(1, civilizationId);
+		        ps.setInt(2, battleId);
+		        
+		        
+		        ResultSet rs = ps.executeQuery();
+		        
+		        if (rs.next()) {
+		            stats = rs.getString("report");
+		            //System.out.println(stats);
+		            
+		        } else {
+		            System.out.println("No se encontraron registros para civilization_id = " + civilizationId +
+		                               " y num_battle = " + battleId);
+		        }
+		        
+		        conn.close();
+		    } catch (SQLException e) {
+		        throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
+		    }
+			return stats;
+			
+		}
+
+		//Metodo para insertar el desarrollo de una batalla en la BD (log)
+		public void insertarBattleLog(int civilizationId, int battleId, String logEntry) throws MiSQLException {
+		    try {
+		        Connection conn = openConnectionDB();
+		        String query = "INSERT INTO Battle_log (civilization_id, num_battle, log_entry) VALUES (?, ?, ?)";
+		        
+		        PreparedStatement ps = conn.prepareStatement(query);
+		        ps.setInt(1, civilizationId);
+		        ps.setInt(2, battleId);
+		        ps.setString(3, logEntry);
+		        
+		        int rowsAffected = ps.executeUpdate();
+		        
+		        if (rowsAffected > 0) {
+		            System.out.println("Se ha insertado el registro en la tabla battle_log.");
+		        } else {
+		            System.out.println("No se ha insertado el registro en la tabla battle_log.");
+		        }
+		        
+		        conn.close();
+		    } catch (SQLException e) {
+		        throw new MiSQLException("Error al ejecutar la inserción: " + e.getMessage());
+		    }
+		}
+		
+		
+		//Metodo para recuperar el desarrollo de una batalla en la BD (log)
+		public String sacarBattleLog(int civilizationId, int battleId) throws MiSQLException {
+		    
+			String logEntry = "";
+			try {
+		        Connection conn = openConnectionDB();
+		        String query = "SELECT log_entry FROM Battle_log WHERE civilization_id = ? AND num_battle = ?";
+		        
+		        PreparedStatement ps = conn.prepareStatement(query);
+		        ps.setInt(1, civilizationId);
+		        ps.setInt(2, battleId);
+		        
+		        ResultSet rs = ps.executeQuery();
+		        
+		        if (rs.next()) {
+		            logEntry = rs.getString("log_entry");
+		            //System.out.println(logEntry);
+		        } else {
+		            System.out.println("No se encontraron registros para civilization_id = " + civilizationId +
+		                               " y num_battle = " + battleId);
+		        }
+		        
+		        conn.close();
+		    } catch (SQLException e) {
+		        throw new MiSQLException("Error al ejecutar la consulta: " + e.getMessage());
+		    }
+			
+			return logEntry;
+		}
+		
+		//Metodo ultimos 5 battleReports:
+		
+		public String [] sacar5BattleReports() throws MiSQLException{
+			
+			String [] battleReports = new String[5];
+	
+			try {
+	            Connection conn = openConnectionDB();
+	            String query = "SELECT report FROM battle_stats ORDER BY num_battle DESC FETCH FIRST 5 ROWS ONLY";
+	            
+	            PreparedStatement ps = conn.prepareStatement(query);
+	            ResultSet rs = ps.executeQuery();
+	            
+	            int i = 0;
+	            while (rs.next() && i < 5) {
+	                battleReports[i] = rs.getString("report");
+	                i++;
+	            }
+
+	            conn.close();
+	        } catch (SQLException e) {
+	            throw new MiSQLException("Error al recuperar los ultimos 5 battleStats: " + e.getMessage());
+	        }
+
+	        return battleReports;
+	    }
+		
+		//Metodo ultimos 5 battleReports:
+		
+		public String [] sacar5BattleLog() throws MiSQLException{
+			
+			String [] battleReports = new String[5];
+	
+			try {
+	            Connection conn = openConnectionDB();
+	            String query = "SELECT log_entry FROM battle_log ORDER BY num_battle DESC FETCH FIRST 5 ROWS ONLY";
+	            
+	            PreparedStatement ps = conn.prepareStatement(query);
+	            ResultSet rs = ps.executeQuery();
+	            
+	            int i = 0;
+	            while (rs.next() && i < 5) {
+	                battleReports[i] = rs.getString("log_entry");
+	                i++;
+	            }
+
+	            conn.close();
+	        } catch (SQLException e) {
+	            throw new MiSQLException("Error al recuperar los ultimos 5 battleLog: " + e.getMessage());
+	        }
+
+	        return battleReports;
+	    }
+		
+		
+		
+	//BORRAR DATOS DE CIVILIZATION
+	public void eliminarCivilizacion(int civilizationId) throws MiSQLException {
+        
+        try {
+        	Connection conn = openConnectionDB(); 
+        	String deleteQuery = "DELETE FROM Civilizations_stats WHERE civilization_id = ?";
+        	
+            PreparedStatement ps = conn.prepareStatement(deleteQuery);
+            ps.setInt(1, civilizationId);
+            
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Civilization ID " + civilizationId + " borrada");
+            } else {
+                System.out.println("No civilization  con ID " + civilizationId);
+            }
+            ps.close();
+            
+            String resetSeq = "ALTER SEQUENCE seq_id_log RESTART START WITH 1";
+            Statement st = conn.createStatement();
+            
+            st.executeQuery(resetSeq);
+            
+            resetSeq = "ALTER SEQUENCE seq_id_stat RESTART START WITH 1";
+            
+            st.executeQuery(resetSeq);
+            
+            st.close();
+            
+            //reestablecer las secuencias de las tablas creadas en la BD:
+            
+        } catch (SQLException e) {
+            throw new MiSQLException("Error borrando civilization: " + e.getMessage());
+        }
+    }
+	
+	public static void main(String[] args) {
+		ConnectionDB cdb = new ConnectionDB();
+		
+		try {
+			cdb.eliminarCivilizacion(1);
+			
+			cdb.crearDatosCivilization("ewe");
+			cdb.insertarBattleStats(1, " BATTLE STATISTICS\r\n"
+					+ "\r\n"
+					+ " Civilization Army        Units   Drops  Enemy Army      Units   Drops\r\n"
+					+ "\r\n"
+					+ "\r\n"
+					+ "\r\n"
+					+ " Swordsman                   2       2   Swordsman           4       3\r\n"
+					+ "\r\n"
+					+ " Spearman                    0       0   Spearman            7       7\r\n"
+					+ "\r\n"
+					+ " Crossbow                    4       1   Crossbow            1       0\r\n"
+					+ "\r\n"
+					+ " Cannon                      1       1   Cannon              1       0\r\n"
+					+ "\r\n"
+					+ " Arrow Tower                 5       5\r\n"
+					+ "\r\n"
+					+ " Catapult                    3       3\r\n"
+					+ "\r\n"
+					+ " Rocket Launcher Tower       0       0\r\n"
+					+ "\r\n"
+					+ " Magician                    0       0\r\n"
+					+ "\r\n"
+					+ " Priest                      0       0\r\n"
+					+ "\r\n"
+					+ " *************************************************************************\r\n"
+					+ "\r\n"
+					+ " Cost Army Civilization                  Cost Army Enemy\r\n"
+					+ "\r\n"
+					+ " Food:	        0                        Food:	     8000\r\n"
+					+ " Wood:	   135000                        Wood:	    78000\r\n"
+					+ " Iron:	    21000                        Iron:	    22050\r\n"
+					+ "\r\n"
+					+ " *************************************************************************\r\n"
+					+ "\r\n"
+					+ " Losses Army Civilization                Losses Army Enemy\r\n"
+					+ "\r\n"
+					+ " Food:	    16000                        Food:	    59000\r\n"
+					+ " Wood:	   103000                        Wood:	    54500\r\n"
+					+ " Iron:	    23600                        Iron:	      500\r\n"
+					+ "\r\n"
+					+ " *************************************************************************\r\n"
+					+ "\r\n"
+					+ " Waste Generated:\r\n"
+					+ "\r\n"
+					+ " Wood:	    86450\r\n"
+					+ " Iron:	    15995\r\n"
+					+ "\r\n"
+					+ "\r\n"
+					+ " Battle Winned by Civilization, We Collect Rubble\r\n"
+					+ "\r\n"
+					+ " #########################################################################");
+			cdb.insertarBattleLog(1,1, "log 1");
+			cdb.insertarBattleStats(1, "stats batalla 2");
+			cdb.insertarBattleLog(1,2, "log 2");
+			cdb.insertarBattleStats(1, "stats batalla 3");
+			cdb.insertarBattleLog(1,3, "log 3");
+			
+			String [] reports = cdb.sacar5BattleReports();
+			String [] logs = cdb.sacar5BattleLog();
+			
+			
+			for (int i = 0; i < reports.length; i++) {
+				System.out.println("Battle report: " + i + "\n"+reports[i]);
+				System.out.println("Battle Log: " + i + "\n"+logs[i]);
+				
+			}
+			
+			
+		} catch (MiSQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
 
 
