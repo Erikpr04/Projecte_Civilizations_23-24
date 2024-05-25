@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Minecraft';
-  src: url('font/game_font.ttf') format('truetype');
+  src: url('font/game_font.otf') format('opentype');
 }
 
 
