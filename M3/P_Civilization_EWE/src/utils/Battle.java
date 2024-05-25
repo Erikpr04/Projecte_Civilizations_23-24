@@ -818,7 +818,9 @@ public class Battle {
 		}
 		
 	//CONTADOR DE BATALLAS SUBE
+		System.out.println("Antes Cont: " + classes.getCv().getBattles());
 		classes.getCv().setBattles(classes.getCv().getBattles() + 1);
+		System.out.println("Despues Cont: " + classes.getCv().getBattles());
 				
 	//GUARDAR DATOS EN LA BASE DE DATOS:
 		
@@ -826,7 +828,7 @@ public class Battle {
 		ConnectionDB cdb = new ConnectionDB();
 		
 		
-		int numBattle = classes.getCv().getBattles(); //aqui hay que recuperar el count de batallas de la clase civilization o SELECT del ultimo num_batalla
+		int numBattle = classes.getCv().getBattles(); //aqui hay que recuperar el count de batallas de la clase civilization
 		int civilization_Id = classes.getCv().getId(); //en un principio solo hay una civilizacion "1"
 
 		
@@ -836,28 +838,29 @@ public class Battle {
 		 battlelistener.updatecv_after_battle(wasteWoodIron);
 		
 		//Actualziar EXPERIENCIA local unidades
-		for (int i = 0; i < civilizationArmy.size(); i++) {
-			for (int j = 0; j < civilizationArmy.get(i).size(); i++) {
+		for (int i = 0; i < myArmy.size(); i++) {
+			for (int j = 0; j < myArmy.get(i).size(); j++) {
+				
 				if (i <= 3) {
-					((AttackUnit) civilizationArmy.get(i).get(j)).setExperience();
+					((AttackUnit) myArmy.get(i).get(j)).setExperience();
 				
 				} else if (i <= 6) {
-					((DefenseUnit) civilizationArmy.get(i).get(j)).setExperience();
+					((DefenseUnit) myArmy.get(i).get(j)).setExperience();
 				
 				} else {
-					((SpecialUnit) civilizationArmy.get(i).get(j)).setExperience();
+					((SpecialUnit) myArmy.get(i).get(j)).setExperience();
 				}
 			}
-		}	
+		}
 		
-		//Actualizar Civilization
-		classes.getCv().setArmy(civilizationArmy);
+		//Actualizamos la array local con la resultante del enfrentamiento
+		 classes.getCv().setArmy(myArmy);
 		
 		//Actualizar civilizacion en bd
 		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
 		  
 		 //update de las unidades restantes
-		 cdb.actualizarUnitsBD(myArmy);		 
+		 cdb.actualizarUnitsBD(myArmy);
 		 
 		 //insertar battleStats y battleLog  (REVISAR EN CLASE) -------------------------------------
 		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(numBattle));
@@ -885,11 +888,13 @@ public class Battle {
 		 }
 		 
 		 //EnemyUnits
-		 for (int i = 0; i < initialArmies[1].length; i++) {
-			 int unitType = i+1;
-			//enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
-			 cdb.insertBattleEnemyUnitStats(civilization_Id, numBattle, unitType, initialArmies[1][i], enemyDeaths[i]);
-		 } 
+		for (int i = 0; i < initialArmies[1].length; i++) {
+			int unitType = i+1;
+			if (i < enemyDeaths.length) {
+				//enemy_attack_stats: civilization_id, num_battle, unit_type, initial, death
+				cdb.insertBattleEnemyUnitStats(civilization_Id, numBattle, unitType, initialArmies[1][i], enemyDeaths[i]);
+			}
+		} 
 	}
 }
 	
