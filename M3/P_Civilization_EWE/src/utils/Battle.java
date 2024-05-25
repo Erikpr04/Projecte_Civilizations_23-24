@@ -838,32 +838,29 @@ public class Battle {
 		 battlelistener.updatecv_after_battle(wasteWoodIron);
 		
 		//Actualziar EXPERIENCIA local unidades
-		for (int i = 0; i < civilizationArmy.size(); i++) {
-			for (int j = 0; j < civilizationArmy.get(i).size(); j++) {
+		for (int i = 0; i < myArmy.size(); i++) {
+			for (int j = 0; j < myArmy.get(i).size(); j++) {
 				
 				if (i <= 3) {
-					((AttackUnit) civilizationArmy.get(i).get(j)).setExperience();
+					((AttackUnit) myArmy.get(i).get(j)).setExperience();
 				
 				} else if (i <= 6) {
-					((DefenseUnit) civilizationArmy.get(i).get(j)).setExperience();
+					((DefenseUnit) myArmy.get(i).get(j)).setExperience();
 				
 				} else {
-					((SpecialUnit) civilizationArmy.get(i).get(j)).setExperience();
+					((SpecialUnit) myArmy.get(i).get(j)).setExperience();
 				}
 			}
-		}	
+		}
 		
-		//Actualizar Civilization
-		classes.getCv().setArmy(civilizationArmy);
+		//Actualizamos la array local con la resultante del enfrentamiento
+		 classes.getCv().setArmy(myArmy);
 		
 		//Actualizar civilizacion en bd
 		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
 		  
 		 //update de las unidades restantes
 		 cdb.actualizarUnitsBD(myArmy);
-		 
-		 //Actualizamos la array local con la resultante del enfrentamiento
-		 classes.getCv().setArmy(myArmy);
 		 
 		 //insertar battleStats y battleLog  (REVISAR EN CLASE) -------------------------------------
 		 cdb.insertarBattleStats(civilization_Id ,getBattleReport(numBattle));
