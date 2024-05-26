@@ -132,3 +132,11 @@ Ejecuta el archivo Main situado en la carpeta Main para empezar tu Civilización
 
 ![](https://github.com/Erikpr04/Projecte_Civilizations_23-24/blob/Preproduccion/M5/imagenesREADME/main.png)
 
+
+## Error con la resolución
+
+Si su dispositivo experimenta un error a la hora de ejecutar la ventana del luego, debe cambiar el tamaño de fuente a 100%.
+Para acceder a esa opción (Windows), en la barra de busqueda introduzca: cambiar la resolución de pantalla y seleccione la siguiente opción:
+
+![](https://github.com/Erikpr04/Projecte_Civilizations_23-24/blob/Preproduccion/M5/imagenesREADME/resolucion.PNG)
+

@@ -402,8 +402,8 @@ private void openCreditsWindow() {
     // Agregar el panel de nombres al panel principal
     mainPanel.add(namesPanel, BorderLayout.CENTER);
 
-    // Crear y agregar el texto "Made by NEWELL" en la parte superior de namesPanel
-    JLabel madeByLabel = new JLabel("Made by NEWELL: ", SwingConstants.CENTER);
+    // Crear y agregar el texto "Made by NEWEL" en la parte superior de namesPanel
+    JLabel madeByLabel = new JLabel("Made by NEWEL: ", SwingConstants.CENTER);
     madeByLabel.setFont(gameFont);
     madeByLabel.setBorder(BorderFactory.createEmptyBorder(0, 220, 0, 20)); // Agregar margen a la izquierda y derecha
 

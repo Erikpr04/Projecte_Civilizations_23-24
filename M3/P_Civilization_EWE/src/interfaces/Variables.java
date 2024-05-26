@@ -8,6 +8,10 @@ public interface Variables {
 	public final String user = "AdminCivilization";
 	public final String pass = "ewe";
 	
+	//tiempo de los timertask del juego
+	public final int TIMERTASK_BATTLE = 75000;
+	public final int TIMERTASK_RESOURCES = 20000;
+	public final int TIMERTASK_NOTIFICATION_BATTLE = 60000;
 	
 	// resources available to create the first enemy fleet
 	public final int IRON_BASE_ENEMY_ARMY = 26000;

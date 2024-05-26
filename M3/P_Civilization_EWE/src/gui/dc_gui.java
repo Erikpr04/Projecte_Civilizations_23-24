@@ -3,12 +3,15 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,13 +56,6 @@ public class dc_gui  {
 
 	private Civilization civilization;
 
-	
-	
-
-	
-	
-
-    
 
 
 	public String getUsername() {
@@ -114,7 +110,7 @@ public class dc_gui  {
 				
 				
 				//borrar datos de la bd si hay
-		        mainMenuFrame.dispose(); // Dispose of the main menu frame
+		        mainMenuFrame.dispose(); 
 		        username = username1;
 		        profileindex = photoindex1;
 		        invoke_game_gui();
@@ -124,17 +120,72 @@ public class dc_gui  {
 		        GameFrame.setVisible(true);
 		        gui_obj.createAndShowTutorial();
 		        
-		        // Verificar que el array subPanels no sea null y que tenga al menos una columna
+		        if (gui_obj.getSubPanels() != null && gui_obj.getSubPanels().length > 0 && gui_obj.getSubPanels()[0].length > 1) {
+		            Random random = new Random();
+
+		            // Seleccionar una coordenada y aleatoria que no esté ocupada
+		            int y;
+		            do {
+		                y = random.nextInt(gui_obj.getSubPanels().length);
+		            } while (gui_obj.getSubPanels()[y][0].isIsoccupied());
+
+		            // Seleccionar una coordenada x inicial aleatoria para el río, asegurando que haya espacio para los tiles del río
+
+		            // Iterar sobre los tiles del río
+		            for (int i = 0; i < gui_obj.getSubPanels()[0].length; i++) {
+		                // Verificar que el panel no esté ocupado
+		                if (!gui_obj.getSubPanels()[y][i].isIsoccupied()) {
+		                    // Establecer la nueva textura principal
+		                	gui_obj.getSubPanels()[y][i].setIsoccupied(true);
+		                    gui_obj.getSubPanels()[y][i].setFuture_structure("River");
+		                    gui_obj.getSubPanels()[y][i].setCurrentImage(new ImageIcon("./src/gui/rivertile.png"));
+
+		                    // Revalidar y repintar el panel para asegurarse de que se apliquen los cambios
+		                    gui_obj.getSubPanels()[y][i].revalidate();
+		                    gui_obj.getSubPanels()[y][i].repaint();
+		                } else {
+		                    // Si encuentras un panel ocupado, termina la creación del río
+		                    break;
+		                }
+		            }
+		        }
+		        
 		        if (gui_obj.getSubPanels() != null && gui_obj.getSubPanels().length > 0 && gui_obj.getSubPanels()[0].length > 0) {
-		            // Iterar sobre la primera columna (índice 0) de subPanels
-		            for (int y = 0; y < gui_obj.getSubPanels().length; y++) {
+		            Random random = new Random();
+		            int numberOfTrees = 15; 
+
+		            for (int i = 0; i < numberOfTrees; i++) {
+		                int x, y;
+		                
+		                do {
+		                    x = random.nextInt(gui_obj.getSubPanels()[0].length);
+		                    y = random.nextInt(gui_obj.getSubPanels().length);
+		                } while (gui_obj.getSubPanels()[y][x].isIsoccupied());
+
 		                // Establecer la nueva textura principal
-		            	gui_obj.getSubPanels()[y][0].setIsoccupied(true);
-		            	gui_obj.getSubPanels()[y][0].setFuture_structure("River");
-		                gui_obj.getSubPanels()[y][0].setCurrentImage(new ImageIcon("./src/gui/rivertile.png"));
+		                gui_obj.getSubPanels()[y][x].setIsoccupied(true);
+		                gui_obj.getSubPanels()[y][x].setFuture_structure("Tree");
+		                gui_obj.getSubPanels()[y][x].setCurrentImage(new ImageIcon("./src/gui/tree.png"));
+
 		                // Revalidar y repintar el panel para asegurarse de que se apliquen los cambios
-		                gui_obj.getSubPanels()[y][0].revalidate();
-		                gui_obj.getSubPanels()[y][0].repaint();
+		                gui_obj.getSubPanels()[y][x].revalidate();
+		                gui_obj.getSubPanels()[y][x].repaint();
+		            }
+		        }
+		        
+		        
+		        
+		        // Verificar que el array subPanels no sea null y que tenga al menos una columna
+		        if (gui_obj.getSubPanels() != null && gui_obj.getSubPanels().length > 0 && gui_obj.getSubPanels()[1].length > 0) {
+		            // Iterar sobre la primera columna (índice 0) de subPanels
+		            for (int x = 0; x <= gui_obj.getSubPanels().length; x++) {
+		                // Establecer la nueva textura principal
+		            	gui_obj.getSubPanels()[0][x].setIsoccupied(true);
+		            	gui_obj.getSubPanels()[0][x].setFuture_structure("Rock");
+		                gui_obj.getSubPanels()[0][x].setCurrentImage(new ImageIcon("./src/gui/rock.png"));
+		                // Revalidar y repintar el panel para asegurarse de que se apliquen los cambios
+		                gui_obj.getSubPanels()[0][x].revalidate();
+		                gui_obj.getSubPanels()[0][x].repaint();
 		            }
 		        }
 		        
@@ -165,95 +216,64 @@ public class dc_gui  {
 
  // Método para invocar la GUI del juego
     public void invoke_game_gui() {
-    	
-    	
-    	Object[] options = {"Probar ventana normal", "Probar pantalla completa"};
+        GameFrame = new JFrame("Civilization By Newel");
+        GameFrame.setIconImage(gamelogo.getImage());
+        GameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        int choice = JOptionPane.showOptionDialog(null,
-                "Elige una opción (Pruebas, Decidme como os va):", "Opción",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                options,
-                options[0]);
-
-        if (choice == JOptionPane.YES_OPTION) {
-            System.out.println("Probar ventana normal seleccionada");
-            GameFrame = new JFrame("Game GUI");
-            GameFrame.setIconImage(gamelogo.getImage());
-            GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            try {
-    			gui_obj = new Game_gui(10, 11);
-    		} catch (Exception e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-            
-            gui_obj.setListener(this.ggl);
-            
-            GameFrame.add(gui_obj, BorderLayout.CENTER);
-            GameFrame.setResizable(false);
-
-
-            GameFrame.pack();
-            GameFrame.setLocationRelativeTo(null);
-
-                    
-            gui_obj.setUsername(username);
-            gui_obj.setPpindex(profileindex);
-
-
-
-
-            
-        }else if (choice == JOptionPane.NO_OPTION) {
-            System.out.println("Probar pantalla completa seleccionada");
-            GameFrame = new JFrame("Game GUI");
-            GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            try {
-                gui_obj = new Game_gui(10, 10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            gui_obj.setListener(this.ggl);
-            GameFrame.add(gui_obj, BorderLayout.CENTER);
-            GameFrame.setIconImage(gamelogo.getImage());
-
-
-            // Obtener el dispositivo gráfico (monitor)
-            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
-            if (gd.isFullScreenSupported()) {
-                // Configurar el JFrame en modo pantalla completa antes de hacerlo visible
-                GameFrame.setUndecorated(true);
-                gd.setFullScreenWindow(GameFrame);
-            } else {
-                System.err.println("Pantalla completa no soportada");
-                GameFrame.setSize(800, 600); // Tamaño por defecto si no es soportado
-            }
-
-            GameFrame.setVisible(true); // Hacer visible el JFrame después de todas las configuraciones
-
-            gui_obj.setUsername(username);
-            gui_obj.setPpindex(profileindex);        } else {
-            System.out.println("Diálogo cerrado");
-            // Acción si se cierra el diálogo sin seleccionar ninguna opción
+        try {
+            gui_obj = new Game_gui(10, 11);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    	
-    	
 
+        gui_obj.setListener(this.ggl);
+
+        GameFrame.add(gui_obj, BorderLayout.CENTER);
+        GameFrame.setResizable(false);
+        GameFrame.pack();
+        GameFrame.setLocationRelativeTo(null);
+
+        gui_obj.setUsername(username);
+        gui_obj.setPpindex(profileindex);
+
+        GameFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                showExitConfirmation();
+            }
+        });
+
+        GameFrame.setVisible(true);
     }
 
+    public void showExitConfirmation() {
+        int option = JOptionPane.showOptionDialog(
+            GameFrame,
+            "Are you sure you wanna leave?",
+            "Exit Confirmation",
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.WARNING_MESSAGE,
+            null,
+            new String[]{"Save Game and Quit", "Quit Game Without Saving", "Cancel"},
+            "Cancel"
+        );
 
+        if (option == JOptionPane.YES_OPTION) {
+            try {
+                gui_obj.getListener().update_resources_db();
+            } catch (MiSQLException e1) {
+                e1.printStackTrace();
+            }
+            GameFrame.dispose();
+            System.exit(0);
+        } else if (option == JOptionPane.NO_OPTION) {
+            GameFrame.dispose();
+            System.exit(0);
 
-    //metodo para actualizar recursos en game gui
-    
-    
-    
-    
+            
+        }
+    }
+
     //metodo cargar partida
     
     public boolean load_game()  {
@@ -268,25 +288,8 @@ public class dc_gui  {
 
     }
     
-    public void update_army_db(int tipo_tropa) {
 
-    }
-    
-    public void update_structures_db(int number_structures) {
 
-    }
-    public void update_technologies_db(int attack_technology,int defense_technology) {
-
-    }
-    
-    
-    
-    
-    //metodo para actualizar casillas en base de datos
-    
-    
-    
-    
     
     //setters y getters
     

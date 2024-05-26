@@ -67,7 +67,6 @@ public class Main {
     	try {
 			update_panels();
 		} catch (ResourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	dc_gui.getGui_obj().setFood(classes.getCv().getFood());
@@ -246,6 +245,8 @@ public class Main {
             public void run() {
                 if (!m.pauseGame) { // Verifica si el juego está en pausa
                     try {
+                    	
+//                    	System.out.println("Se han generado recursos!");
                         // Lógica de tu tarea de recursos
                         m.classes.getCv().setWood(m.classes.getCv().getWood() + 100000 + Variables.CIVILIZATION_WOOD_GENERATED + (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
                         m.classes.getCv().setFood(m.classes.getCv().getFood() + 100000 + Variables.CIVILIZATION_FOOD_GENERATED + (m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
@@ -253,11 +254,11 @@ public class Main {
                         m.classes.getCv().setMana(m.classes.getCv().getMana() + 100000 + (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
 
                         // Muestra los recursos en consola
-                        System.out.println("Madera: " + m.classes.getCv().getWood());
-                        System.out.println("Comida: " + m.classes.getCv().getFood());
-                        System.out.println("Hierro: " + m.classes.getCv().getIron());
-                        System.out.println("Mana: " + m.classes.getCv().getMana());
-                        System.out.println("*********************");
+//                        System.out.println("Madera: " + m.classes.getCv().getWood());
+//                        System.out.println("Comida: " + m.classes.getCv().getFood());
+//                        System.out.println("Hierro: " + m.classes.getCv().getIron());
+//                        System.out.println("Mana: " + m.classes.getCv().getMana());
+//                        System.out.println("*********************");
 
                         // Actualiza los recursos en la interfaz gráfica
                         m.dc_gui.getGui_obj().setWood(m.classes.getCv().getWood());
@@ -288,6 +289,7 @@ public class Main {
 				
 				m.classes.getCv().setWood(m.classes.getCv().getWood() + resources[0]); 
 				m.classes.getCv().setIron(m.classes.getCv().getIron() + resources[1]); 
+				m.dc_gui.getGui_obj().loadingPanel();
 
 				
 			}
@@ -336,7 +338,7 @@ public class Main {
 						System.out.println(e.getMessage());
 					}
 
-					System.out.println(m.b.getBattleDevelopment());
+//					System.out.println(m.b.getBattleDevelopment());
 
 					
 					m.dc_gui.getGui_obj().showBattleWindow(m.b.getBattleDevelopment());
@@ -364,9 +366,10 @@ public class Main {
 			//metodo para cargar juego
 			public void load_game_gui() {
 				
-				m.maintimer.schedule(resourcestask, 10000, 10000);
-				m.maintimer.schedule(shownotificationtask, 20000, 120000);
-				m.maintimer.schedule(startbattle, 25000, 120000);
+				
+				m.maintimer.schedule(resourcestask, Variables.TIMERTASK_RESOURCES, Variables.TIMERTASK_RESOURCES);
+				m.maintimer.schedule(shownotificationtask, Variables.TIMERTASK_NOTIFICATION_BATTLE, Variables.TIMERTASK_NOTIFICATION_BATTLE);
+				m.maintimer.schedule(startbattle, Variables.TIMERTASK_BATTLE, Variables.TIMERTASK_BATTLE);
 								
 			}
 
@@ -388,11 +391,11 @@ public class Main {
 				
 				database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 
-				System.out.println("Resources updated db");
-				System.out.println("ppindex" + m.dc_gui.getGui_obj().getPpindex());
+//				System.out.println("Resources updated db");
+//				System.out.println("ppindex" + m.dc_gui.getGui_obj().getPpindex());
 				database.uploadPanels(m.dc_gui.getGui_obj().getSubPanels(),m.dc_gui.getGui_obj().getPpindex());
 				
-				System.out.println("Panels updated db");
+//				System.out.println("Panels updated db");
 
 				m.dc_gui.getGui_obj().loadingPanel();
 				
@@ -428,7 +431,6 @@ public class Main {
 				} catch (MiSQLException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Estructura creada!");
 				}
 
 			public int[] getcv_army_values() {
@@ -455,7 +457,7 @@ public class Main {
 			public void create_troop(int soldierTypeIndex, int numSoldiers) throws MiSQLException {
 			    if (soldierTypeIndex < 0 || soldierTypeIndex >= m.classes.getCv().getArmy().size()) {
 			        // Si el índice del tipo de soldado está fuera de los límites del ArrayList, mostrar un mensaje de error
-			        System.out.println("Error: Tipo de soldado inválido.");
+//			        System.out.println("Error: Tipo de soldado inválido.");
 			        return;
 			    }
 
@@ -494,7 +496,7 @@ public class Main {
 		                break;
 		            default:
 		                // Manejo de caso no válido
-		                System.out.println("Tipo de soldado no válido: ");
+//		                System.out.println("Tipo de soldado no válido: ");
 		                break;
 		        }
 		    }catch (ResourceException | BuildingException e) {
@@ -570,7 +572,7 @@ public class Main {
 			    for (int i = 0; i < armies.size() - 1; i++) {
 			        totalUnits += armies.get(i).size(); // Sumar el tamaño de cada array
 			    }
-			    System.out.println("terminado de iterar" + totalUnits);
+//			    System.out.println("terminado de iterar" + totalUnits);
 				
 				if (totalUnits >= 1) {
 					m.classes.getCv().sanctifyUnits();
@@ -591,8 +593,8 @@ public class Main {
 				database.getConnectionDB().obtenerDatosCivilization(m.classes.getCv());
 				m.classes.getCv().setArmy(database.getConnectionDB().cargarUnitsBD());
 				
-				System.out.println("Wood despues de cargar partida (Civilization)" + m.classes.getCv().getWood());
-				System.out.println("Iron despues de cargar partida (Civilization)" + m.classes.getCv().getIron());
+//				System.out.println("Wood despues de cargar partida (Civilization)" + m.classes.getCv().getWood());
+//				System.out.println("Iron despues de cargar partida (Civilization)" + m.classes.getCv().getIron());
 
 				//ahora cargamos todo de clases y paneles a gui
 				
@@ -610,8 +612,8 @@ public class Main {
 
 			@Override
 			public void update_technologies() {
-				System.out.println("Nivel tecnologia gui defensa : " + m.dc_gui.getGui_obj().getDefenseint());
-				System.out.println("Nivel tecnologia gui ataque : " + m.dc_gui.getGui_obj().getDefenseint());
+//				System.out.println("Nivel tecnologia gui defensa : " + m.dc_gui.getGui_obj().getDefenseint());
+//				System.out.println("Nivel tecnologia gui ataque : " + m.dc_gui.getGui_obj().getDefenseint());
 
 				m.classes.getCv().setTechnologyDefense(m.dc_gui.getGui_obj().getDefenseint());
 				m.classes.getCv().setTechnologyAttack(m.dc_gui.getGui_obj().getAttackint());
@@ -635,10 +637,10 @@ public class Main {
 			
 			public void clear_and_startdb() throws MiSQLException, ResourceException {
 				database.getConnectionDB().eliminarCivilizacion(m.classes.getCv().getId());
-				System.out.println("Base de datos borrada");
+//				System.out.println("Base de datos borrada");
 				
 				database.getConnectionDB().crearDatosCivilization(m.dc_gui.getUsername());
-				System.out.println("Base de datos creada");
+//				System.out.println("Base de datos creada");
 				
 		        m.dc_gui.getGui_obj().setPpindex(m.dc_gui.getProfileindex());
 
@@ -686,7 +688,7 @@ public class Main {
 	public void update_panels() throws ResourceException {
 	    dc_database database = new dc_database();
 	    MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
-	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry","River"};
+	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry","River","Tree","Rock","Beach"};
 	    boolean isOccupied;
 	    int ppindex = 1;
 
@@ -697,7 +699,7 @@ public class Main {
 	            while (resultSet.next()) {
 	                String structureType = resultSet.getString("structure_type");
 	                int isOccupiednumber = resultSet.getInt("is_occupied");
-	                System.out.println(structureType+" " + isOccupiednumber);
+//	                System.out.println(structureType+" " + isOccupiednumber);
 	                if (isOccupiednumber == 0) {
 	                    isOccupied = false;
 	                } else {
@@ -742,7 +744,7 @@ public class Main {
 	                            break;
 	                    }
 	                } else {
-	                    System.out.println("Structure isn't occupied");
+//	                    System.out.println("Structure isn't occupied");
 	                }
 	            }
 	            resultSet.close();
