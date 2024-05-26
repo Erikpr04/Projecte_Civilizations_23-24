@@ -55,7 +55,7 @@ public class Game_gui extends JPanel {
             0, 0, 0, 0, 
             0, 0
         };
-    String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket Launcher Tower", "Magician", "Priest"};
+    String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket L. Tower", "Magician", "Priest"};
     BackgroundPanel statsPanel;
 	private Timer maintimer;
 	private String username;
@@ -344,7 +344,7 @@ public class Game_gui extends JPanel {
 	     
 	     helpItem.addActionListener(new ActionListener() {
 			
-			@Override
+			 
 			public void actionPerformed(ActionEvent e) {
 				createAndShowTutorial();
 				
@@ -367,7 +367,7 @@ public class Game_gui extends JPanel {
         JButton openButton = new JButton("Battle Logs");
         openButton.setFont(gameFont);
         openButton.addActionListener(new ActionListener() {
-            @Override
+             
             public void actionPerformed(ActionEvent e) {
             	battlelog_frame();
 
@@ -398,14 +398,14 @@ public class Game_gui extends JPanel {
         for (MiPanelito[] row : subPanels) {
             for (MiPanelito panel : row) {
                 panel.addMouseListener(new MouseAdapter() {
-                    @Override
+                     
                     public void mouseEntered(MouseEvent e) {
                         super.mouseEntered(e);
                         panel.setBorder(BorderFactory.createLineBorder(Color.black));
                         panel.repaint(); // Repintar el panel para reflejar el cambio
                     }
 
-                    @Override
+                     
                     public void mouseExited(MouseEvent e) {
                         super.mouseExited(e);
                         panel.setBorder(null);
@@ -418,7 +418,7 @@ public class Game_gui extends JPanel {
         
      // Agregar MouseListener para capturar eventos de ratón
         mainPanel2.addMouseListener(new MouseAdapter() {
-            @Override
+             
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     isRightClicked = true;
@@ -427,7 +427,7 @@ public class Game_gui extends JPanel {
                 }
             }
 
-            @Override
+             
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     isRightClicked = false;
@@ -437,7 +437,7 @@ public class Game_gui extends JPanel {
 
         // Agregar MouseWheelListener para el zoom
         mainPanel2.addMouseWheelListener(new MouseWheelListener() {
-            @Override
+             
             public void mouseWheelMoved(MouseWheelEvent e) {
                 int notches = e.getWheelRotation();
 
@@ -543,7 +543,7 @@ public class Game_gui extends JPanel {
     
     sanctify_button.addActionListener(new ActionListener() {
 		
-		@Override
+		 
 		public void actionPerformed(ActionEvent e) {
 			//comprobamos si hay priest en nuestra army
 			if (cv_values[8] >= 1) {
@@ -601,7 +601,7 @@ public class Game_gui extends JPanel {
     // Booleano para controlar el estado del botón
     // ActionListener para see_cvstats
     see_cvstats.addActionListener(new ActionListener() {
-        @Override
+         
         public void actionPerformed(ActionEvent e) {
             getcv_data();
             statsPanel.removeAll();
@@ -662,6 +662,8 @@ public class Game_gui extends JPanel {
     JPanel upgradeTechnologyPanel = cvUpgradeGui.new TechnologyUpgradePanel();
     tabbedPane.add("Upgrade Army", upgradeArmyPanel);
     tabbedPane.add("Upgrade Technology", upgradeTechnologyPanel);
+    tabbedPane.setFont(gameFont);
+
 
     panelpestañas.add(tabbedPane, BorderLayout.CENTER);
     mainpanel.add(panelpestañas, JLayeredPane.PALETTE_LAYER);
@@ -669,7 +671,7 @@ public class Game_gui extends JPanel {
     panelpestañas.setVisible(false);
 
     upgrade_cvbutton.addActionListener(new ActionListener() {
-        @Override
+         
         public void actionPerformed(ActionEvent e) {
             isUpgradePressed = !isUpgradePressed;
             panelpestañas.setVisible(isUpgradePressed);
@@ -714,7 +716,7 @@ public class Game_gui extends JPanel {
 
 
     maintimergui = new Timer(1000, new ActionListener() {
-        @Override
+         
         public void actionPerformed(ActionEvent e) {
             if (!pauseGame) { // Verifica si el juego está en pausa
                 seconds++;
@@ -755,12 +757,12 @@ public void createAndShowTutorial() {
     String[] tutorialTexts = {
     	    "Bienvenido al tutorial del juego Civilization.\nPlay: Empieza una partida desde cero (Si ya tienes una creada, la sobreescribe)\nLoad Game: Carga la partida que tengas empezada\nCredits: Informacion extra del juego\nQuit: Cierra la aplicacion",
     	    "El area debajo de username sirve para registrar el nombre.\nAqui asignaremos una foto de perfil al jugador.\nEl boton de play empieza la partida (solo esta activo cuando el usuario introduzca un nombre y elija una foto).",
-    	    "Estos iconos indican los recursos que tiene tu Civilizacion, cada un cierto periodo de tiempo estos aumentaran.",
+    	    "Estos iconos indican los recursos que tiene tu Civilizacion, \ncada un cierto periodo de tiempo estos aumentaran.",
     	    "El boton superior battle logs nos sirve para ver el historial de las ultimas 5 partidas:\nCada ventana corresponde a una batalla.\nLas opciones inferiores sirven:\nPara ver entre el reporte final de la batalla (BattleReport)\nPara ver el transcurso de la batalla (BattleLog)",
     	    "La zona verde es el terreno donde vas a asentar los cimientos de tu civilizacion.\nEn esta zona se colocan los edificios que vayas construyendo segun el transcurso de tu partida.",
     	    "Cada opcion corresponde a la Construccion de cada edificio disponible,\nCuando pasemos el raton por encima, se nos mostrara el coste de construir estas estructuras.",
-    	    "Ataque enemigo: Cada cierto tiempo, un ejercito enemigo vendra a atacarnos y nos saldra el siguiente mensaje emergente:",
-    	    "Battle Log: Cada vez que nos salga la ventana emergente anterior, se nos abrira una nueva ventana para observar el transcurso de la batalla. \nEl scroll lateral nos permite desplazarnos por el transcurso de la batalla.",
+    	    "Ataque enemigo: Cada cierto tiempo, un ejercito enemigo vendra a atacarnos y nos saldra el siguiente \nmensaje emergente:",
+    	    "Battle Log: Cada vez que nos salga la ventana emergente anterior,\nse nos abrira una nueva ventana para observar el transcurso de la batalla. \nEl scroll lateral nos permite desplazarnos por el transcurso de la batalla.",
     	    "Civilization Stats, este panel nos mostrara los datos principales de nuestra civilizacion.",
     	    "Upgrade civilization:\nTendremos dos pestanas a en el menu de mejoras (entrenar tropas o mejorar tecnologia)\nPara la tropa que queramos mejorar, se pediran los recursos necesarios para crearla.\nSi no tienes suficientes recursos el juego te lo indicara.",
     	    "Panel para mejorar tecnologia: Se nos mostraran ambas tecnologias, sus costes y el nivel de tecnologia actual.\n Si no tenemos suficientes recursos, no podremos mejorar nuestro nivel de tecnologia."
@@ -858,7 +860,7 @@ public void createAndShowTutorial() {
     
     exitButton.addActionListener(new ActionListener() {
 		
-		@Override
+		 
 		public void actionPerformed(ActionEvent e) {
             backgroundPanel.setVisible(false); // Ocultar el panel
             backgroundPanel.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
@@ -872,7 +874,7 @@ public void createAndShowTutorial() {
 
     // ActionListener para el botón de desplazamiento hacia la izquierda
     leftButton.addActionListener(new ActionListener() {
-        @Override
+         
         public void actionPerformed(ActionEvent e) {
             currentIndex[0]--;
             if (currentIndex[0] < 0) {
@@ -887,7 +889,7 @@ public void createAndShowTutorial() {
 
     // ActionListener para el botón de desplazamiento hacia la derecha
     rightButton.addActionListener(new ActionListener() {
-        @Override
+         
         public void actionPerformed(ActionEvent e) {
             currentIndex[0]++;
             if (currentIndex[0] >= tutorialTexts.length) {
@@ -918,7 +920,7 @@ public void createAndShowTutorial() {
     closeButton.setContentAreaFilled(false);
     closeButton.setBorderPainted(false);
     closeButton.addActionListener(new ActionListener() {
-        @Override
+         
         public void actionPerformed(ActionEvent e) {
             // Cerrar la ventana del tutorial
             backgroundPanel.setVisible(false);
@@ -982,12 +984,12 @@ public void showBattleWindow(String text) {
 
 	    // Crear y agregar el título
 	    JLabel titleLabel = new JLabel("The battle begins!", SwingConstants.CENTER);
-	    titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0));
 	    titleLabel.setFont(gameFont);
+	    titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0));
 
 	    JTextArea textArea = new JTextArea();
-	    textArea.setEditable(false);
 	    textArea.setFont(gameFont);
+	    textArea.setEditable(false);
 	    textArea.setLineWrap(true);
 	    textArea.setWrapStyleWord(true);
 	    JScrollPane scrollPane = new JScrollPane(textArea);
@@ -997,13 +999,13 @@ public void showBattleWindow(String text) {
 	    JButton showAllButton = new JButton("Show All");
 	    showAllButton.setFont(gameFont);
 	    showAllButton.addActionListener(new ActionListener() {
-	        @Override
+	         
 	        public void actionPerformed(ActionEvent e) {
 	            textArea.setText(text); // Mostrar todo el texto
 	            showAllButton.setEnabled(false); // Deshabilitar el botón después de hacer clic
 	            JButton deleteButton = new JButton("Delete Panel");
 	            deleteButton.addActionListener(new ActionListener() {
-	                @Override
+	                 
 	                public void actionPerformed(ActionEvent e) {
 	                	backgroundPanel.setVisible(false); // Ocultar el panel
 	                    battleFrame.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
@@ -1013,9 +1015,11 @@ public void showBattleWindow(String text) {
 	        }
 	    });
 	    battleFrame.add(showAllButton, BorderLayout.SOUTH);
+	    
 
 	    // Dividir el texto en líneas
 	    String[] lines = text.split("\n");
+	    
 	    int[] currentLineIndex = {0}; // Usar un array para permitir acceso en la clase anónima
 
 	 // Crear el botón "Delete Panel" como un botón cuadrado con una imagen
@@ -1027,7 +1031,7 @@ public void showBattleWindow(String text) {
 
 	    // Agregar el ActionListener para ocultar el panel al hacer clic en el botón
 	    deleteButton.addActionListener(new ActionListener() {
-	        @Override
+	         
 	        public void actionPerformed(ActionEvent e) {
 	            backgroundPanel.setVisible(false); // Ocultar el panel
 	            battleFrame.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
@@ -1053,7 +1057,7 @@ public void showBattleWindow(String text) {
 
 	    // KeyListener para la tecla Enter
 	    textArea.addKeyListener(new KeyAdapter() {
-	        @Override
+	         
 	        public void keyPressed(KeyEvent e) {
 	            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 	                if (currentLineIndex[0] < lines.length) {
@@ -1125,7 +1129,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
             private int state = 0; // Estado para controlar las partes de la animación
             private int pauseCount = 0; // Contador para la pausa
 
-            @Override
+             
             public void actionPerformed(ActionEvent e) {
                 // Primera parte: movimiento hacia abajo
                 if (state == 0) {
@@ -1159,7 +1163,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
             }
         });
 
-        parentComponent.add(customPanel, JLayeredPane.PALETTE_LAYER); // Agregar el panel al componente principal
+        parentComponent.add(customPanel, JLayeredPane.POPUP_LAYER); // Agregar el panel al componente principal
         parentComponent.revalidate(); // Actualizar la interfaz
 
         timer.start(); // Iniciar la animación
@@ -1273,7 +1277,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         
         // Temporizador para ocultar el panel después de 3 segundos
         Timer timer = new Timer(3000, new ActionListener() {
-            @Override
+             
             public void actionPerformed(ActionEvent e) {
             	customPanel.setVisible(false);
                 mainpanel.remove(customPanel);
@@ -1346,13 +1350,13 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
             panel.setLayout(new BorderLayout());
 
             JLabel imageLabel = new JLabel(new ImageIcon(image.getScaledInstance(10, 10, Image.SCALE_SMOOTH))) {
-                @Override
+                 
                 public void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
                 }
 
-                @Override
+                 
                 public Dimension getPreferredSize() {
                     return new Dimension(image.getWidth(this), image.getHeight(this));
                 }
@@ -1452,12 +1456,14 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         for (int i = 0; i < battleReports.length; i++) {
             // Crear JTextArea para Battle Log
             JTextArea logTextArea = new JTextArea(10, 30);
+            logTextArea.setFont(gameFont);
             logTextArea.setText(battleLogs[i]);
             JScrollPane logScrollPane = new JScrollPane(logTextArea);
             logScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
             // Crear JTextArea para Battle Report
             JTextArea reportTextArea = new JTextArea(10, 30);
+            reportTextArea.setFont(gameFont);
             reportTextArea.setText(battleReports[i]);
             JScrollPane reportScrollPane = new JScrollPane(reportTextArea);
             reportScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -1470,7 +1476,8 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
             innerTabbedPane.addTab("Battle Report", reportScrollPane);
 
             // Agregar el JTabbedPane interno a la pestaña actual
-            tabbedPane.addTab("Tab " + (i + 1), innerTabbedPane);
+            tabbedPane.addTab("" + (i + 1), innerTabbedPane);
+            tabbedPane.setFont(gameFont);
         }
 
         // Cargar la imagen battleicon.png
@@ -1513,7 +1520,7 @@ public class MiPanelito extends JPanel {
     private int lastMouseY;
     private Color panelColor = Color.GREEN;
     private Color borderColor = Color.black;
-    private ImageIcon[] buildingImages = new ImageIcon[6];
+    private ImageIcon[] buildingImages = new ImageIcon[9];
     private ImageIcon currentImage,main_texture;
     private dc_gui dcGui;
     private boolean isoccupied;
@@ -1551,7 +1558,8 @@ public class MiPanelito extends JPanel {
 		
 		
 		
-		main_texture = new ImageIcon("./src/gui/maintilegrass.png");
+		//main_texture = new ImageIcon("./src/gui/maintilegrass.png");
+		main_texture = new ImageIcon("./src/gui/main_grass_texture.jpg");
     	
 		this.setCurrentImage(main_texture);
 		//setBorder(BorderFactory.createLineBorder(borderColor));
@@ -1562,11 +1570,15 @@ public class MiPanelito extends JPanel {
 		getBuildingImages()[3] = new ImageIcon("./src/gui/magic_tower.png");
 		getBuildingImages()[4] = new ImageIcon("./src/gui/carpentry.png");
 		getBuildingImages()[5] = new ImageIcon("./src/gui/rivertile.png");
+		getBuildingImages()[6] = new ImageIcon("./src/gui/tree.png");
+		getBuildingImages()[7] = new ImageIcon("./src/gui/rock.png");		
+		getBuildingImages()[8] = new ImageIcon("./src/gui/beach.png");
+
 
 
 
 		addMouseListener(new MouseAdapter() {
-		    @Override
+		     
 		    public void mousePressed(MouseEvent e) {
 		        if (SwingUtilities.isRightMouseButton(e)) {
 		            lastMouseX = e.getX();
@@ -1583,7 +1595,7 @@ public class MiPanelito extends JPanel {
 		                for (int i = 0; i < options.length; i++) {
 		                    buttons[i] = new JButton(options[i]);
 		                    buttons[i].addMouseListener(new MouseAdapter() {
-		                        @Override
+		                         
 		                        public void mouseEntered(MouseEvent e) {
 		                            // Obtener el texto del botón sobre el que pasó el ratón
 		                            String buttonText = ((JButton) e.getSource()).getText();
@@ -1595,7 +1607,7 @@ public class MiPanelito extends JPanel {
 		                            popupMenu.show((Component) e.getSource(), 0, ((Component) e.getSource()).getHeight());
 		                        }
 
-		                        @Override
+		                         
 		                        public void mouseClicked(MouseEvent e) {
 		                            int woodCost = 0;
 		                            int ironCost = 0;
@@ -1715,7 +1727,7 @@ public class MiPanelito extends JPanel {
 		        }
 		    }
 
-		    @Override
+		     
 		    public void mouseEntered(MouseEvent e) {
 		        if (e.getSource() instanceof JButton) {
 		            JButton button = (JButton) e.getSource();
@@ -1753,7 +1765,7 @@ public class MiPanelito extends JPanel {
         repaint();
     }
 
-    @Override
+     
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (currentImage != null) {
@@ -1794,8 +1806,6 @@ public class MiPanelito extends JPanel {
 	}
 
 }
-
-
 
 
 
@@ -1883,6 +1893,7 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
 
         SpinnerNumberModel spinnerModelAttack = new SpinnerNumberModel(1, 1, 5, 1);
         JSpinner levelSelectorAttack = new JSpinner(spinnerModelAttack);
+        levelSelectorAttack.setFont(gameFont);
         levelSelectorAttack.setPreferredSize(new Dimension(50, 30));
 
         // Etiqueta de hierro
@@ -1904,6 +1915,8 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
 
         // Botón de mejora
         JButton upgradeButtonAttack = new JButton("Upgrade");
+        upgradeButtonAttack.setFont(gameFont);
+
         upgradeButtonAttack.addActionListener(e -> {
             int units = (int) levelSelectorAttack.getValue();
             int ironCost = Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST * units;
@@ -1978,6 +1991,8 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
 
         SpinnerNumberModel spinnerModelDefense = new SpinnerNumberModel(1, 1, 5, 1);
         JSpinner levelSelectorDefense = new JSpinner(spinnerModelDefense);
+        levelSelectorDefense.setFont(gameFont);
+
         levelSelectorDefense.setPreferredSize(new Dimension(50, 30));
 
         // Etiqueta de hierro
@@ -1999,6 +2014,7 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
 
         // Botón de mejora
         JButton upgradeButtonDefense = new JButton("Upgrade");
+        upgradeButtonDefense.setFont(gameFont);
         upgradeButtonDefense.addActionListener(e -> {
             int units = (int) levelSelectorDefense.getValue();
             int ironCost = Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST * units;
@@ -2134,9 +2150,11 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
 
         SpinnerNumberModel numberModel = new SpinnerNumberModel(1, 1, 99, 1);
         JSpinner unitSelector = new JSpinner(numberModel);
+        unitSelector.setFont(gameFont);
+
         unitSelector.setPreferredSize(new Dimension(50, 30));
         unitSelector.addChangeListener(new ChangeListener() {
-            @Override
+             
             public void stateChanged(ChangeEvent e) {
                 int value = (int) unitSelector.getValue();
                 // Actualizar el texto de los JLabels de recursos según la cantidad seleccionada
@@ -2154,8 +2172,9 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
         bottomPanel.add(unitSelector);
 
         JButton createButton = new JButton("Create");
+        createButton.setFont(gameFont);
         createButton.addActionListener(new ActionListener() {
-            @Override
+             
             public void actionPerformed(ActionEvent e) {
                 int units = (int) unitSelector.getValue();
                 int foodCost = costs[0] * units;
@@ -2269,7 +2288,7 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
             }
 		}
 
-		@Override
+		 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (backgroundImage != null) {
@@ -2287,20 +2306,20 @@ class BlurryPanel extends JPanel {
         setOpaque(false); // Hace que el panel sea transparente
         setFocusable(true); // Hace que el panel pueda recibir el foco
         addMouseListener(new MouseAdapter() {
-            @Override
+             
             public void mouseClicked(MouseEvent e) {
                 e.consume(); // Consume el evento del mouse para evitar que se propague a los componentes subyacentes
             }
         });
         addKeyListener(new KeyAdapter() {
-            @Override
+             
             public void keyPressed(KeyEvent e) {
                 e.consume(); // Consume el evento del teclado para evitar que se propague a los componentes subyacentes
             }
         });
     }
 
-    @Override
+     
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
@@ -2311,7 +2330,7 @@ class BlurryPanel extends JPanel {
         g2d.dispose();
     }
 
-    @Override
+     
     protected void paintChildren(Graphics g) {
         // Permitir que los componentes hijos se pinten sobre el panel
         super.paintChildren(g);
