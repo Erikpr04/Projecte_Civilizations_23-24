@@ -21,6 +21,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -71,6 +73,7 @@ public class Game_gui extends JPanel {
 	Timer maintimergui;
     int seconds = 0;
     int minutes = 0;
+    JButton exitButton;
 	
 	
 	
@@ -90,7 +93,15 @@ public class Game_gui extends JPanel {
 
     
 
-    public boolean isPauseGame() {
+    public JButton getExitButton() {
+		return exitButton;
+	}
+
+	public void setExitButton(JButton exitButton) {
+		this.exitButton = exitButton;
+	}
+
+	public boolean isPauseGame() {
 		return pauseGame;
 	}
 
@@ -364,6 +375,7 @@ public class Game_gui extends JPanel {
         //Boton para ver logs
         
      // En el constructor de Game_gui, después de crear panelup
+	    JPanel panelbotones = new JPanel(new BorderLayout());
         JButton openButton = new JButton("Battle Logs");
         openButton.setFont(gameFont);
         openButton.addActionListener(new ActionListener() {
@@ -375,7 +387,22 @@ public class Game_gui extends JPanel {
             }
         });
         openButton.setPreferredSize(new Dimension(140,50));
-        panelup.add(openButton,BorderLayout.EAST);
+        
+        exitButton = new JButton("x");
+
+        
+        exitButton.setForeground(Color.red);
+        exitButton.setFont(gameFont);
+
+
+        panelbotones.add(openButton,BorderLayout.CENTER);
+        panelbotones.add(exitButton,BorderLayout.EAST);
+        panelbotones.setPreferredSize(new Dimension(200,50));
+
+
+        
+        
+        panelup.add(panelbotones,BorderLayout.EAST);
         
      
          //panel de batalla             
@@ -2304,7 +2331,7 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
 class BlurryPanel extends JPanel {
     public BlurryPanel() {
         setOpaque(false); // Hace que el panel sea transparente
-        setFocusable(true); // Hace que el panel pueda recibir el foco
+        //setFocusable(true); // Hace que el panel pueda recibir el foco
         addMouseListener(new MouseAdapter() {
              
             public void mouseClicked(MouseEvent e) {
