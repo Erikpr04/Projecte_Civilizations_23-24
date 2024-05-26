@@ -857,86 +857,30 @@ public class ConnectionDB {
         }
     }
 	
-	public static void main(String[] args) {
-		ConnectionDB cdb = new ConnectionDB();
-		
-		try {
-			cdb.eliminarCivilizacion(1);
-			
-			cdb.crearDatosCivilization("ewe");
-			cdb.insertarBattleStats(1, " BATTLE STATISTICS\r\n"
-					+ "\r\n"
-					+ " Civilization Army        Units   Drops  Enemy Army      Units   Drops\r\n"
-					+ "\r\n"
-					+ "\r\n"
-					+ "\r\n"
-					+ " Swordsman                   2       2   Swordsman           4       3\r\n"
-					+ "\r\n"
-					+ " Spearman                    0       0   Spearman            7       7\r\n"
-					+ "\r\n"
-					+ " Crossbow                    4       1   Crossbow            1       0\r\n"
-					+ "\r\n"
-					+ " Cannon                      1       1   Cannon              1       0\r\n"
-					+ "\r\n"
-					+ " Arrow Tower                 5       5\r\n"
-					+ "\r\n"
-					+ " Catapult                    3       3\r\n"
-					+ "\r\n"
-					+ " Rocket Launcher Tower       0       0\r\n"
-					+ "\r\n"
-					+ " Magician                    0       0\r\n"
-					+ "\r\n"
-					+ " Priest                      0       0\r\n"
-					+ "\r\n"
-					+ " *************************************************************************\r\n"
-					+ "\r\n"
-					+ " Cost Army Civilization                  Cost Army Enemy\r\n"
-					+ "\r\n"
-					+ " Food:	        0                        Food:	     8000\r\n"
-					+ " Wood:	   135000                        Wood:	    78000\r\n"
-					+ " Iron:	    21000                        Iron:	    22050\r\n"
-					+ "\r\n"
-					+ " *************************************************************************\r\n"
-					+ "\r\n"
-					+ " Losses Army Civilization                Losses Army Enemy\r\n"
-					+ "\r\n"
-					+ " Food:	    16000                        Food:	    59000\r\n"
-					+ " Wood:	   103000                        Wood:	    54500\r\n"
-					+ " Iron:	    23600                        Iron:	      500\r\n"
-					+ "\r\n"
-					+ " *************************************************************************\r\n"
-					+ "\r\n"
-					+ " Waste Generated:\r\n"
-					+ "\r\n"
-					+ " Wood:	    86450\r\n"
-					+ " Iron:	    15995\r\n"
-					+ "\r\n"
-					+ "\r\n"
-					+ " Battle Winned by Civilization, We Collect Rubble\r\n"
-					+ "\r\n"
-					+ " #########################################################################");
-			cdb.insertarBattleLog(1,1, "log 1");
-			cdb.insertarBattleStats(1, "stats batalla 2");
-			cdb.insertarBattleLog(1,2, "log 2");
-			cdb.insertarBattleStats(1, "stats batalla 3");
-			cdb.insertarBattleLog(1,3, "log 3");
-			
-			String [] reports = cdb.sacar5BattleReports();
-			String [] logs = cdb.sacar5BattleLog();
-			
-			
-			for (int i = 0; i < reports.length; i++) {
-				System.out.println("Battle report: " + i + "\n"+reports[i]);
-				System.out.println("Battle Log: " + i + "\n"+logs[i]);
-				
-			}
-			
-			
-		} catch (MiSQLException e) {
-			e.printStackTrace();
-		}
-	}
+	//metodo para recuperar el numero de batallas, usado para guardar información despues de una batalla:
+	
+	public int newBattleId() throws MiSQLException {
+		int lastId = 0;
+        try {
+        	Connection conn = openConnectionDB(); 
+        	String query = "SELECT MAX(num_battle) FROM battle_stats WHERE civilization_id = 1";
 
+		    Statement st = conn.createStatement();
+		    ResultSet rs = st.executeQuery(query);
+   
+		    if (rs.next()) {
+		    	lastId = rs.getInt(1);
+		    }
+		    
+		    st.close();
+		    return lastId +1;
+        //reestablecer las secuencias de las tablas creadas en la BD:
+	        
+	    } catch (SQLException e) {
+	        throw new MiSQLException("Error borrando civilization: " + e.getMessage());
+	    }
+	}
+	
 }
 
 

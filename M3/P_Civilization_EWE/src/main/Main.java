@@ -341,7 +341,7 @@ public class Main {
 					
 					m.dc_gui.getGui_obj().showBattleWindow(m.b.getBattleDevelopment());
 					
-					database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
+					//database.getConnectionDB().actualizarDatosCivilization(m.classes.getCv());
 
 				}catch (Exception e){
 					e.printStackTrace();

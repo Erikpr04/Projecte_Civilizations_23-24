@@ -815,10 +815,7 @@ public class Battle {
 			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
 		}
 		
-	//CONTADOR DE BATALLAS SUBE
-		System.out.println("Antes Cont: " + classes.getCv().getBattles());
-		classes.getCv().setBattles(classes.getCv().getBattles() + 1);
-		System.out.println("Despues Cont: " + classes.getCv().getBattles());
+		
 				
 	//GUARDAR DATOS EN LA BASE DE DATOS:
 		
@@ -826,7 +823,7 @@ public class Battle {
 		ConnectionDB cdb = new ConnectionDB();
 		
 		
-		int numBattle = classes.getCv().getBattles(); //aqui hay que recuperar el count de batallas de la clase civilization
+		int numBattle = cdb.newBattleId(); //aqui hay que recuperar el count de batallas de la clase civilization
 		int civilization_Id = classes.getCv().getId(); //en un principio solo hay una civilizacion "1"
 
 		
@@ -853,10 +850,16 @@ public class Battle {
 		
 		//Actualizamos la array local con la resultante del enfrentamiento
 		 classes.getCv().setArmy(myArmy);
-		
-		//Actualizar civilizacion en bd
-		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
+		 battlelistener.getCV_Battle().setArmy(myArmy);
+
+		 
+		//Actualizar CONTADOR DE BATALLAS
+		 classes.getCv().setBattles(numBattle);
+		battlelistener.getCV_Battle().setBattles(numBattle);
+//Actualizar civilizacion en bd
 		  
+		 cdb.actualizarDatosCivilization(battlelistener.getCV_Battle());
+		 	 	  
 		 //update de las unidades restantes
 		 cdb.actualizarUnitsBD(myArmy);
 		 

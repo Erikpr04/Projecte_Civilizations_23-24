@@ -29,7 +29,7 @@ Este juego de estrategia te permitirá demostrar tus habilidades de gestión y p
 
 ## Archivos
 
-Los del juego archivos como tal ya se encuentran descargados junto a este documento.
+Los archivos como tal ya se encuentran descargados junto a este documento.
 
 ## Installation
 
