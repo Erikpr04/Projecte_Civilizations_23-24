@@ -891,6 +891,7 @@ public class Battle {
 			 }			
 		 }
 		 
+		 
 		 //EnemyUnits
 		for (int i = 0; i < initialArmies[1].length; i++) {
 			int unitType = i+1;
