@@ -1,0 +1,398 @@
+package main;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import gui.Game_gui.MiPanelito;
+import gui.dc_gui;
+import classes.Civilization;
+import classes.dc_classes;
+import classes.attackunits.*;
+import classes.defenseunits.*;
+import classes.specialunits.*;
+import exceptions.BuildingException;
+import exceptions.ResourceException;
+import interfaces.GameGuiListener;
+import interfaces.Variables;
+import utils.Battle;
+import utils.dc_database;
+
+public class Main {
+    private int countFleet = 0;
+    private dc_gui dc_gui;
+    private dc_classes classes;
+    private boolean shownotification;
+    private dc_database database = new dc_database();
+
+    public static void main(String[] args) {
+        Main m = new Main();
+        dc_database database = new dc_database();
+        m.database = new dc_database();
+
+        dc_classes classes = new dc_classes();
+        m.dc_gui = new dc_gui(classes.getCv());
+        m.dc_gui.invoke_main_menu();
+
+        // TIMER TASK:
+        TimerTask task = new TimerTask() {
+            public void run() {
+                try {
+                    // Actualizar recursos
+                    Civilization cv = classes.getCv();
+                    cv.setWood(cv.getWood() + Variables.CIVILIZATION_WOOD_GENERATED + (cv.getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+                    cv.setFood(cv.getFood() + Variables.CIVILIZATION_FOOD_GENERATED + (cv.getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+                    cv.setIron(cv.getIron() + Variables.CIVILIZATION_IRON_GENERATED + (cv.getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+                    cv.setMana(cv.getMana() + (cv.getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+
+                    // Mostrar recursos actualizados
+                    System.out.println("Madera: " + cv.getWood());
+                    System.out.println("Comida: " + cv.getFood());
+                    System.out.println("Hierro: " + cv.getIron());
+                    System.out.println("Mana: " + cv.getMana());
+                    System.out.println("*********************");
+
+                    // Actualizar GUI
+                    m.dc_gui.setFood(cv.getFood());
+                    m.dc_gui.setWood(cv.getWood());
+                    m.dc_gui.setIron(cv.getIron());
+                    m.dc_gui.setMana(cv.getMana());
+                    m.dc_gui.update_resources_gui();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Timer maintimer = new Timer();
+        
+        // Instanciar controladores de dominio
+        m.dc_gui.setGgl(new GameGuiListener() {
+            public void load_game_gui() {
+                m.dc_gui.load_game();
+                maintimer.schedule(task, 10000, 10000);
+                update_panels();
+            }
+
+            public void update_resources() {
+                Civilization cv = classes.getCv();
+                m.dc_gui.setFood(cv.getFood());
+                m.dc_gui.setWood(cv.getWood());
+                m.dc_gui.setIron(cv.getIron());
+                m.dc_gui.setMana(cv.getMana());
+            }
+
+            public void update_resources_db(int food, int wood, int iron, int mana) {
+                Civilization cv = classes.getCv();
+                cv.setFood(food);
+                cv.setWood(wood);
+                cv.setIron(iron);
+                cv.setMana(mana);
+
+                System.out.println("Resources updated: " + food + ", " + wood + ", " + iron + ", " + mana);
+            }
+
+            @Override
+            public void update_resources(int food, int wood, int iron, int mana) {
+                // Método no implementado
+            }
+
+            @Override
+            public void update_army_db(int tipo_tropa) {
+                // Método no implementado
+            }
+
+            @Override
+            public void update_structures_db(String structuretype, int number_structures) {
+                Civilization cv = classes.getCv();
+                switch (structuretype) {
+                    case "Church":
+                        cv.setChurch(cv.getChurch() + 1);
+                        break;
+                    case "Magic Tower":
+                        cv.setMagicTower(cv.getMagicTower() + 1);
+                        break;
+                    case "Carpentry":
+                        cv.setCarpentry(cv.getCarpentry() + 1);
+                        break;
+                    case "Smithy":
+                        cv.setSmithy(cv.getSmithy() + 1);
+                        break;
+                    case "Farm":
+                        cv.setFarm(cv.getFarm() + 1);
+                        break;
+                }
+                System.out.println("Estructura creada: " + structuretype);
+            }
+
+            @Override
+            public void update_technologies_db(int attack_technology, int defense_technology) {
+                // Método no implementado
+            }
+
+            public int[] getcv_army_values() {
+                Civilization cv = classes.getCv();
+                int[] cv_array = new int[11];
+                for (int i = 0; i < 9; i++) {
+                    cv_array[i] = cv.getArmy().get(i).size();
+                }
+                cv_array[9] = cv.getTechnologyAttack();
+                cv_array[10] = cv.getTechnologyDefense();
+                return cv_array;
+            }
+
+            public void create_troop(int soldierTypeIndex, int numSoldiers) {
+                try {
+                    switch (soldierTypeIndex) {
+                        case 0: classes.getCv().new_Swordsman(numSoldiers); break;
+                        case 1: classes.getCv().new_Spearman(numSoldiers); break;
+                        case 2: classes.getCv().new_Crossbow(numSoldiers); break;
+                        case 3: classes.getCv().new_Cannon(numSoldiers); break;
+                        case 4: classes.getCv().new_ArrowTower(numSoldiers); break;
+                        case 5: classes.getCv().new_Catapult(numSoldiers); break;
+                        case 6: classes.getCv().new_RocketLauncher(numSoldiers); break;
+                        case 7: classes.getCv().new_Magician(numSoldiers); break;
+                        case 8: classes.getCv().new_Priest(numSoldiers); break;
+                        default: System.out.println("Tipo de soldado no válido: " + soldierTypeIndex); break;
+                    }
+                } catch (ResourceException | BuildingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public boolean shownotification() {
+                return false;
+            }
+
+            @Override
+            public void create_farm() {
+                try {
+                    classes.getCv().new_Farm();
+                } catch (ResourceException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void create_church() {
+                try {
+                    classes.getCv().new_Church();
+                } catch (ResourceException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void create_carpentry() {
+                try {
+                    classes.getCv().new_Carpentry();
+                } catch (ResourceException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void create_smithy() {
+                try {
+                    classes.getCv().new_Smithy();
+                } catch (ResourceException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void create_magic_tower() {
+                try {
+                    classes.getCv().new_MagicTower();
+                } catch (ResourceException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void sanctify() {
+                try {
+                    classes.getCv().sanctify_units();
+                } catch (ResourceException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void load_game_db() {
+                ResultSet rs = database.load_db();
+                Civilization cv = classes.getCv();
+
+                try {
+                    while (rs.next()) {
+                        // Actualizar civilización con datos de la base de datos
+                        cv.setFood(rs.getInt("food"));
+                        cv.setWood(rs.getInt("wood"));
+                        cv.setIron(rs.getInt("iron"));
+                        cv.setMana(rs.getInt("mana"));
+                        cv.setTechnologyAttack(rs.getInt("attack_technology"));
+                        cv.setTechnologyDefense(rs.getInt("defense_technology"));
+                    }
+
+                    // Crear estructuras
+                    update_structure_from_db(database.load_farm(), "Farm", cv);
+                    update_structure_from_db(database.load_church(), "Church", cv);
+                    update_structure_from_db(database.load_carpentry(), "Carpentry", cv);
+                    update_structure_from_db(database.load_smithy(), "Smithy", cv);
+                    update_structure_from_db(database.load_magic_tower(), "Magic Tower", cv);
+
+                    // Crear ejército
+                    create_troops_from_db(database.load_swordsman(), "Swordsman", cv);
+                    create_troops_from_db(database.load_spearman(), "Spearman", cv);
+                    create_troops_from_db(database.load_crossbow(), "Crossbow", cv);
+                    create_troops_from_db(database.load_cannon(), "Cannon", cv);
+                    create_troops_from_db(database.load_arrow_tower(), "Arrow Tower", cv);
+                    create_troops_from_db(database.load_catapult(), "Catapult", cv);
+                    create_troops_from_db(database.load_rocket_launcher(), "Rocket Launcher", cv);
+                    create_troops_from_db(database.load_magician(), "Magician", cv);
+                    create_troops_from_db(database.load_priest(), "Priest", cv);
+
+                    // Actualizar GUI
+                    m.dc_gui.setFood(cv.getFood());
+                    m.dc_gui.setWood(cv.getWood());
+                    m.dc_gui.setIron(cv.getIron());
+                    m.dc_gui.setMana(cv.getMana());
+                    m.dc_gui.update_resources_gui();
+                    update_panels();
+                } catch (SQLException | ResourceException | BuildingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private static void update_structure_from_db(ResultSet rs, String structureType, Civilization cv) throws SQLException {
+        while (rs.next()) {
+            switch (structureType) {
+                case "Farm":
+                    cv.setFarm(rs.getInt("number_farms"));
+                    break;
+                case "Church":
+                    cv.setChurch(rs.getInt("number_church"));
+                    break;
+                case "Carpentry":
+                    cv.setCarpentry(rs.getInt("number_carpentries"));
+                    break;
+                case "Smithy":
+                    cv.setSmithy(rs.getInt("number_smithies"));
+                    break;
+                case "Magic Tower":
+                    cv.setMagicTower(rs.getInt("number_magic_towers"));
+                    break;
+            }
+        }
+    }
+
+    private static void create_troops_from_db(ResultSet rs, String troopType, Civilization cv) throws SQLException, ResourceException, BuildingException {
+        while (rs.next()) {
+            int numberTroops = rs.getInt("number_" + troopType.toLowerCase());
+            switch (troopType) {
+                case "Swordsman":
+                    cv.new_Swordsman(numberTroops);
+                    break;
+                case "Spearman":
+                    cv.new_Spearman(numberTroops);
+                    break;
+                case "Crossbow":
+                    cv.new_Crossbow(numberTroops);
+                    break;
+                case "Cannon":
+                    cv.new_Cannon(numberTroops);
+                    break;
+                case "Arrow Tower":
+                    cv.new_ArrowTower(numberTroops);
+                    break;
+                case "Catapult":
+                    cv.new_Catapult(numberTroops);
+                    break;
+                case "Rocket Launcher":
+                    cv.new_RocketLauncher(numberTroops);
+                    break;
+                case "Magician":
+                    cv.new_Magician(numberTroops);
+                    break;
+                case "Priest":
+                    cv.new_Priest(numberTroops);
+                    break;
+            }
+        }
+    }
+
+    public static void createEnemyArmy() {
+        System.out.println("Creando enemigos...");
+        Civilization cv = new Civilization();
+        ArrayList<ArrayList<Soldier>> fleet = new ArrayList<>();
+        Random r = new Random();
+        int nfleets = r.nextInt(5) + 1;
+        int food = r.nextInt(400) + 50;
+        int wood = r.nextInt(400) + 50;
+        int iron = r.nextInt(400) + 50;
+        int mana = r.nextInt(400) + 50;
+        int tam = r.nextInt(50) + 5;
+
+        for (int i = 0; i < nfleets; i++) {
+            System.out.println("Flota " + i + " tamaño: " + tam + " con: ");
+            for (int j = 0; j < tam; j++) {
+                int soldiertype = r.nextInt(10);
+                switch (soldiertype) {
+                    case 0: System.out.println("Swordsman"); cv.new_Swordsman(1); break;
+                    case 1: System.out.println("Spearman"); cv.new_Spearman(1); break;
+                    case 2: System.out.println("Crossbow"); cv.new_Crossbow(1); break;
+                    case 3: System.out.println("Cannon"); cv.new_Cannon(1); break;
+                    case 4: System.out.println("Arrow Tower"); cv.new_ArrowTower(1); break;
+                    case 5: System.out.println("Catapult"); cv.new_Catapult(1); break;
+                    case 6: System.out.println("Rocket Launcher"); cv.new_RocketLauncher(1); break;
+                    case 7: System.out.println("Magician"); cv.new_Magician(1); break;
+                    case 8: System.out.println("Priest"); cv.new_Priest(1); break;
+                }
+            }
+            fleet.add(cv.getArmy());
+        }
+
+        viewThread(fleet);
+        System.out.println("Food: " + food + "\nWood: " + wood + "\nIron: " + iron + "\nMana: " + mana);
+        Battle b = new Battle();
+        // b.generateBattle();
+    }
+
+    public static void viewThread(ArrayList<ArrayList<Soldier>> fleet) {
+        for (ArrayList<Soldier> flota : fleet) {
+            for (Soldier soldado : flota) {
+                System.out.println(soldado.getType());
+            }
+        }
+    }
+
+    private static void update_panels() {
+        for (MiPanelito panel : dc_gui.all_panels) {
+            if (!panel.getOcupado()) {
+                switch (panel.getStructure()) {
+                    case "Church":
+                        dc_gui.all_structures[3].setOcupado(true);
+                        break;
+                    case "Magic Tower":
+                        dc_gui.all_structures[4].setOcupado(true);
+                        break;
+                    case "Carpentry":
+                        dc_gui.all_structures[0].setOcupado(true);
+                        break;
+                    case "Smithy":
+                        dc_gui.all_structures[1].setOcupado(true);
+                        break;
+                    case "Farm":
+                        dc_gui.all_structures[2].setOcupado(true);
+                        break;
+                }
+            }
+        }
+    }
+}
