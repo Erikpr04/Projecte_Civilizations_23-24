@@ -57,7 +57,7 @@ public class Game_gui extends JPanel {
             0, 0, 0, 0, 
             0, 0
         };
-    String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket L. Tower", "Magician", "Priest"};
+    String[] soldierNames = {"Swordsman", "Spearman", "Crossbow", "Cannon", "Arrow Tower", "Catapult", "Rocket Tower", "Magician", "Priest"};
     BackgroundPanel statsPanel;
 	private Timer maintimer;
 	private String username;
@@ -1009,7 +1009,7 @@ public void showBattleWindow(String text) {
 
         // Crear el panel de batalla
         JPanel battleFrame = new JPanel();
-	    battleFrame.setPreferredSize(new Dimension(500,600));
+	    battleFrame.setPreferredSize(new Dimension(550,650));
 	    battleFrame.setLayout(new BorderLayout());
 
 	    // Crear y agregar el título
