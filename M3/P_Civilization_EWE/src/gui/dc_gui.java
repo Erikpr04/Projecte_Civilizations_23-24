@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -246,8 +248,44 @@ public class dc_gui  {
             }
         });
         
-       
+
+
         GameFrame.setVisible(true);
+        
+        
+        GameFrame.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                	showExitConfirmation();
+                }				
+			}
+		});
+        
+        
+        
+        //añadimos boton de x para las pantallas con problemas al hacer fullscreen
+        
+        gui_obj.getExitButton().addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+                showExitConfirmation();
+				
+			}
+        });
     }
 
     public void showExitConfirmation() {
