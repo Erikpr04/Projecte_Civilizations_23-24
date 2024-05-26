@@ -93,7 +93,7 @@ public class dc_gui  {
 
 
 
-			@Override
+
 			public void loadgame() throws MiSQLException {
 		        invoke_game_gui();	
 				if (!load_game()) {
@@ -242,7 +242,7 @@ public class dc_gui  {
         gui_obj.setPpindex(profileindex);
 
         GameFrame.addWindowListener(new WindowAdapter() {
-            @Override
+            
             public void windowClosing(WindowEvent e) {
                 showExitConfirmation();
             }
