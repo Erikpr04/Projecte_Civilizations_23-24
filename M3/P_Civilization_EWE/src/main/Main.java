@@ -209,15 +209,15 @@ public class Main {
 	
 	//PRINT DE LA ARMY ENEMIGA
 	
-	public String viewThread(ArrayList<ArrayList> enemigos) {
-	    String threatString = "";
-	    threatString += "NEW threat coming soon, prepare yourself!\n";
-	    threatString += String.format("%-12s %7d\n", "Swordsman:", enemigos.get(0).size());
-	    threatString += String.format("%-12s %9d\n", "Spearman:", enemigos.get(1).size());
-	    threatString += String.format("%-13s %7d\n", "Crossbow:", enemigos.get(2).size());
-	    threatString += String.format("%-12s %11d\n", "Cannon:", enemigos.get(3).size());
-	    return threatString;
-	}
+    public String viewThread(ArrayList<ArrayList> enemigos) {
+        String threatString = "";
+        threatString += "NEW threat coming soon, prepare yourself!\n";
+        threatString += String.format("%-12s %7s\n", "Swordsman:", String.format("%7d", enemigos.get(0).size()));
+        threatString += String.format("%-12s %7s\n", "Spearman:", String.format("%8d", enemigos.get(1).size()));
+        threatString += String.format("%-12s %7s\n", "Crossbow:", String.format("%9d", enemigos.get(2).size()));
+        threatString += String.format("%-12s %7s\n", "Cannon:", String.format("%10d", enemigos.get(3).size()));
+        return threatString;
+    }
 
 
 

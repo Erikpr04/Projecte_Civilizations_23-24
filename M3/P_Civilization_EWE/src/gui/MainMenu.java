@@ -31,6 +31,8 @@ public class MainMenu extends JPanel {
     private String[] userData;
     private JFrame creategameframe;
     private Font gameFont;
+    private ImageIcon gamelogo = new ImageIcon("./src/gui/game_logo.png");
+
 
 
 
@@ -371,6 +373,7 @@ public class MainMenu extends JPanel {
 private void openCreditsWindow() {
     // Crear una nueva ventana de opciones
     JFrame optionsFrame = new JFrame("About Us");
+    optionsFrame.setIconImage(gamelogo.getImage());
     optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     optionsFrame.setSize(600, 400);
     optionsFrame.setLocationRelativeTo(null);
@@ -462,6 +465,8 @@ private void openCreditsWindow() {
 
     private void createAndShowGUI() {
         creategameframe = new JFrame("Create Game");
+        creategameframe.setIconImage(gamelogo.getImage());
+
         creategameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         creategameframe.setSize(1000, 800);
         creategameframe.setLayout(new BorderLayout());
@@ -481,10 +486,14 @@ private void openCreditsWindow() {
 
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
         JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(gameFont);
+
         usernameLabel.setForeground(Color.white);
 
         usernameLabel.setFont(gameFont);
         JTextField usernameField = new JTextField();
+        usernameField.setFont(gameFont);
+
 
         usernamePanel.add(usernameLabel);
         usernamePanel.add(Box.createVerticalStrut(5)); // Espacio entre etiqueta y campo de texto
@@ -546,6 +555,7 @@ private void openCreditsWindow() {
 
         // Botón "Play"
         JButton playButton = new JButton("Play");
+        playButton.setFont(gameFont);
         playButton.setEnabled(false);
 
         // Habilitar el botón "Play" cuando se han llenado ambos campos

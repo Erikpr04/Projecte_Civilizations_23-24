@@ -38,6 +38,8 @@ public class dc_gui  {
 	private String username = "username";
 	private int profileindex = 1;
 	private JFrame GameFrame;
+    private ImageIcon gamelogo = new ImageIcon("./src/gui/game_logo.png");
+
 
 	
     public Game_gui getGui_obj() {
@@ -157,6 +159,8 @@ public class dc_gui  {
         mainMenuFrame.pack();
         mainMenuFrame.setLocationRelativeTo(null);
         mainMenuFrame.setVisible(true);
+        mainMenuFrame.setResizable(false);
+        mainMenuFrame.setIconImage(gamelogo.getImage());
     }
 
  // Método para invocar la GUI del juego
@@ -176,10 +180,11 @@ public class dc_gui  {
         if (choice == JOptionPane.YES_OPTION) {
             System.out.println("Probar ventana normal seleccionada");
             GameFrame = new JFrame("Game GUI");
+            GameFrame.setIconImage(gamelogo.getImage());
             GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             try {
-    			gui_obj = new Game_gui(10, 10);
+    			gui_obj = new Game_gui(10, 11);
     		} catch (Exception e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
@@ -188,6 +193,8 @@ public class dc_gui  {
             gui_obj.setListener(this.ggl);
             
             GameFrame.add(gui_obj, BorderLayout.CENTER);
+            GameFrame.setResizable(false);
+
 
             GameFrame.pack();
             GameFrame.setLocationRelativeTo(null);
@@ -195,6 +202,7 @@ public class dc_gui  {
                     
             gui_obj.setUsername(username);
             gui_obj.setPpindex(profileindex);
+
 
 
 
@@ -212,6 +220,8 @@ public class dc_gui  {
 
             gui_obj.setListener(this.ggl);
             GameFrame.add(gui_obj, BorderLayout.CENTER);
+            GameFrame.setIconImage(gamelogo.getImage());
+
 
             // Obtener el dispositivo gráfico (monitor)
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
