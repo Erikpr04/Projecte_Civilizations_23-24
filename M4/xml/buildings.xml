@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildings>
+	<building>
+		<name>FARM</name>
+		<description>Estructura vital que genera recursos alimenticios esenciales para mantener a tu población. Aunque no participa en combates, su función de producir alimentos es crucial para mantener el crecimiento de tu imperio y sustentar a tus tropas. La gestión adecuada de las granjas es fundamental para asegurar el bienestar de tu pueblo y el exito de tus campañas militares.</description>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 5000</food_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 10000</iron_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 12000</wood_cost>
+		</costs>
+		<sprite>../xml/img/farm.png</sprite>
+	</building>
+	<building>
+		<name>CARPENTRY</name>
+		<description>Edificio especializado en la producción de madera, un recurso esencial para la construcción y mejora de estructuras y unidades. Aunque no está diseñado para la defensa o el ataque directo, su papel en la economía de tu imperio es fundamental. Gestionar eficientemente las carpinterías garantiza un suministro constante de madera para impulsar el crecimiento y desarrollo de tu reino.</description>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 5000</food_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 10000</iron_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 12000</wood_cost>
+		</costs>
+		<sprite>../xml/img/carpentry.png</sprite>
+	</building>
+	<building>
+		<name>SMITHY</name>
+		<description>Forja dedicada a la producción de hierro, un recurso fundamental para la fabricación de armas y armaduras. Aunque no participa en las batallas, su contribución al suministro de hierro es crucial para equipar a tus tropas con el mejor equipo disponible. Gestionar sabiamente las forjas garantiza un flujo constante de hierro para fortalecer tu ejercito y proteger tu reino.</description>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 5000</food_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 10000</iron_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 12000</wood_cost>
+		</costs>
+		<sprite>../xml/img/smithy.png</sprite>
+	</building>
+	<building>
+		<name>CHURCH</name>
+		<description> Lugar sagrado donde puedes entrenar y reclutar sacerdotes, quienes poseen el poder de santificar a tus unidades, aumentando significativamente sus estadísticas en combate. Aunque la iglesia misma no participa en la guerra, su función de proporcionar sacerdotes es vital para fortalecer tu ejercito y aumentar sus posibilidades de victoria en el campo de batalla. Gestionar sabiamente tus iglesias te permitirá desbloquear todo el potencial de tus tropas.</description>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 5000</food_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 10000</iron_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 12000</wood_cost>
+		</costs>
+		<sprite>../xml/img/church.png</sprite>
+	</building>
+	<building>
+		<name>MAGICTOWER</name>
+		<description>Torre mágica que genera maná, una esencia vital para la creación de sacerdotes y magos. Aunque no es directamente ofensiva, su capacidad para producir maná es crucial para reclutar a estos poderosos aliados que fortalecerán tus filas y proporcionarán apoyo mágico en el campo de batalla. Gestionar sabiamente las torres mágicas te permitirá mantener un suministro constante de maná y desbloquear el potencial místico de tu ejercito.</description>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 5000</food_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 10000</iron_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 12000</wood_cost>
+		</costs>
+		<sprite>../xml/img/magic_tower.png</sprite>
+	</building>
+</buildings>

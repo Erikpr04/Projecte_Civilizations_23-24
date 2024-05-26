@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<special_units>
+	<unit>
+		<name>MAGICIAN</name>
+		<description>Hechicero poderoso con habilidades ofensivas devastadoras, capaz de lanzar hechizos que infligen gran daño a los enemigos. Aunque su poder de ataque es impresionante, carece de defensa física, haciendolo vulnerable en combate cuerpo a cuerpo. Su magia es invaluable en el campo de batalla, pero requiere protección para alcanzar su máximo potencial.</description>
+		<base_damage>3000</base_damage>
+		<armour>0</armour>
+		<waste_chance>0</waste_chance>
+		<attack_again_chance>75</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> X</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 6</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> X</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> X</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 12000</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 2000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 500</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 5000</mana_cost>
+		</costs>
+		<sprite>../xml/img/magician.png</sprite>
+	</unit>
+	<unit>
+		<name>PRIEST</name>
+		<description>Siervo devoto que no ataca y carece de defensa, pero posee el poder de santificar unidades, otorgándoles aumentos significativos en sus estadísticas. Su presencia en el campo de batalla es crucial para fortalecer a tus tropas y mejorar su eficacia en combate. Aunque frágil, su habilidad para potenciar a tus unidades puede cambiar el curso de una batalla.</description>
+		<base_damage>0</base_damage>
+		<armour>0</armour>
+		<waste_chance>0</waste_chance>
+		<attack_again_chance>0</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> X</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> X</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> X</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> X</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> X</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> X</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 15000</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 0</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 0</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 15000</mana_cost>
+		</costs>
+		<sprite>../xml/img/priest.png</sprite>
+	</unit>
+</special_units>

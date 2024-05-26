@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attack_units>
+	<unit>
+		<name>SWORDSMAN</name>
+		<description>Soldados expertos en combate cuerpo a cuerpo, equipados con espadas y armaduras pesadas. Son la primera línea de ataque y infligen buen daño a los enemigos en el campo de batalla.</description>
+		<base_damage>80</base_damage>
+		<armour>400</armour>
+		<waste_chance>55</waste_chance>
+		<attack_again_chance>3</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 5</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 5</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 4</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> 7</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 8000</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 3000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 50</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/swordsman.png</sprite>
+	</unit>
+	<unit>
+		<name>SPEARMAN</name>
+		<description>Soldados especializados en el combate a distancia, armados con lanzas largas y escudos. Son eficaces para repeler ataques enemigos y pueden infligir daño letal a la distancia.</description>
+		<base_damage>150</base_damage>
+		<armour>1000</armour>
+		<waste_chance>65</waste_chance>
+		<attack_again_chance>7</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 5</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 5</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 4</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> 7</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 5000</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 6500</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 50</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/spearman.png</sprite>
+	</unit>
+	<unit>
+		<name>CROSSBOW</name>
+		<description>Experto tirador equipado con ballesta, capaz de infligir un daño devastador a larga distancia. Su precisión y potencia hacen de el un enemigo temido en el campo de batalla.</description>
+		<base_damage>1000</base_damage>
+		<armour>6000</armour>
+		<waste_chance>80</waste_chance>
+		<attack_again_chance>45</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 5</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 5</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 4</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> 7</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 0</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 45000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 7000</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/crossbow.png</sprite>
+	</unit>
+	<unit>
+		<name>CANNON</name>
+		<description>Poderosa arma de asedio que causa estragos en las filas enemigas con su enorme daño explosivo. Su capacidad para derribar fortificaciones y diezmar tropas lo convierte en un activo invaluable en el campo de batalla.</description>
+		<base_damage>700</base_damage>
+		<armour>8000</armour>
+		<waste_chance>90</waste_chance>
+		<attack_again_chance>70</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 5</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 5</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 4</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> 7</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 0</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 30000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_icon.png"/> 15000</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/cannon.png</sprite>
+	</unit>
+</attack_units>

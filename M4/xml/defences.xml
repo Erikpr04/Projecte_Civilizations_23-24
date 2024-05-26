@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defence_units>
+	<unit>
+		<name>ARROWTOWER</name>
+		<description>Torre defensiva que dispara flechas con precisión mortal a los enemigos que se acercan, aunque inflige un daño moderado en comparación con otras defensas. Su alcance y rapidez de disparo la convierten en una fortificación valiosa para mantener a raya a las fuerzas invasoras.</description>
+		<base_damage>80</base_damage>
+		<armour>200</armour>
+		<waste_chance>55</waste_chance>
+		<attack_again_chance>5</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 0</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 0</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 0</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 0</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/>0</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 0</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 0</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 2000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 0</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/arrow_tower.png</sprite>
+	</unit>
+	<unit>
+		<name>CATAPULT</name>
+		<description>Ingenio de guerra que lanza proyectiles masivos con gran precisión, infligiendo daño contundente a objetivos específicos como edificios y unidades enemigas. Su poder destructivo es invaluable en asedios y batallas.</description>
+		<base_damage>250</base_damage>
+		<armour>1200</armour>
+		<waste_chance>65</waste_chance>
+		<attack_again_chance>12</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 5</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 5</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 4</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> 7</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 0</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 4000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 500</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/catapult.png</sprite>
+	</unit>
+	<unit>
+		<name>ROCKETLAUNCHERTOWER</name>
+		<description>Torre de lanzamiento de cohetes con una alta probabilidad de encadenar ataques consecutivos, infligiendo daño significativo a objetivos específicos. Aunque no afecta áreas amplias, su capacidad para ataques continuos la convierte en una amenaza constante para los enemigos, siendo una defensa valiosa en la estrategia de combate.</description>
+		<base_damage>2000</base_damage>
+		<armour>7000</armour>
+		<waste_chance>75</waste_chance>
+		<attack_again_chance>30</attack_again_chance>
+		<plus_stats>
+			<technology><img href="../xml/img/technology.png"/> TECHNOLOGY:</technology>
+			<armour_technology><img href="../xml/img/shield.png"/> 5</armour_technology>
+			<attack_technology><img href="../xml/img/sword.png"/> 5</attack_technology>
+			<exp><img href="../xml/img/exp.png"/> EXPERIENCE:</exp>
+			<armour_experience><img href="../xml/img/shield.png"/> 4</armour_experience>
+			<attack_experience><img href="../xml/img/sword.png"/> 4</attack_experience>
+			<sanctify><img href="../xml/img/sanctify.png"/> SANCTIFIED:</sanctify>
+			<armour_sanctified><img href="../xml/img/shield.png"/> 7</armour_sanctified>
+			<attack_sanctified><img href="../xml/img/sword.png"/> 7</attack_sanctified>
+		</plus_stats>
+		<costs>
+			<food_cost><img href="../xml/img/food_icon.png"/> 0</food_cost>
+			<wood_cost><img href="../xml/img/wood_icon.png"/> 50000</wood_cost>
+			<iron_cost><img href="../xml/img/iron_beam_icon.png"/> 5000</iron_cost>
+			<mana_cost><img href="../xml/img/mana_icon.png"/> 0</mana_cost>
+		</costs>
+		<sprite>../xml/img/rocket_launcher.png</sprite>
+	</unit>
+</defence_units>
