@@ -6,13 +6,28 @@
 
 
 body {
-  background-color: #77db049f;
-  position:relative;  
-  font-family: 'Minecraft', sans-serif;
-  color: #000000;
-  margin: 0;
-  padding: 20px;
-  font-size: x-large;
+    position: relative;
+    font-family: 'Minecraft', sans-serif;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    font-size: x-large;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('background/background3.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    filter: brightness(0.5);
+    z-index: -1;
 }
 
 h1 {
