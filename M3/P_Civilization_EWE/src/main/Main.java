@@ -35,6 +35,12 @@ public class Main {
     private ArrayList<ArrayList> enemy_army;
     private Battle b;
     private int countFleet = classes.getCv().getBattles();
+    Timer maintimer;
+    private boolean pauseGame = false;
+    
+    
+    
+
 
 
 	
@@ -42,7 +48,21 @@ public class Main {
     //metodo para cargar datos de clase cv a gui
     
     
-    public void load_all_data() {
+    public boolean isPauseGame() {
+		return pauseGame;
+	}
+
+
+
+
+	public void setPauseGame(boolean pauseGame) {
+		this.pauseGame = pauseGame;
+	}
+
+
+
+
+	public void load_all_data() {
     	
     	try {
 			update_panels();
@@ -61,6 +81,11 @@ public class Main {
     	//ahora cargamos tropas
     	
     	dc_gui.getGui_obj().getcv_data();
+    	
+    	
+    	//cargamos username
+    	dc_gui.getGui_obj().setUsername(classes.getCv().getName());
+
     	
     	
     	
@@ -217,66 +242,38 @@ public class Main {
 		//TIMER TASK:
 
 		
-		TimerTask resourcestask = new TimerTask() {
+        TimerTask resourcestask = new TimerTask() {
+            public void run() {
+                if (!m.pauseGame) { // Verifica si el juego está en pausa
+                    try {
+                        // Lógica de tu tarea de recursos
+                        m.classes.getCv().setWood(m.classes.getCv().getWood() + 100000 + Variables.CIVILIZATION_WOOD_GENERATED + (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+                        m.classes.getCv().setFood(m.classes.getCv().getFood() + 100000 + Variables.CIVILIZATION_FOOD_GENERATED + (m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+                        m.classes.getCv().setIron(m.classes.getCv().getIron() + 100000 + Variables.CIVILIZATION_IRON_GENERATED + (m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+                        m.classes.getCv().setMana(m.classes.getCv().getMana() + 100000 + (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
 
-			public void run() {
-				try {
-									
-				
+                        // Muestra los recursos en consola
+                        System.out.println("Madera: " + m.classes.getCv().getWood());
+                        System.out.println("Comida: " + m.classes.getCv().getFood());
+                        System.out.println("Hierro: " + m.classes.getCv().getIron());
+                        System.out.println("Mana: " + m.classes.getCv().getMana());
+                        System.out.println("*********************");
 
+                        // Actualiza los recursos en la interfaz gráfica
+                        m.dc_gui.getGui_obj().setWood(m.classes.getCv().getWood());
+                        m.dc_gui.getGui_obj().setFood(m.classes.getCv().getFood());
+                        m.dc_gui.getGui_obj().setIron(m.classes.getCv().getIron());
+                        m.dc_gui.getGui_obj().setMana(m.classes.getCv().getMana());
+                        m.dc_gui.getGui_obj().setAttackint(m.classes.getCv().getTechnologyAttack());
+                        m.dc_gui.getGui_obj().setDefenseint(m.classes.getCv().getTechnologyDefense());
+                        m.dc_gui.getGui_obj().update_resources_quantity();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
 
-				m.classes.getCv().setWood(m.classes.getCv().getWood()+100000+ Variables.CIVILIZATION_WOOD_GENERATED+ (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-				m.classes.getCv().setFood(m.classes.getCv().getFood() +100000+ Variables.CIVILIZATION_FOOD_GENERATED+(m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-				m.classes.getCv().setIron(m.classes.getCv().getIron() +100000+ Variables.CIVILIZATION_IRON_GENERATED+(m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-				m.classes.getCv().setMana(m.classes.getCv().getMana() +100000+ (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
-				
-				
-				
-				
-				System.out.println("Madera: " + m.classes.getCv().getWood());
-				System.out.println("Comida: " + m.classes.getCv().getFood());
-				System.out.println("Hierro: " + m.classes.getCv().getIron());
-				System.out.println("Mana: " + m.classes.getCv().getMana());
-				System.out.println("*********************");
-	            //m.dc_gui.getGui_obj().showCustomPanel(m.dc_gui.getGui_obj().getMainpanel());
-	            
-	    		System.out.println("iron actual" + m.classes.getCv().getIron());
-	    		System.out.println(m.classes.getCv().getSmithy());
-
-	    		
-	    		
-	    		//CARGAMOS RECURSOS EN GUI
-	    		
-	    		//m.load_data_class_gui();
-	    		m.dc_gui.getGui_obj().setWood(m.classes.getCv().getWood());
-	    		m.dc_gui.getGui_obj().setFood(m.classes.getCv().getFood());
-	    		System.out.println(m.classes.getCv().getFood());
-	    		System.out.println(m.classes.getCv().getWood());
-	    		m.dc_gui.getGui_obj().setIron(m.classes.getCv().getIron());
-	    		System.out.println(m.classes.getCv().getIron());
-	    		m.dc_gui.getGui_obj().setMana(m.classes.getCv().getMana());
-	    		System.out.println(m.classes.getCv().getMana());
-
-	    		m.dc_gui.getGui_obj().setAttackint(m.classes.getCv().getTechnologyAttack());
-	    		m.dc_gui.getGui_obj().setDefenseint(m.classes.getCv().getTechnologyDefense());
-	    		System.out.println("--------");
-	    		
-	    		System.out.println(m.dc_gui.getGui_obj().getWood());
-	    		m.dc_gui.getGui_obj().update_resources_quantity();	    		
-	    		System.out.println("recursos actualizados");
-	    		
-	    		
-	    		
-				
-
-				}catch (Exception e){
-					e.printStackTrace();
-					
-				}
-				
-			}
-			
-		};
 		
         m.b = new Battle();
 
@@ -300,6 +297,8 @@ public class Main {
 		TimerTask shownotificationtask = new TimerTask() {
 
 			public void run() {
+                if (!m.pauseGame) { // Verifica si el juego está en pausa
+
 				try {
 
 									
@@ -313,6 +312,7 @@ public class Main {
 					e.printStackTrace();
 					
 				}
+                }
 				
 			}
 			
@@ -323,6 +323,8 @@ public class Main {
 		TimerTask startbattle = new TimerTask() {
 
 			public void run() {
+                if (!m.pauseGame) { // Verifica si el juego está en pausa
+
 				try {
 									
 					//en esta tarea mostraremos la notificacion que avisara que viene un ejercito
@@ -345,6 +347,7 @@ public class Main {
 					e.printStackTrace();
 					
 				}
+                }
 				
 			}
 			
@@ -352,7 +355,7 @@ public class Main {
 		
 		
 		//METODOS
-		Timer maintimer = new Timer();
+		m.maintimer = new Timer();
 		
         //instanciar controladores de dominio
         
@@ -361,9 +364,9 @@ public class Main {
 			//metodo para cargar juego
 			public void load_game_gui() {
 				
-				maintimer.schedule(resourcestask, 10000, 10000);
-				maintimer.schedule(shownotificationtask, 20000, 120000);
-				maintimer.schedule(startbattle, 25000, 120000);
+				m.maintimer.schedule(resourcestask, 10000, 10000);
+				m.maintimer.schedule(shownotificationtask, 20000, 120000);
+				m.maintimer.schedule(startbattle, 25000, 120000);
 								
 			}
 
@@ -391,8 +394,8 @@ public class Main {
 				
 				System.out.println("Panels updated db");
 
-				//NOTICAMOS DE TODO EN LA BBDD
 				m.dc_gui.getGui_obj().loadingPanel();
+				
 				
 				
 			}
@@ -497,6 +500,8 @@ public class Main {
 		    }catch (ResourceException | BuildingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}finally {
+					m.dc_gui.getGui_obj().loadingPanel();
 				}
 
 
@@ -605,7 +610,11 @@ public class Main {
 
 			@Override
 			public void update_technologies() {
+				System.out.println("Nivel tecnologia gui defensa : " + m.dc_gui.getGui_obj().getDefenseint());
+				System.out.println("Nivel tecnologia gui ataque : " + m.dc_gui.getGui_obj().getDefenseint());
+
 				m.classes.getCv().setTechnologyDefense(m.dc_gui.getGui_obj().getDefenseint());
+				m.classes.getCv().setTechnologyAttack(m.dc_gui.getGui_obj().getAttackint());
 
 				
 			}
@@ -650,6 +659,22 @@ public class Main {
 				}				
 			}
 
+			@Override
+			public void pausegame() {
+				m.setPauseGame(true);
+				m.dc_gui.getGui_obj().setPauseGame(true);
+				
+			}
+
+			@Override
+			public void resumegame() {
+				m.setPauseGame(false);
+				m.dc_gui.getGui_obj().setPauseGame(false);
+
+
+				
+			}
+
 
 		});
 	}
@@ -660,21 +685,23 @@ public class Main {
 
 	public void update_panels() throws ResourceException {
 	    dc_database database = new dc_database();
-	    ResultSet resultSet = database.getOccupiedPanels();
 	    MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
-	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic_Tower", "Carpentry"};
+	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry"};
 	    boolean isOccupied;
 	    int ppindex = 1;
-	
-	    if (resultSet != null) {
-	        try {
+
+	    try {
+	        ResultSet resultSet = database.getOccupiedPanels(); // Obtener los datos de la base de datos
+
+	        if (resultSet != null) {
 	            while (resultSet.next()) {
 	                String structureType = resultSet.getString("structure_type");
 	                int isOccupiednumber = resultSet.getInt("is_occupied");
+	                System.out.println(structureType+" " + isOccupiednumber);
 	                if (isOccupiednumber == 0) {
-	                	isOccupied = false;
-	                }else {
-	                	isOccupied = true;
+	                    isOccupied = false;
+	                } else {
+	                    isOccupied = true;
 	                }
 	                int xPosition = resultSet.getInt("x_position");
 	                int yPosition = resultSet.getInt("y_position");
@@ -687,7 +714,6 @@ public class Main {
 	                        break;
 	                    }
 	                }
-	                
 
 	                if (position != -1 && isOccupied) {
 	                    MiPanelito panel = subPanels[yPosition][xPosition];
@@ -719,18 +745,14 @@ public class Main {
 	                    System.out.println("Structure isn't occupied");
 	                }
 	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } finally {
-	            try {
-			        dc_gui.getGui_obj().setPpindex(ppindex);
-	                if (resultSet != null) resultSet.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
+	            resultSet.close();
 	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dc_gui.getGui_obj().setPpindex(ppindex);
 	    }
-
 	}
+
 	
 }

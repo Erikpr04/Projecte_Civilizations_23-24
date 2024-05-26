@@ -74,6 +74,13 @@ public class Game_gui extends JPanel {
     private Font gameFont,gameFont_Big;
     String[] battleLogs = new String[]{"Battle Log 1", "Battle Log 2", "Battle Log 3", "Battle Log 4", "Battle Log 5"};
     String[] battleReports = new String[]{"Battle Report 1", "Battle Report 2", "Battle Report 3", "Battle Report 4", "Battle Report 5"};
+	protected boolean pauseGame;
+	Timer maintimergui;
+    int seconds = 0;
+    int minutes = 0;
+	
+	
+	
 
 
 
@@ -90,7 +97,15 @@ public class Game_gui extends JPanel {
 
     
 
-    public String[] getBattleLogs() {
+    public boolean isPauseGame() {
+		return pauseGame;
+	}
+
+	public void setPauseGame(boolean pauseGame) {
+		this.pauseGame = pauseGame;
+	}
+
+	public String[] getBattleLogs() {
 		return battleLogs;
 	}
 
@@ -131,7 +146,7 @@ public class Game_gui extends JPanel {
 		this.ppindex = ppindex;
 	    selectedpp = ppphotos[ppindex-1];
 	    Image originalImage = selectedpp.getImage();
-	    Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
+	    Image resizedImage = originalImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 	    ImageIcon scaledIcon = new ImageIcon(resizedImage);
 	    imageLabel.setIcon(scaledIcon);
 	    imageLabel.revalidate();
@@ -316,8 +331,18 @@ public class Game_gui extends JPanel {
 	     cheatsMenu.add(cheat2);
 	
 	     // Agregar elementos de menú al menú "Help"
-	     JMenuItem helpItem = new JMenuItem("Help");
+	     JMenuItem helpItem = new JMenuItem("Tutorial");
 	     helpMenu.add(helpItem);
+	     
+	     helpItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createAndShowTutorial();
+				
+			}
+		});
+
 	
 	     // Agregar los menús al menú principal
 	     menuBar.add(cheatsMenu);
@@ -529,7 +554,6 @@ public class Game_gui extends JPanel {
     
     
     
-    
     //sanctify units panel
     
     sanctify_button.addActionListener(new ActionListener() {
@@ -599,11 +623,14 @@ public class Game_gui extends JPanel {
 
             // Añadir los nuevos componentes con los datos actualizados
             for (int i = 0; i < labels.length; i++) {
-                JLabel label = new JLabel(labels[i]);
-                label.setForeground(Color.WHITE); // Texto blanco
-                statsPanel.add(label);
+                JLabel namelabel = new JLabel(labels[i]);
+                namelabel.setFont(gameFont);
+
+                namelabel.setForeground(Color.WHITE); // Texto blanco
+                statsPanel.add(namelabel);
                 
                 JLabel valueLabel = new JLabel(Integer.toString(cv_values[i]));
+                valueLabel.setFont(gameFont);
                 valueLabel.setForeground(Color.WHITE); // Texto blanco
                 statsPanel.add(valueLabel);
             }
@@ -681,8 +708,7 @@ public class Game_gui extends JPanel {
 
     selectedpp = ppphotos[ppindex];
     Image originalImage = selectedpp.getImage();
-    Image resizedImage = originalImage.getScaledInstance(280, 200, Image.SCALE_SMOOTH);
-    ImageIcon scaledIcon = new ImageIcon(resizedImage);
+    ImageIcon scaledIcon = new ImageIcon(originalImage);
     imageLabel = new JLabel(scaledIcon);
     imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(imageLabel);
@@ -695,36 +721,254 @@ public class Game_gui extends JPanel {
     userPanel.add(usernameLabel);
 
     JLabel timerLabel = new JLabel("0:00", JLabel.CENTER);
-    timerLabel.setFont(gameFont);
+    timerLabel.setFont(gameFont_Big);
     timerLabel.setForeground(Color.WHITE);
     timerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userPanel.add(timerLabel);
     userPanel.setOpaque(false);
 
-    Timer timer = new Timer(1000, new ActionListener() {
-        int seconds = 0;
-        int minutes = 0;
 
+    maintimergui = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            seconds++;
-            if (seconds == 60) {
-                seconds = 0;
-                minutes++;
+            if (!pauseGame) { // Verifica si el juego está en pausa
+                seconds++;
+                if (seconds == 60) {
+                    seconds = 0;
+                    minutes++;
+                }
+                String timeString = String.format("%d:%02d", minutes, seconds);
+                // Actualiza el texto del contador de tiempo
+                timerLabel.setText(timeString);
             }
-            String timeString = String.format("%d:%02d", minutes, seconds);
-            timerLabel.setText(timeString);
         }
     });
-    timer.start();
-    userPanel.setPreferredSize(new Dimension(300, 300));
+
+    maintimergui.start();
+    userPanel.setPreferredSize(new Dimension(300, 340));
 
     panelright2.add(userPanel, BorderLayout.SOUTH);
+    
+
+    
 	 }
+	
+	
+	
+public void createAndShowTutorial() {
+    listener.pausegame();
+    BlurryPanel backgroundPanel = new BlurryPanel();
+    backgroundPanel.setBounds(0, 0, 1920, 1080);
+    backgroundPanel.setLayout(new GridBagLayout());
+
+    // Crear el panel del tutorial
+    BackgroundPanel paneltutorial = new BackgroundPanel();
+    paneltutorial.setPreferredSize(new Dimension(1000, 800));
+    paneltutorial.setLayout(new BorderLayout());
+
+    // Textos del tutorial
+    String[] tutorialTexts = {
+    	    "Bienvenido al tutorial del juego Civilization.\nPlay: Empieza una partida desde cero (Si ya tienes una creada, la sobreescribe)\nLoad Game: Carga la partida que tengas empezada\nCredits: Informacion extra del juego\nQuit: Cierra la aplicacion",
+    	    "El area debajo de username sirve para registrar el nombre.\nAqui asignaremos una foto de perfil al jugador.\nEl boton de play empieza la partida (solo esta activo cuando el usuario introduzca un nombre y elija una foto).",
+    	    "Estos iconos indican los recursos que tiene tu Civilizacion, cada un cierto periodo de tiempo estos aumentaran.",
+    	    "El boton superior battle logs nos sirve para ver el historial de las ultimas 5 partidas:\nCada ventana corresponde a una batalla.\nLas opciones inferiores sirven:\nPara ver entre el reporte final de la batalla (BattleReport)\nPara ver el transcurso de la batalla (BattleLog)",
+    	    "La zona verde es el terreno donde vas a asentar los cimientos de tu civilizacion.\nEn esta zona se colocan los edificios que vayas construyendo segun el transcurso de tu partida.",
+    	    "Cada opcion corresponde a la Construccion de cada edificio disponible,\nCuando pasemos el raton por encima, se nos mostrara el coste de construir estas estructuras.",
+    	    "Ataque enemigo: Cada cierto tiempo, un ejercito enemigo vendra a atacarnos y nos saldra el siguiente mensaje emergente:",
+    	    "Battle Log: Cada vez que nos salga la ventana emergente anterior, se nos abrira una nueva ventana para observar el transcurso de la batalla. El scroll lateral nos permite desplazarnos por el transcurso de la batalla.",
+    	    "Civilization Stats, este panel nos mostrara los datos principales de nuestra civilizacion.",
+    	    "Upgrade civilization:\nTendremos dos pestanas a en el menu de mejoras (entrenar tropas o mejorar tecnologia)\nPara la tropa que queramos mejorar, se pediran los recursos necesarios para crearla.\nSi no tienes suficientes recursos el juego te lo indicara.",
+    	    "Panel para mejorar tecnologia: Se nos mostraran ambas tecnologias, sus costes y el nivel de tecnologia actual, si no tenemos suficientes recursos, no podremos mejorar nuestro nivel de tecnologia."
+    	};
+
+
+
+    // Crear el panel para la imagen y el texto
+    JPanel imageTextPanel = new JPanel(new BorderLayout());
+    imageTextPanel.setOpaque(false);
+
     
+
+    // Cargar imágenes
+    ImageIcon[] tutorialImages = new ImageIcon[tutorialTexts.length];
+    for (int i = 0; i < tutorialImages.length; i++) {
+        tutorialImages[i] = new ImageIcon("./src/gui/tutorial_assets/" + i + ".jpg"); // Cambia a tus rutas de imágenes
+        tutorialImages[i] = new ImageIcon(tutorialImages[i].getImage().getScaledInstance(600, 400, Image.SCALE_SMOOTH));
+    }
+
+    // Estado actual del tutorial
+    final int[] currentIndex = {0};
+    JLabel[] indicators = new JLabel[tutorialTexts.length];
+
+    // Crear componentes
+    JLabel imageLabel = new JLabel(tutorialImages[currentIndex[0]]);
+    imageTextPanel.add(imageLabel, BorderLayout.CENTER);
+    imageTextPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+
+
+    // Crear el label para el texto
+    JTextArea textArea = new JTextArea(tutorialTexts[currentIndex[0]]);
+    textArea.setForeground(Color.WHITE); // Establece el color del texto como blanco
+    textArea.setFont(gameFont); 
+
+    textArea.setOpaque(false); // Hace que el JTextArea no sea opaco
+    textArea.setEditable(false);
+    textArea.setBackground(new Color(0, 0, 0, 0)); // Establece el fondo como transparente (RGBA: totalmente transparente)
+    textArea.setBorder(null); // Establece el borde del JTextArea como nulo
+
+    // Crear el JScrollPane y establecer su opacidad en false y el borde como null
+    JScrollPane scrollPane = new JScrollPane(textArea);
+    scrollPane.setOpaque(false);
+    scrollPane.getViewport().setOpaque(false); // Asegúrate de que la vista del viewport también sea transparente
+    scrollPane.setBorder(null); // Establece el borde del JScrollPane como nulo
+
+
+    imageTextPanel.add(scrollPane, BorderLayout.SOUTH);
+
+    // Agregar el panel de imagen y texto al panel del tutorial
+    paneltutorial.add(imageTextPanel, BorderLayout.CENTER);
+
+ // Crear el panel de botones de desplazamiento con BorderLayout
+    JPanel buttonPanel = new JPanel(new BorderLayout());
+    buttonPanel.setOpaque(false);
+    buttonPanel.setBackground(Color.red);
+
+    // Crear los botones de desplazamiento con un tamaño preferido más pequeño
+    JButton leftButton = new JButton("<");
+    leftButton.setFont(gameFont_Big);
+    leftButton.setForeground(Color.white);
+    leftButton.setContentAreaFilled(false);
+    leftButton.setBorderPainted(false);
+    leftButton.setPreferredSize(new Dimension(70,50));
+    JButton rightButton = new JButton(">");
+    rightButton.setFont(gameFont_Big);
+    rightButton.setForeground(Color.white);
+    rightButton.setContentAreaFilled(false);
+    rightButton.setBorderPainted(false);
+    rightButton.setPreferredSize(new Dimension(70,50));
+
+
+    // Crear el botón de salida con un tamaño preferido más pequeño
+    JButton exitButton = new JButton();
+    ImageIcon exitIcon = new ImageIcon("./src/gui/cross.png"); // Ajusta la ruta según la ubicación de tu imagen
+    exitButton.setOpaque(false); // Hace que el fondo sea transparente
+    exitButton.setContentAreaFilled(false); // Elimina el relleno del área de contenido
+    exitButton.setIcon(exitIcon);
+
+    // Agregar los botones de desplazamiento al panel de botones en el centro
+    JPanel directionalButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    directionalButtonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+    directionalButtonsPanel.setOpaque(false);
+    directionalButtonsPanel.add(leftButton);
+    directionalButtonsPanel.add(rightButton);
+    buttonPanel.add(directionalButtonsPanel, BorderLayout.CENTER);
+
+    // Agregar el botón de salida al lado derecho del panel de botones
+    buttonPanel.add(exitButton, BorderLayout.EAST);
     
+    exitButton.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+            backgroundPanel.setVisible(false); // Ocultar el panel
+            backgroundPanel.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
+			listener.resumegame();
+		}
+	});
+
+
+
+
+
+    // ActionListener para el botón de desplazamiento hacia la izquierda
+    leftButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            currentIndex[0]--;
+            if (currentIndex[0] < 0) {
+                currentIndex[0] = tutorialTexts.length - 1;
+            }
+            // Actualizar la imagen y el texto
+            imageLabel.setIcon(tutorialImages[currentIndex[0]]);
+            textArea.setText(tutorialTexts[currentIndex[0]]);
+            updateIndicators(indicators, currentIndex[0]);
+        }
+    });
+
+    // ActionListener para el botón de desplazamiento hacia la derecha
+    rightButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            currentIndex[0]++;
+            if (currentIndex[0] >= tutorialTexts.length) {
+                currentIndex[0] = 0;
+            }
+            // Actualizar la imagen y el texto
+            imageLabel.setIcon(tutorialImages[currentIndex[0]]);
+            textArea.setText(tutorialTexts[currentIndex[0]]);
+            updateIndicators(indicators, currentIndex[0]);
+        }
+    });
+    paneltutorial.add(buttonPanel, BorderLayout.NORTH);
+
+    // Crear el panel de indicadores
+    JPanel indicatorPanel = new JPanel(new FlowLayout());
+    for (int i = 0; i < indicators.length; i++) {
+        indicators[i] = new JLabel("●");
+        indicators[i].setFont(new Font("Arial", Font.PLAIN, 24));
+        indicatorPanel.add(indicators[i]);
+    }
+    indicatorPanel.setOpaque(false);
+    paneltutorial.add(indicatorPanel, BorderLayout.SOUTH);
+
+    // Crear el botón de cierre en la esquina superior derecha
+    JButton closeButton = new JButton();
+    closeButton.setPreferredSize(new Dimension(50, 50));
+    closeButton.setIcon(new ImageIcon("./src/gui/tutorial_assets/cross.png"));
+    closeButton.setContentAreaFilled(false);
+    closeButton.setBorderPainted(false);
+    closeButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Cerrar la ventana del tutorial
+            backgroundPanel.setVisible(false);
+        }
+    });
+    // Agregar el botón de cierre al panel del tutorial en la esquina superior derecha
+    paneltutorial.add(closeButton, BorderLayout.EAST);
+
+    // Añadir el panel del tutorial al backgroundPanel en el centro
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.insets = new Insets(0, 0, 0, 0);
+    gbc.anchor = GridBagConstraints.CENTER;
+    backgroundPanel.add(paneltutorial, gbc);
+
+    // Añadir el backgroundPanel al mainPanel en la capa adecuada
+    mainpanel.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
+
+    // Hacer visible el panel de tutorial
+    paneltutorial.setVisible(true);
+}
     
- public void showBattleWindow(String text) {
+    private void updateTutorial(JLabel imageLabel, JLabel textLabel, ImageIcon[] tutorialImages, String[] tutorialTexts, int currentIndex, JLabel[] indicators) {
+        imageLabel.setIcon(tutorialImages[currentIndex]);
+        textLabel.setText(tutorialTexts[currentIndex]);
+        updateIndicators(indicators, currentIndex);
+    }
+    
+    private void updateIndicators(JLabel[] indicators, int currentIndex) {
+        for (int i = 0; i < indicators.length; i++) {
+            if (i == currentIndex) {
+                indicators[i].setForeground(Color.BLACK);
+            } else {
+                indicators[i].setForeground(Color.LIGHT_GRAY);
+            }
+        }
+    }
+
+public void showBattleWindow(String text) {
         // Crear el panel borroso como fondo
         BlurryPanel backgroundPanel = new BlurryPanel();
         backgroundPanel.setBounds(0, 0, 1920, 1080);
@@ -825,7 +1069,7 @@ public class Game_gui extends JPanel {
         backgroundPanel.setBorder(BorderFactory.createEmptyBorder(250, 0, 0, 0));
 
         // Agregar el panel borroso al JLayeredPane con la capa adecuada
-        mainpanel.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
+        mainpanel.add(backgroundPanel, JLayeredPane.POPUP_LAYER);
 
         // Hacer visible el panel de batalla
         battleFrame.setVisible(true);
@@ -1015,7 +1259,7 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
         customPanel.setBounds(panelX, panelY, panelWidth, panelHeight);
 
         // Agregar el panel al mainpanel
-        mainpanel.add(customPanel, JLayeredPane.PALETTE_LAYER);
+        mainpanel.add(customPanel, JLayeredPane.POPUP_LAYER);
         mainpanel.revalidate();
         
         // Hacer visible el panel
@@ -1651,6 +1895,8 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
             // Verificar si hay suficientes recursos disponibles
             if (getIron() >= ironCost) {
                 setIron(getIron() - ironCost);
+                setAttackint(getDefenseint()+ units);
+                ironLabelAttack.repaint();
                 listener.update_technologies();
 
                 try {
@@ -1676,8 +1922,11 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
         JPanel bottomPanelAttack = new JPanel(new FlowLayout());
         bottomPanelAttack.add(levelSelectorAttack);
         bottomPanelAttack.add(upgradeButtonAttack);
+        bottomPanelAttack.setOpaque(false);
+
 
         attackBottomPanel.add(ironLabelAttack, BorderLayout.NORTH);
+        attackBottomPanel.setOpaque(false);
         attackBottomPanel.add(bottomPanelAttack, BorderLayout.SOUTH);
         attackPanel.add(attackBottomPanel, BorderLayout.SOUTH);
 
@@ -1741,7 +1990,10 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
             // Verificar si hay suficientes recursos disponibles
             if (getIron() >= ironCost) {
                 setIron(getIron() - ironCost);
+                setDefenseint(getDefenseint()+ units);
                 listener.update_technologies();
+                ironLabelAttack.repaint();
+
 
                 try {
                     update_resources_quantity();
@@ -1767,8 +2019,12 @@ public class TechnologyUpgradePanel extends BackgroundPanel {
         JPanel bottomPanelDefense = new JPanel(new FlowLayout());
         bottomPanelDefense.add(levelSelectorDefense);
         bottomPanelDefense.add(upgradeButtonDefense);
+        bottomPanelDefense.setOpaque(false);
+
 
         defenseBottomPanel.add(ironLabelDefense, BorderLayout.NORTH);
+        defenseBottomPanel.setOpaque(false);
+
         defenseBottomPanel.add(bottomPanelDefense, BorderLayout.SOUTH);
         defensePanel.add(defenseBottomPanel, BorderLayout.SOUTH);
 

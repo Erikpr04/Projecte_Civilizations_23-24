@@ -120,6 +120,7 @@ public class dc_gui  {
 		        ggl.load_game_gui();
 		        gui_obj.setPpindex(photoindex1);
 		        GameFrame.setVisible(true);
+		        gui_obj.createAndShowTutorial();
 		        
 				
 			}

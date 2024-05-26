@@ -40,5 +40,7 @@ public interface GameGuiListener {
     int getcvmagic_tower();
 	void clear_and_startdb() throws MiSQLException, ResourceException;
 	void refresh_battle_logs_reports();
+	void pausegame();
+	void resumegame();
     
 }

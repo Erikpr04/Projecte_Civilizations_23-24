@@ -292,7 +292,7 @@ public class MainMenu extends JPanel {
     	
     	
     	
-    	ImageBackgroundPanel mainpanel = new ImageBackgroundPanel("./src/gui/background_title.jpg");
+    	BackgroundAnimatedPanel mainpanel = new BackgroundAnimatedPanel();
     	add(mainpanel);
     	// Agregar ActionListener a cada botón
 
@@ -461,25 +461,31 @@ private void openCreditsWindow() {
     
 
     private void createAndShowGUI() {
-        creategameframe = new JFrame("Game Launcher");
+        creategameframe = new JFrame("Create Game");
         creategameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        creategameframe.setSize(600, 400);
+        creategameframe.setSize(1000, 800);
         creategameframe.setLayout(new BorderLayout());
         creategameframe.setLocationRelativeTo(null);
 
         // Panel principal con margen
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        ImageBackgroundPanel mainPanel = new ImageBackgroundPanel(new BorderLayout(),"./src/gui/panel_background_img.jpg");
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Panel para los inputs
         JPanel inputPanel = new JPanel(new BorderLayout(10, 10)); // Añadir espacio entre componentes
+        inputPanel.setOpaque(false);
 
         // Panel para el nombre de usuario
         JPanel usernamePanel = new JPanel();
-        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
+        usernamePanel.setOpaque(false);
+
+        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
         JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setForeground(Color.white);
+
         usernameLabel.setFont(gameFont);
         JTextField usernameField = new JTextField();
+
         usernamePanel.add(usernameLabel);
         usernamePanel.add(Box.createVerticalStrut(5)); // Espacio entre etiqueta y campo de texto
         usernamePanel.add(usernameField);
@@ -488,14 +494,21 @@ private void openCreditsWindow() {
 
         // Panel para las fotos de perfil
         JPanel profilePhotoPanel = new JPanel(new BorderLayout(10, 10));
+        profilePhotoPanel.setOpaque(false);
+
         JPanel photoLabelPanel = new JPanel(new BorderLayout());
+        photoLabelPanel.setOpaque(false);
+
         JLabel pickPhotoLabel = new JLabel("Pick one profile photo:");
+        pickPhotoLabel.setForeground(Color.white);
         pickPhotoLabel.setFont(gameFont);
         photoLabelPanel.add(pickPhotoLabel, BorderLayout.WEST);
         photoLabelPanel.add(Box.createHorizontalGlue(), BorderLayout.CENTER); // Añadir espacio para ocupar el ancho
 
         profilePhotoPanel.add(photoLabelPanel, BorderLayout.NORTH);
         JPanel photoGridPanel = new JPanel(new GridLayout(3, 3, 10, 10));
+        photoGridPanel.setOpaque(false);
+        photoGridPanel.setPreferredSize(new Dimension(200,200));
         ButtonGroup photoGroup = new ButtonGroup();
         
         
@@ -515,10 +528,12 @@ private void openCreditsWindow() {
     	for (int i = 0; i < 9; i++) {
     	    ImageIcon originalIcon = ppphotos[i];
     	    Image originalImage = originalIcon.getImage();
-    	    Image resizedImage = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+    	    Image resizedImage = originalImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
     	    ImageIcon resizedIcon = new ImageIcon(resizedImage);
     	    
     	    JToggleButton photoButton = new JToggleButton(resizedIcon);
+    	    photoButton.setContentAreaFilled(false);
+    	    photoButton.setBorderPainted(false);
     	    photoButton.setActionCommand(String.valueOf(i + 1)); // Índice base 1
     	    photoGroup.add(photoButton);
     	    photoGridPanel.add(photoButton);
@@ -594,7 +609,62 @@ private void openCreditsWindow() {
 
 //CLASE PARA PANEL DE FONDO
 
+//panel de fondo animado
 
+class BackgroundAnimatedPanel extends JPanel {
+    private BufferedImage[] images;
+    private BufferedImage currentImage;
+    private BufferedImage nextImage;
+    private int currentIndex = 0;
+    private int fadeDuration = 10000; // Duración del desvanecimiento en milisegundos
+    private Timer fadeTimer;
+
+    public BackgroundAnimatedPanel() {
+        // Cargar imágenes localmente
+        images = new BufferedImage[3];
+        try {
+            images[0] = ImageIO.read(new File("./src/gui/bck_img1.jpg"));
+            images[1] = ImageIO.read(new File("./src/gui/bck_img2.jpg"));
+            images[2] = ImageIO.read(new File("./src/gui/bck_img3.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        currentImage = images[0]; // Establecer la primera imagen como la actual
+        nextImage = images[1]; // Establecer la segunda imagen como la siguiente
+
+        fadeTimer = new Timer(fadeDuration, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cambiar a la siguiente imagen en el array (cíclicamente)
+                currentIndex = (currentIndex + 1) % images.length;
+                currentImage = nextImage;
+                nextImage = images[(currentIndex + 1) % images.length];
+                repaint();
+                // Reiniciar el temporizador de desvanecimiento
+                fadeTimer.restart();
+            }
+        });
+        fadeTimer.setRepeats(false); // Solo una ejecución del temporizador
+        fadeTimer.start(); // Iniciar el temporizador
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (currentImage != null && nextImage != null) {
+            g.drawImage(currentImage, 0, 0, getWidth(), getHeight(), null);
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.drawImage(nextImage, 0, 0, getWidth(), getHeight(), null);
+            g2d.dispose();
+        }
+    }
+
+    // Método para detener el temporizador de desvanecimiento (opcional)
+    public void stopFadeTimer() {
+        fadeTimer.stop();
+    }
+}
 
 
 class ImageBackgroundPanel extends JPanel {
