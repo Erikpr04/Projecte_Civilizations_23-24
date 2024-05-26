@@ -239,29 +239,27 @@ public class Battle {
 		    }
 		}
 
+		report = "";
+
+		report += " *************************************************************************\n\n";
+		report += " Cost Army Civilization                              Cost Army Enemy\n\n";
+		report += String.format(" Food:    %8d                         Food:    %8d\n", initialCostFleet[0][0], initialCostFleet[1][0]);
+		report += String.format(" Wood:    %8d                         Wood:    %8d\n", initialCostFleet[0][1], initialCostFleet[1][1]);
+		report += String.format(" Iron:    %8d                         Iron:    %8d\n\n", initialCostFleet[0][2], initialCostFleet[1][2]);
 		report += " *************************************************************************\n\n";
 
-		// Encabezado de la sección de costos de recursos
-		report += " Cost Army Civilization                   Cost Army Enemy\n\n";
-		report += String.format(" Food:	 %8d                         Food:	 %8d\n", initialCostFleet[0][0], initialCostFleet[1][0]);
-		report += String.format(" Wood:	 %8d                         Wood:	 %8d\n", initialCostFleet[0][1], initialCostFleet[1][1]);
-		report += String.format(" Iron:	 %8d                         Iron:	 %8d\n\n", initialCostFleet[0][2], initialCostFleet[1][2]);
+		report += " Losses Army Civilization                            Losses Army Enemy\n\n";
+		report += String.format(" Food:    %8d                         Food:    %8d\n", getResourcesLooses()[0][0], getResourcesLooses()[1][0]);
+		report += String.format(" Wood:    %8d                         Wood:    %8d\n", getResourcesLooses()[0][1], getResourcesLooses()[1][1]);
+		report += String.format(" Iron:    %8d                         Iron:    %8d\n\n", getResourcesLooses()[0][2], getResourcesLooses()[1][2]);
 		report += " *************************************************************************\n\n";
 
-		// Encabezado de la sección de pérdidas de recursos
-		report += String.format(" Losses Army Civilization                 Losses Army Enemy\n\n", " ");
-		report += String.format(" Food:	 %8d                         Food:	 %8d\n", getResourcesLooses()[0][0], getResourcesLooses()[1][0]);
-		report += String.format(" Wood:	 %8d                         Wood:	 %8d\n", getResourcesLooses()[0][1], getResourcesLooses()[1][1]);
-		report += String.format(" Iron:	 %8d                         Iron:	 %8d\n\n", getResourcesLooses()[0][2], getResourcesLooses()[1][2]);
-		report += " *************************************************************************\n\n";
-
-		// Desperdicios generados
 		report += " Waste Generated:\n\n";
-		report += String.format(" Wood:	 %8d\n", wasteWoodIron[0]);
-		report += String.format(" Iron:	 %8d\n\n", wasteWoodIron[1]);
+		report += String.format(" Wood:    %8d\n", wasteWoodIron[0]);
+		report += String.format(" Iron:    %8d\n\n", wasteWoodIron[1]);
 
-		// Mensaje final de batalla
-	    report += "\n #########################################################################";
+		report += "\n #########################################################################";
+
 
 	    return report;
 	}

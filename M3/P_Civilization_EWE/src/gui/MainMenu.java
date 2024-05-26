@@ -67,7 +67,7 @@ public class MainMenu extends JPanel {
     	
     	
         try {
-			gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
+			gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/Monocraft.ttf")).deriveFont(18f);
 		} catch (FontFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -418,7 +418,7 @@ private void openCreditsWindow() {
      nameLabel.setLayout(new BoxLayout(nameLabel, BoxLayout.Y_AXIS));
 
      nameLabel.setFont(gameFont);
-     nameLabel.setBorder(BorderFactory.createEmptyBorder(20, 240, 0, 20)); // Agregar margen a la izquierda y derecha
+     nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 220, 0, 0)); // Agregar margen a la izquierda y derecha
      nameLabel.setForeground(Color.white);
      nameLabel.setForeground(new Color(0, 0, 0, 0)); // Inicialmente transparente
      namesPanel.add(nameLabel);

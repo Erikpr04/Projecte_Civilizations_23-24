@@ -207,8 +207,11 @@ public class Game_gui extends JPanel {
 		
 		//cargamos partida
 		
-		gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
-		gameFont_Big = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(30f);
+		gameFont = Font.createFont(Font.PLAIN, new File("./src/gui/Monocraft.ttf")).deriveFont(16f);
+		//gameFont = new Font("Courier New", Font.PLAIN, 12); // Usar fuente de ancho fijo
+
+		
+		gameFont_Big = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/Monocraft.ttf")).deriveFont(30f);
 
 
 		
