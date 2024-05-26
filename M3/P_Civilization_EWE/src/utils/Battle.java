@@ -484,14 +484,17 @@ public class Battle {
 		setCivilizationArmy(myArmy);
 		setEnemyArmy(enemyArmy);
 		
+		//vaciamos battledevelopement anterior
+		setBattleDevelopment("");
 		
 		initInitialArmies();
 
 		//Generacion de los ejercitos de la batalla: 
 		if (getInitialNumberUnitsCivilization() == 0) {
-			setBattleDevelopment(getBattleDevelopment() + " \n\n\nCANT START BATTLE, CIVILIZATION HAS NO UNITS");
+			setBattleDevelopment(getBattleDevelopment() + " \n\nCANT START BATTLE, CIVILIZATION HAS NO UNITS");
 			System.out.println("---------"+getBattleDevelopment());
-			throw new NoUnitsException("CANT START BATTLE, CIVILIZATION HAS NO UNITS");
+			
+			throw new NoUnitsException("Error: CANT START BATTLE, CIVILIZATION HAS NO UNITS");
 			
 		}
 
@@ -521,10 +524,6 @@ public class Battle {
 			
 		setActualNumberUnitsCivilization(getActualNumberUnitsCivilization());
 		setActualNumberUnitsEnemy(getActualNumberUnitsEnemy());
-		
-		//vaciamos battledevelopement anterior
-		
-		setBattleDevelopment("");
 		
 		
 		String[] nameUnits= {"Swordsman", "Spearman", "Crossbow", "Cannon", 

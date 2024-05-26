@@ -248,10 +248,10 @@ public class Main {
                     	
 //                    	System.out.println("Se han generado recursos!");
                         // Lógica de tu tarea de recursos
-                        m.classes.getCv().setWood(m.classes.getCv().getWood() + 100000 + Variables.CIVILIZATION_WOOD_GENERATED + (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
-                        m.classes.getCv().setFood(m.classes.getCv().getFood() + 100000 + Variables.CIVILIZATION_FOOD_GENERATED + (m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
-                        m.classes.getCv().setIron(m.classes.getCv().getIron() + 100000 + Variables.CIVILIZATION_IRON_GENERATED + (m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
-                        m.classes.getCv().setMana(m.classes.getCv().getMana() + 100000 + (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
+                        m.classes.getCv().setWood(m.classes.getCv().getWood() + Variables.CIVILIZATION_WOOD_GENERATED + (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
+                        m.classes.getCv().setFood(m.classes.getCv().getFood() + Variables.CIVILIZATION_FOOD_GENERATED + (m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
+                        m.classes.getCv().setIron(m.classes.getCv().getIron() + Variables.CIVILIZATION_IRON_GENERATED + (m.classes.getCv().getSmithy() * Variables.CIVILIZATION_IRON_GENERATED_PER_SMITHY));
+                        m.classes.getCv().setMana(m.classes.getCv().getMana() + (m.classes.getCv().getMagicTower() * Variables.CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER));
 
                         // Muestra los recursos en consola
 //                        System.out.println("Madera: " + m.classes.getCv().getWood());

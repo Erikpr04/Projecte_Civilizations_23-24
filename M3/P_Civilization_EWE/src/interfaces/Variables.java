@@ -10,7 +10,7 @@ public interface Variables {
 	
 	//tiempo de los timertask del juego
 	public final int TIMERTASK_BATTLE = 75000;
-	public final int TIMERTASK_RESOURCES = 20000;
+	public final int TIMERTASK_RESOURCES = 10000;
 	public final int TIMERTASK_NOTIFICATION_BATTLE = 60000;
 	
 	// resources available to create the first enemy fleet
@@ -26,7 +26,7 @@ public interface Variables {
 	public final int CIVILIZATION_IRON_GENERATED_PER_SMITHY = (int) (0.5*CIVILIZATION_IRON_GENERATED);
 	public final int CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY = (int) (0.5*CIVILIZATION_WOOD_GENERATED);
 	public final int CIVILIZATION_FOOD_GENERATED_PER_FARM = (int) (0.5*CIVILIZATION_FOOD_GENERATED);
-	public final int CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER = 20;
+	public final int CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER = 200;
 	// TECHNOLOGY COST
 	public final int UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST = 2000;
 	public final int UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST = 2000;

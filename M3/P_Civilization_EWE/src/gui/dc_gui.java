@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -89,7 +91,7 @@ public class dc_gui  {
 
 
 
-			@Override
+
 			public void loadgame() throws MiSQLException {
 		        invoke_game_gui();	
 				if (!load_game()) {
@@ -217,6 +219,7 @@ public class dc_gui  {
  // Método para invocar la GUI del juego
     public void invoke_game_gui() {
         GameFrame = new JFrame("Civilization By Newel");
+        GameFrame.setUndecorated(true);
         GameFrame.setIconImage(gamelogo.getImage());
         GameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -237,12 +240,13 @@ public class dc_gui  {
         gui_obj.setPpindex(profileindex);
 
         GameFrame.addWindowListener(new WindowAdapter() {
-            @Override
+            
             public void windowClosing(WindowEvent e) {
                 showExitConfirmation();
             }
         });
-
+        
+       
         GameFrame.setVisible(true);
     }
 
