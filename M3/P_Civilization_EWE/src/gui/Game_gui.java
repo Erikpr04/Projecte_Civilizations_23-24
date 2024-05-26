@@ -196,6 +196,11 @@ public class Game_gui extends JPanel {
 
 	public Game_gui(int rows, int cols) throws Exception {
 		
+		
+		
+
+	        
+		
 		//cargamos partida
 		
 		gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("./src/gui/game_font.ttf")).deriveFont(18f);
@@ -226,6 +231,8 @@ public class Game_gui extends JPanel {
         panelup = new JPanel(new BorderLayout());
         panelright1 = new JPanel(new GridLayout(4, 1));
         panelright2 = new MiPanelito(new BorderLayout());
+        
+        
 
 
         //  the resources_img icon
@@ -969,6 +976,8 @@ public void createAndShowTutorial() {
     }
 
 public void showBattleWindow(String text) {
+		//paramos el juego
+		listener.pausegame();
         // Crear el panel borroso como fondo
         BlurryPanel backgroundPanel = new BlurryPanel();
         backgroundPanel.setBounds(0, 0, 1920, 1080);
@@ -1028,6 +1037,9 @@ public void showBattleWindow(String text) {
 	        public void actionPerformed(ActionEvent e) {
 	            backgroundPanel.setVisible(false); // Ocultar el panel
 	            battleFrame.getParent().remove(backgroundPanel); // Eliminar el panel del contenedor principal
+	            // reanudamos juego
+	    		listener.resumegame();
+
 	        }
 	    });
 
@@ -1504,7 +1516,7 @@ public class MiPanelito extends JPanel {
     private int lastMouseY;
     private Color panelColor = Color.GREEN;
     private Color borderColor = Color.black;
-    private ImageIcon[] buildingImages = new ImageIcon[5];
+    private ImageIcon[] buildingImages = new ImageIcon[6];
     private ImageIcon currentImage,main_texture;
     private dc_gui dcGui;
     private boolean isoccupied;
@@ -1537,8 +1549,13 @@ public class MiPanelito extends JPanel {
 	}
 
 	public MiPanelito() {
+		
+		
+		
+		
+		
+		main_texture = new ImageIcon("./src/gui/maintilegrass.png");
     	
-    	main_texture = new ImageIcon("./src/gui/main_grass_texture.jpg");
 		this.setCurrentImage(main_texture);
 		//setBorder(BorderFactory.createLineBorder(borderColor));
 
@@ -1547,6 +1564,8 @@ public class MiPanelito extends JPanel {
 		getBuildingImages()[2] = new ImageIcon("./src/gui/church.png");
 		getBuildingImages()[3] = new ImageIcon("./src/gui/magic_tower.png");
 		getBuildingImages()[4] = new ImageIcon("./src/gui/carpentry.png");
+		getBuildingImages()[5] = new ImageIcon("./src/gui/rivertile.png");
+
 
 
 		addMouseListener(new MouseAdapter() {
@@ -1676,7 +1695,8 @@ public class MiPanelito extends JPanel {
 
 		                                
 		                            } else {
-		               
+		        		        		JOptionPane.showMessageDialog(null, "You Dont Have enough resources", "Error", JOptionPane.ERROR_MESSAGE);
+
 		                            	//throw new ResourceException("Not enough resources to build structure");
 		                            }
 

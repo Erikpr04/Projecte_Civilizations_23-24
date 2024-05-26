@@ -122,6 +122,20 @@ public class dc_gui  {
 		        GameFrame.setVisible(true);
 		        gui_obj.createAndShowTutorial();
 		        
+		        // Verificar que el array subPanels no sea null y que tenga al menos una columna
+		        if (gui_obj.getSubPanels() != null && gui_obj.getSubPanels().length > 0 && gui_obj.getSubPanels()[0].length > 0) {
+		            // Iterar sobre la primera columna (índice 0) de subPanels
+		            for (int y = 0; y < gui_obj.getSubPanels().length; y++) {
+		                // Establecer la nueva textura principal
+		            	gui_obj.getSubPanels()[y][0].setIsoccupied(true);
+		            	gui_obj.getSubPanels()[y][0].setFuture_structure("River");
+		                gui_obj.getSubPanels()[y][0].setCurrentImage(new ImageIcon("./src/gui/rivertile.png"));
+		                // Revalidar y repintar el panel para asegurarse de que se apliquen los cambios
+		                gui_obj.getSubPanels()[y][0].revalidate();
+		                gui_obj.getSubPanels()[y][0].repaint();
+		            }
+		        }
+		        
 				
 			}
 

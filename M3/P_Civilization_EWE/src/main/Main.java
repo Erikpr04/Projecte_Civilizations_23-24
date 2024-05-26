@@ -686,7 +686,7 @@ public class Main {
 	public void update_panels() throws ResourceException {
 	    dc_database database = new dc_database();
 	    MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
-	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry"};
+	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry","River"};
 	    boolean isOccupied;
 	    int ppindex = 1;
 
