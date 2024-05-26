@@ -525,6 +525,9 @@ public class Battle {
 		setActualNumberUnitsCivilization(getActualNumberUnitsCivilization());
 		setActualNumberUnitsEnemy(getActualNumberUnitsEnemy());
 		
+		//Vaciamos el battleDevelopement Anterior:
+		setBattleDevelopment("");
+		
 		String[] nameUnits= {"Swordsman", "Spearman", "Crossbow", "Cannon", 
 								"Arrow Tower", "Catapult","Rocket Launcher Tower","Magician","Priest"};
 		
@@ -564,7 +567,7 @@ public class Battle {
 				}
 				
 				if (extraTurn) {
-					setBattleDevelopment(getBattleDevelopment()+ "\n****************** Civilization Turn ******************");
+					setBattleDevelopment(getBattleDevelopment()+ "\n\n****************** Civilization Turn ******************");
 					int defenseGroup = getGroupDefender(enemyArmy);
 
 					while (enemyArmy.get(defenseGroup).size() == 0) {
@@ -649,7 +652,7 @@ public class Battle {
 						Random attackAgain = new Random();
 						int chanceAttackAgain = attackAgain.nextInt(101);
 						if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
-							setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Civilization.");
+							setBattleDevelopment(getBattleDevelopment()+ "\n\nExtra turn Civilization.\n");
 							myTurn = true;
 				
 							
@@ -675,7 +678,7 @@ public class Battle {
 				}
 				
 				if (extraTurn) {
-					setBattleDevelopment(getBattleDevelopment()+ "\n****************** Enemy Turn ******************");
+					setBattleDevelopment(getBattleDevelopment()+ "\n\n****************** Enemy Turn ******************");
 					int defenseGroup = getGroupDefender(myArmy);
 					while (myArmy.get(defenseGroup).size() == 0) {
 						defenseGroup = getGroupDefender(myArmy);
@@ -771,7 +774,7 @@ public class Battle {
 						Random attackAgain = new Random();
 						int chanceAttackAgain = attackAgain.nextInt(101);
 						if (chanceAttackAgain <= Variables.CHANCE_ATTACK_AGAIN_UNITS[attackGroup]) {
-							setBattleDevelopment(getBattleDevelopment()+ "\nExtra turn Enemy.");
+							setBattleDevelopment(getBattleDevelopment()+ "\n\nExtra turn Enemy.\n");
 							myTurn = false;
 							
 				
@@ -788,7 +791,7 @@ public class Battle {
 		}
 		
 			
-		setBattleDevelopment(getBattleDevelopment()+ "\nEnd of the battle");
+		setBattleDevelopment(getBattleDevelopment()+ "\n\n\nEnd of the battle");
 //Logica para ver que bando gana
 		
 		resourcesLooses = getResourcesLooses();
@@ -801,7 +804,7 @@ public class Battle {
 		
 		// El valor de Points (puntuacion de cada bando en la batalla) mas alto pierde
 		if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
-			setBattleDevelopment(getBattleDevelopment()+ "\nCivilization WIN !!!");
+			setBattleDevelopment(getBattleDevelopment()+ "\n\nCivilization WIN !!!\n");
 			
 			//Anadir recursos a la civilizacion
 			classes.getCv().setWood(classes.getCv().getWood() + getWasteWoodIron()[0]);
@@ -809,10 +812,10 @@ public class Battle {
 			
 			
 		} else if (resourcesLooses[0][3] > resourcesLooses[1][3]) {
-			setBattleDevelopment(getBattleDevelopment()+ "\nEnemy WIN !!!");
+			setBattleDevelopment(getBattleDevelopment()+ "\n\nEnemy WIN !!!\n");
 			
 		} else {
-			setBattleDevelopment(getBattleDevelopment()+ "\nThe two armies have TIED !!!");
+			setBattleDevelopment(getBattleDevelopment()+ "\n\nThe two armies have TIED !!!\n");
 		}
 		
 		
@@ -849,12 +852,12 @@ public class Battle {
 		}
 		
 		//Actualizamos la array local con la resultante del enfrentamiento
-		 classes.getCv().setArmy(myArmy);
+		 //classes.getCv().setArmy(myArmy);
 		 battlelistener.getCV_Battle().setArmy(myArmy);
 
 		 
 		//Actualizar CONTADOR DE BATALLAS
-		 classes.getCv().setBattles(numBattle);
+		 //classes.getCv().setBattles(numBattle);
 		battlelistener.getCV_Battle().setBattles(numBattle);
 //Actualizar civilizacion en bd
 		  
