@@ -3,6 +3,12 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -54,13 +60,6 @@ public class dc_gui  {
 
 	private Civilization civilization;
 
-	
-	
-
-	
-	
-
-    
 
 
 	public String getUsername() {
@@ -125,7 +124,7 @@ public class dc_gui  {
 		        GameFrame.setVisible(true);
 		        gui_obj.createAndShowTutorial();
 		        
-		        if (gui_obj.getSubPanels() != null && gui_obj.getSubPanels().length > 0 && gui_obj.getSubPanels()[0].length > 0) {
+		        if (gui_obj.getSubPanels() != null && gui_obj.getSubPanels().length > 0 && gui_obj.getSubPanels()[0].length > 1) {
 		            Random random = new Random();
 
 		            // Seleccionar una coordenada y aleatoria que no esté ocupada
@@ -221,44 +220,102 @@ public class dc_gui  {
 
  // Método para invocar la GUI del juego
     public void invoke_game_gui() {
-    	
-    	
-            GameFrame = new JFrame("Civilization By Newel");
-            GameFrame.setIconImage(gamelogo.getImage());
-            GameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GameFrame = new JFrame("Civilization By Newel");
+        GameFrame.setUndecorated(true);
+        GameFrame.setIconImage(gamelogo.getImage());
+        GameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-            try {
-    			gui_obj = new Game_gui(10, 11);
-    		} catch (Exception e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-            
-            gui_obj.setListener(this.ggl);
-            
-            GameFrame.add(gui_obj, BorderLayout.CENTER);
-            GameFrame.setResizable(false);
+        try {
+            gui_obj = new Game_gui(10, 11);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        gui_obj.setListener(this.ggl);
+
+        GameFrame.add(gui_obj, BorderLayout.CENTER);
+        GameFrame.setResizable(false);
+        GameFrame.pack();
+        GameFrame.setLocationRelativeTo(null);
+
+        gui_obj.setUsername(username);
+        gui_obj.setPpindex(profileindex);
+
+        GameFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                showExitConfirmation();
+            }
+        });
+        
 
 
-            GameFrame.pack();
-            GameFrame.setLocationRelativeTo(null);
+        GameFrame.setVisible(true);
+        
+        
+        GameFrame.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                	showExitConfirmation();
+                }				
+			}
+		});
+        
+        
+        
+        //añadimos boton de x para las pantallas con problemas al hacer fullscreen
+        
+        gui_obj.getExitButton().addActionListener(new ActionListener() {
 
-                    
-            gui_obj.setUsername(username);
-            gui_obj.setPpindex(profileindex);
-
-    	
-    	
-
+			public void actionPerformed(ActionEvent e) {
+                showExitConfirmation();
+				
+			}
+        });
     }
 
+    public void showExitConfirmation() {
+        int option = JOptionPane.showOptionDialog(
+            GameFrame,
+            "Are you sure you wanna leave?",
+            "Exit Confirmation",
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.WARNING_MESSAGE,
+            null,
+            new String[]{"Save Game and Quit", "Quit Game Without Saving", "Cancel"},
+            "Cancel"
+        );
 
+        if (option == JOptionPane.YES_OPTION) {
+            try {
+                gui_obj.getListener().update_resources_db();
+            } catch (MiSQLException e1) {
+                e1.printStackTrace();
+            }
+            GameFrame.dispose();
+            System.exit(0);
+        } else if (option == JOptionPane.NO_OPTION) {
+            GameFrame.dispose();
+            System.exit(0);
 
-    //metodo para actualizar recursos en game gui
-    
-    
-    
-    
+            
+        }
+    }
+
     //metodo cargar partida
     
     public boolean load_game()  {
@@ -273,25 +330,8 @@ public class dc_gui  {
 
     }
     
-    public void update_army_db(int tipo_tropa) {
 
-    }
-    
-    public void update_structures_db(int number_structures) {
 
-    }
-    public void update_technologies_db(int attack_technology,int defense_technology) {
-
-    }
-    
-    
-    
-    
-    //metodo para actualizar casillas en base de datos
-    
-    
-    
-    
     
     //setters y getters
     
