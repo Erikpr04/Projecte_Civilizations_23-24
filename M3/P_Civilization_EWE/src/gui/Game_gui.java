@@ -29,16 +29,9 @@ import java.util.Arrays;
 import gui.dc_gui;
 
 public class Game_gui extends JPanel {
-    private static final int PANEL_SIZE = 50;
-    private static final int INIT_ZOOM = 50;
-    private int zoomLevel = INIT_ZOOM;
     private int rows, cols;
     private MiPanelito[][] subPanels;
     private MiPanelito panelright2;
-    private static int offsetX = 0;
-    private static int offsetY = 0;
-    private int lastMouseX;
-    private int lastMouseY;
     private JPanel mainPanel1, containerpanel, mainPanel2, panelright, panelup, panelright1;
     private JLayeredPane mainpanel = new JLayeredPane();
     private int mouseX;
@@ -310,11 +303,23 @@ public class Game_gui extends JPanel {
         
         mainPanel1.setBounds(0, 0, 1920, 1080); // Aquí puedes ajustar las coordenadas y el tamaño según tus necesidades
 
+
         
 
         
-        containerpanel.setPreferredSize(new Dimension(1500, 1500));
-        mainPanel2.setPreferredSize(new Dimension(1500, 1500));
+        containerpanel.setPreferredSize(new Dimension(3000, 3000));
+        mainPanel2.setPreferredSize(new Dimension(1000, 1000));
+     // Crear un JScrollPane para contener mainPanel2
+        JScrollPane scrollPane = new JScrollPane(mainPanel2);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(1500, 1500)); // Establecer el tamaño preferido del JScrollPane
+
+        // Agregar el JScrollPane a mainPanel1 en el lado derecho
+        mainPanel1.add(scrollPane, BorderLayout.WEST);
+
+
+
         
 
         panelright.setPreferredSize(new Dimension(420, 30));
@@ -328,17 +333,13 @@ public class Game_gui extends JPanel {
         JMenuBar menuBar = new JMenuBar();
 
 	     // Agregar elementos de menú
-	     JMenu cheatsMenu = new JMenu("Cheats");
 	     JMenu helpMenu = new JMenu("Help");
-	
-	     // Agregar elementos de menú al menú "Cheats"
-	     JMenuItem cheat1 = new JMenuItem("Cheat 1");
-	     JMenuItem cheat2 = new JMenuItem("Cheat 2");
-	     cheatsMenu.add(cheat1);
-	     cheatsMenu.add(cheat2);
+	     helpMenu.setFont(gameFont);
 	
 	     // Agregar elementos de menú al menú "Help"
 	     JMenuItem helpItem = new JMenuItem("Tutorial");
+	     helpItem.setFont(gameFont);
+
 	     helpMenu.add(helpItem);
 	     
 	     helpItem.addActionListener(new ActionListener() {
@@ -352,7 +353,6 @@ public class Game_gui extends JPanel {
 
 	
 	     // Agregar los menús al menú principal
-	     menuBar.add(cheatsMenu);
 	     menuBar.add(helpMenu);
 	
 	     // Agregar el menú a un panel
@@ -365,6 +365,7 @@ public class Game_gui extends JPanel {
         
      // En el constructor de Game_gui, después de crear panelup
         JButton openButton = new JButton("Battle Logs");
+        openButton.setFont(gameFont);
         openButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -373,18 +374,15 @@ public class Game_gui extends JPanel {
                 
             }
         });
-        openButton.setPreferredSize(new Dimension(100,50));
+        openButton.setPreferredSize(new Dimension(140,50));
         panelup.add(openButton,BorderLayout.EAST);
         
      
-         //panel de batalla     
-        //showBattleWindow("This is the first line.\nThis is the second line.\nThis is the third line.\nThis is the fourth line.\nThis is the fifth line.");
-        
+         //panel de batalla             
         
         
         
 
-        
         
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -418,6 +416,7 @@ public class Game_gui extends JPanel {
         }
         
         
+     // Agregar MouseListener para capturar eventos de ratón
         mainPanel2.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -435,27 +434,6 @@ public class Game_gui extends JPanel {
                 }
             }
         });
-
-        mainPanel2.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (isRightClicked) {
-                    int newX = e.getXOnScreen();
-                    int newY = e.getYOnScreen();
-
-                    int deltaX = newX - mouseX;
-                    int deltaY = newY - mouseY;
-
-                    Point currentLocation = mainPanel2.getLocation();
-                    mainPanel2.setLocation(currentLocation.x + deltaX, currentLocation.y + deltaY);
-
-                    mouseX = newX;
-                    mouseY = newY;
-                }
-            }
-        });
-
-
 
         // Agregar MouseWheelListener para el zoom
         mainPanel2.addMouseWheelListener(new MouseWheelListener() {
@@ -782,10 +760,10 @@ public void createAndShowTutorial() {
     	    "La zona verde es el terreno donde vas a asentar los cimientos de tu civilizacion.\nEn esta zona se colocan los edificios que vayas construyendo segun el transcurso de tu partida.",
     	    "Cada opcion corresponde a la Construccion de cada edificio disponible,\nCuando pasemos el raton por encima, se nos mostrara el coste de construir estas estructuras.",
     	    "Ataque enemigo: Cada cierto tiempo, un ejercito enemigo vendra a atacarnos y nos saldra el siguiente mensaje emergente:",
-    	    "Battle Log: Cada vez que nos salga la ventana emergente anterior, se nos abrira una nueva ventana para observar el transcurso de la batalla. El scroll lateral nos permite desplazarnos por el transcurso de la batalla.",
+    	    "Battle Log: Cada vez que nos salga la ventana emergente anterior, se nos abrira una nueva ventana para observar el transcurso de la batalla. \nEl scroll lateral nos permite desplazarnos por el transcurso de la batalla.",
     	    "Civilization Stats, este panel nos mostrara los datos principales de nuestra civilizacion.",
     	    "Upgrade civilization:\nTendremos dos pestanas a en el menu de mejoras (entrenar tropas o mejorar tecnologia)\nPara la tropa que queramos mejorar, se pediran los recursos necesarios para crearla.\nSi no tienes suficientes recursos el juego te lo indicara.",
-    	    "Panel para mejorar tecnologia: Se nos mostraran ambas tecnologias, sus costes y el nivel de tecnologia actual, si no tenemos suficientes recursos, no podremos mejorar nuestro nivel de tecnologia."
+    	    "Panel para mejorar tecnologia: Se nos mostraran ambas tecnologias, sus costes y el nivel de tecnologia actual.\n Si no tenemos suficientes recursos, no podremos mejorar nuestro nivel de tecnologia."
     	};
 
 
@@ -837,6 +815,11 @@ public void createAndShowTutorial() {
 
  // Crear el panel de botones de desplazamiento con BorderLayout
     JPanel buttonPanel = new JPanel(new BorderLayout());
+    JLabel textLabel = new JLabel("Tutorial", SwingConstants.CENTER);
+    textLabel.setFont(gameFont_Big);
+    textLabel.setForeground(Color.WHITE);
+    textLabel.setBounds(0, 0, 1000, 800); // Ajustar al tamaño del panel
+    buttonPanel.add(textLabel,BorderLayout.SOUTH);
     buttonPanel.setOpaque(false);
     buttonPanel.setBackground(Color.red);
 
@@ -864,7 +847,7 @@ public void createAndShowTutorial() {
 
     // Agregar los botones de desplazamiento al panel de botones en el centro
     JPanel directionalButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    directionalButtonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+    directionalButtonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 70, 0, 0));
     directionalButtonsPanel.setOpaque(false);
     directionalButtonsPanel.add(leftButton);
     directionalButtonsPanel.add(rightButton);
@@ -958,6 +941,16 @@ public void createAndShowTutorial() {
     // Hacer visible el panel de tutorial
     paneltutorial.setVisible(true);
 }
+
+
+
+
+
+
+
+
+
+
     
     private void updateTutorial(JLabel imageLabel, JLabel textLabel, ImageIcon[] tutorialImages, String[] tutorialTexts, int currentIndex, JLabel[] indicators) {
         imageLabel.setIcon(tutorialImages[currentIndex]);
@@ -1002,6 +995,7 @@ public void showBattleWindow(String text) {
 
 	    // Crear el botón para mostrar todo el texto
 	    JButton showAllButton = new JButton("Show All");
+	    showAllButton.setFont(gameFont);
 	    showAllButton.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
@@ -1447,7 +1441,8 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
     void battlelog_frame() {
     	listener.refresh_battle_logs_reports();
-        JFrame popupFrame = new JFrame("Battle Log");
+        JFrame popupFrame = new JFrame("Battle Logs");
+        popupFrame.setFont(gameFont);
         popupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Crear un JTabbedPane
@@ -1469,6 +1464,8 @@ public void showCustomPanel(JLayeredPane parentComponent, String s) {
 
             // Crear un JTabbedPane para Battle Log y Battle Report
             JTabbedPane innerTabbedPane = new JTabbedPane();
+            innerTabbedPane.setFont(gameFont);
+
             innerTabbedPane.addTab("Battle Log", logScrollPane);
             innerTabbedPane.addTab("Battle Report", reportScrollPane);
 
@@ -1689,7 +1686,6 @@ public class MiPanelito extends JPanel {
 	                                    try {
 											listener.update_resources_db();
 										} catch (MiSQLException e1) {
-											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										}
 
