@@ -246,6 +246,8 @@ public class Main {
             public void run() {
                 if (!m.pauseGame) { // Verifica si el juego está en pausa
                     try {
+                    	
+                    	System.out.println("Se han generado recursos!");
                         // Lógica de tu tarea de recursos
                         m.classes.getCv().setWood(m.classes.getCv().getWood() + 100000 + Variables.CIVILIZATION_WOOD_GENERATED + (m.classes.getCv().getCarpentry() * Variables.CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY));
                         m.classes.getCv().setFood(m.classes.getCv().getFood() + 100000 + Variables.CIVILIZATION_FOOD_GENERATED + (m.classes.getCv().getFarm() * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
@@ -288,6 +290,7 @@ public class Main {
 				
 				m.classes.getCv().setWood(m.classes.getCv().getWood() + resources[0]); 
 				m.classes.getCv().setIron(m.classes.getCv().getIron() + resources[1]); 
+				m.dc_gui.getGui_obj().loadingPanel();
 
 				
 			}
@@ -364,9 +367,10 @@ public class Main {
 			//metodo para cargar juego
 			public void load_game_gui() {
 				
-				m.maintimer.schedule(resourcestask, 10000, 10000);
-				m.maintimer.schedule(shownotificationtask, 20000, 120000);
-				m.maintimer.schedule(startbattle, 25000, 120000);
+				
+				m.maintimer.schedule(resourcestask, Variables.TIMERTASK_RESOURCES, Variables.TIMERTASK_RESOURCES);
+				m.maintimer.schedule(shownotificationtask, Variables.TIMERTASK_NOTIFICATION_BATTLE, Variables.TIMERTASK_NOTIFICATION_BATTLE);
+				m.maintimer.schedule(startbattle, Variables.TIMERTASK_BATTLE, Variables.TIMERTASK_BATTLE);
 								
 			}
 
@@ -686,7 +690,7 @@ public class Main {
 	public void update_panels() throws ResourceException {
 	    dc_database database = new dc_database();
 	    MiPanelito[][] subPanels = dc_gui.getGui_obj().getSubPanels(); // Obtener la matriz de subpaneles
-	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry","River"};
+	    String[] structureList = new String[]{"Farm", "Smithy", "Church", "Magic Tower", "Carpentry","River","Tree","Rock","Beach"};
 	    boolean isOccupied;
 	    int ppindex = 1;
 
